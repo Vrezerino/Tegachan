@@ -1,10 +1,11 @@
 'use client';
 
 import {
-  UserGroupIcon,
   HomeIcon,
-  DocumentDuplicateIcon,
-  ComputerDesktopIcon
+  ComputerDesktopIcon,
+  MusicalNoteIcon,
+  SunIcon,
+  ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
@@ -12,30 +13,30 @@ import clsx from 'clsx';
 
 // Map of links to display in the side navigation
 const links = [
-  { 
-    name: 'Index', 
-    href: '/dashboard', 
+  {
+    name: 'Index',
+    href: '/dashboard',
     icon: HomeIcon
   },
   {
-    name: 'Technology',
+    name: 'Tech',
     href: '/dashboard/technology',
     icon: ComputerDesktopIcon,
   },
   {
     name: 'Music',
     href: '/dashboard/music',
-    icon: ComputerDesktopIcon,
+    icon: MusicalNoteIcon,
   },
   {
     name: 'Outdoors',
     href: '/dashboard/outdoors',
-    icon: DocumentDuplicateIcon,
+    icon: SunIcon,
   },
-  { 
+  {
     name: 'Random',
     href: '/dashboard/random',
-    icon: UserGroupIcon
+    icon: ChatBubbleLeftRightIcon
   }
 ];
 
@@ -56,8 +57,8 @@ const NavLinks = () => {
               },
             )}
           >
-            <LinkIcon className='w-6 dark:text-neutral-300' />
-            <p className='linkName dark:linkName-darkmode hidden md:block'>{link.name}</p>
+            <LinkIcon className='w-6 dark:text-neutral-300 xsm:hidden' />
+            <p className='linkName dark:linkName-darkmode'>{link.name}</p>
           </Link>
         );
       })}
