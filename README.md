@@ -1,6 +1,6 @@
-## TegaChan (Next.js/MongoDB)
+## Tegachan (Next.js/MongoDB)
 
-TegaChan is an imageboard type discussion forum. It features dynamic app routing within a dashboard, and styles mostly employ Tailwind CSS.
+Tegachan is an imageboard type discussion forum. It features dynamic app routing within a dashboard, and styles mostly employ Tailwind CSS.
 
 Thread starter posts are sorted by bump order, and new threads and replies that can be posted with a form, get validated in the middleware (between request and response).
 
