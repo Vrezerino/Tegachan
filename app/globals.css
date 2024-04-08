@@ -1,0 +1,140 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Define custom darkmode selectors */
+@layer utilities {
+
+  .body-dark {
+    background-image: url('/img/sky-dark.jpg');
+  }
+
+  .posts-container-post-darkmode {
+    width: 160px;
+    height: 225px;
+    border-radius: 5px;
+    background-color: #1d1d1d;
+    background-image: none;
+  }
+
+  .post-darkmode,
+  .posts-container-post-darkmode {
+    box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 1);
+  }
+
+  .posts-container-post-title-darkmode,
+  .linkName-darkmode,
+  .label-darkmode,
+  .h1-darkmode {
+    color: #f8ddd6;
+    text-shadow: 1px 1px 1px #11587c,
+      2px 2px 1px #14515c,
+      3px 3px 2px #441815
+  }
+
+  .postForm-darkmode {
+    width: 575px;
+    background-image: linear-gradient(to bottom right,
+        rgba(24, 24, 24, 0.9),
+        rgba(41, 41, 48, 0.3),
+        rgba(24, 24, 24, 0.9),
+        rgba(41, 41, 48, 0.3),
+        rgba(24, 24, 24, 0.9),
+        rgba(41, 41, 48, 0.3),
+        rgba(24, 24, 24, 0.9),
+        rgba(41, 41, 48, 0.3))
+  }
+
+  .navLinks-darkmode,
+  .sideNav-darkmode {
+    background-image: linear-gradient(to bottom right,
+        rgba(31, 30, 34, 0.2),
+        rgba(26, 26, 31, 0.4),
+        rgba(8, 15, 17, 0.5));
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 11;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background-image: url('/img/sky1.jpg');
+  background-size: cover;
+}
+
+.posts-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.posts-container-post {
+  width: 160px;
+  height: 225px;
+  border-radius: 5px;
+  background-image: linear-gradient(to bottom right,
+      rgb(255, 237, 225),
+      rgb(255, 255, 255),
+      rgb(228, 242, 247));
+}
+
+.post,
+.posts-container-post {
+  box-shadow: 0 3px 2px 0 rgba(255, 142, 98, 0.12);
+}
+
+.posts-container-text {
+  padding: 6px;
+  min-height: 152px;
+  font-size: small;
+}
+
+.posts-container-post-title {
+  min-height: 55px;
+  max-width: 140px;
+  word-break: keep-all;
+  line-height: 1.1em;
+  font-size: 1.8em;
+  margin-bottom: 0.2em;
+}
+
+.posts-container-post-image {
+  max-height: 73px;
+  overflow: hidden;
+}
+
+.postForm {}
+
+.navLinks,
+.sideNav {
+  background-image: linear-gradient(to bottom right,
+      rgba(247, 225, 165, 0),
+      rgb(255, 255, 255),
+      rgb(228, 242, 247));
+}
+
+.posts-container-post-title,
+.linkName,
+label,
+h1 {
+  color: #2a3f79;
+  text-shadow: 1px 1px 1px #a3c2d1,
+    2px 2px 1px #aeeaf5,
+    3px 3px 2px #ffca7a
+}
