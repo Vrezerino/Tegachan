@@ -10,10 +10,9 @@ const Post = ({ post }: { post: PostType }) => {
             {/* Thread starter (OP) */}
             <div className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                 {post.imageUrl && (
-                    <div key={post.postNum} className='min-w-40 relative'>
-                        <Link key={post.postNum} href={post.imageUrl} target='_blank'>
+                    <div className='min-w-40 relative'>
+                        <Link href={post.imageUrl} target='_blank'>
                             <Image
-                                key={post.postNum}
                                 src={post.imageUrl}
                                 alt='Post image'
                                 fill
@@ -40,7 +39,7 @@ const Post = ({ post }: { post: PostType }) => {
 
             {/* Possible replies */}
             {post.replies.length > 0 && post.replies.map((reply) => (
-                <div className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
+                <div key={reply.postNum} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                     {reply.imageUrl && (
                         <div key={reply.postNum} className='min-w-40 relative'>
                             <Link key={post.postNum} href={reply.imageUrl} target='_blank'>
@@ -59,9 +58,9 @@ const Post = ({ post }: { post: PostType }) => {
                             </Link>
                         </div>
                     )}
-                    <div className='flex flex-col justify-between p-3 leading-normal'>
-                        <span className='text-xs text-red-400 dark:text-red-200/30 inline-block'>{parseDate(reply.date)} <b>№ {reply.postNum}</b></span>
-                        <p className='font-normal text-gray-700 dark:text-gray-400 mt-5'>{reply.content}</p>
+                    <div key={reply.postNum} className='flex flex-col justify-between p-3 leading-normal'>
+                        <span key={reply.postNum} className='text-xs text-red-400 dark:text-red-200/30 inline-block'>{parseDate(reply.date)} <b>№ {reply.postNum}</b></span>
+                        <p key={reply.postNum} className='font-normal text-gray-700 dark:text-gray-400 mt-5'>{reply.content}</p>
                         {reply.replies?.length > 0 && reply.replies.map((rr) => (
                             <span key={rr.postNum} className='font-normal text-gray-700 dark:text-gray-400 mt-5'>{rr.postNum}</span>
                         ))}
