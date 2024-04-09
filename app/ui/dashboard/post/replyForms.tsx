@@ -74,4 +74,4 @@ const ReplyFormSmall = ({ replyTo }: { replyTo: PostType }) => {
     )
 }
 
-export { ReplyFormBig, ReplyFormSmall }
+export default ReplyFormBig;

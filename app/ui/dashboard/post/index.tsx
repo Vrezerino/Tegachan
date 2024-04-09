@@ -1,6 +1,6 @@
 import { PostType } from '@/app/lib/definitions';
 import { parseDate } from '@/app/lib/utils';
-import { ReplyFormBig, ReplyFormSmall } from './replyForms';
+import ReplyFormBig from './replyForms';
 import Image from 'next/image';
 import Link from 'next/link';
 
