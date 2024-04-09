@@ -8,16 +8,6 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { AWS_NAME, AWS_URL } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
 
-export const getPost = async (board: string, pn: string) => {
-    const postNum = parseInt(pn);
-    const post = await (await db()).collection('posts').findOne({ board, postNum });
-
-    // Get replies that have the posts' postNum in their replyTo arrays
-    const replies = await (await db()).collection('posts').find({ replyTo: { $in: [postNum] } }).toArray();
-
-    return JSON.parse(JSON.stringify({ ...post, replies }));
-}
-
 export const POST = async (req: NextRequest) => {
     try {
         const formData = await req.formData();
