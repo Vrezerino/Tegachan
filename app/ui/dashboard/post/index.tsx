@@ -11,8 +11,9 @@ const Post = ({ post }: { post: PostType }) => {
             <div className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                 {post.imageUrl && (
                     <div key={post.postNum} className='min-w-40 relative'>
-                        <Link href={post.imageUrl} target='_blank'>
+                        <Link key={post.postNum} href={post.imageUrl} target='_blank'>
                             <Image
+                                key={post.postNum}
                                 src={post.imageUrl}
                                 alt='Post image'
                                 fill
@@ -42,8 +43,9 @@ const Post = ({ post }: { post: PostType }) => {
                 <div className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                     {reply.imageUrl && (
                         <div key={reply.postNum} className='min-w-40 relative'>
-                            <Link href={reply.imageUrl} target='_blank'>
+                            <Link key={post.postNum} href={reply.imageUrl} target='_blank'>
                                 <Image
+                                    key={post.postNum}
                                     src={reply.imageUrl}
                                     alt='Post image'
                                     fill
