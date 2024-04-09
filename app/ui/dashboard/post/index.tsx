@@ -10,7 +10,7 @@ const Post = ({ post }: { post: PostType }) => {
             {/* Thread starter (OP) */}
             <div className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                 {post.imageUrl && (
-                    <div className='min-w-40 relative'>
+                    <div key={post.postNum} className='min-w-40 relative'>
                         <Link href={post.imageUrl} target='_blank'>
                             <Image
                                 src={post.imageUrl}
@@ -41,7 +41,7 @@ const Post = ({ post }: { post: PostType }) => {
             {post.replies.length > 0 && post.replies.map((reply) => (
                 <div className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                     {reply.imageUrl && (
-                        <div className='min-w-40 relative'>
+                        <div key={reply.postNum} className='min-w-40 relative'>
                             <Link href={reply.imageUrl} target='_blank'>
                                 <Image
                                     src={reply.imageUrl}
