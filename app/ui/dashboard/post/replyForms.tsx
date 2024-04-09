@@ -2,10 +2,12 @@
 
 import { PostType } from '@/app/lib/definitions';
 import { FormEvent, useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
 
 const ReplyFormBig = ({ op }: { op: PostType }) => {
     const [recipients, setRecipients] = useState<number[]>([]);
+    const router = useRouter();
 
     useEffect(() => {
         setRecipients([ op.postNum ]);
@@ -25,6 +27,8 @@ const ReplyFormBig = ({ op }: { op: PostType }) => {
 
         if (response.status >= 400) {
             toast.error((await response.json()).message);
+        } else if (response.ok) {
+            router.refresh();
         }
     }
     return (

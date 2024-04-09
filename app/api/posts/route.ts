@@ -6,77 +6,7 @@ import { isErrorWithStatusCodeType } from '@/app/lib/utils';
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
 import { AWS_NAME, AWS_URL } from '../../lib/env';
-
-import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
-
-export const getLatestPosts = async () => {
-    // Get twenty latest posts from all boards
-    const data = await (await db())
-        .collection('posts')
-        .find({})
-        // Sort by date descending
-        .sort({ date: -1 })
-        .limit(20)
-        .toArray();
-
-    return JSON.parse(JSON.stringify(data));
-}
-
-export const getBumpedPosts = async (board: string) => {
-
-    /**
-     * Get thread starter (OP) posts from a certain board and sort either by
-     * date or the date of the last reply to the post
-     */
-    const data = await (await db()).collection('posts').aggregate([
-        {
-            $lookup: {
-                from: "posts",
-                localField: "replyTo",
-                foreignField: "postNum",
-                as: "parentPosts"
-            }
-        },
-        {
-            $addFields: {
-                sortBy: {
-                    $cond: {
-                        if: { $eq: ["$OP", true] }, // Check if the post is OP
-                        then: "$date", // If OP, sort by the post date
-                        else: {
-                            $cond: {
-                                if: {
-                                    $gt: [
-                                        { $size: "$parentPosts" }, // Check if the parentPosts array exists
-                                        0 // Check if it's not empty
-                                    ]
-                                },
-                                then: { $max: "$parentPosts.date" }, // If it exists and not empty, sort by the max date in parentPosts
-                                else: "$date" // Otherwise, sort by the post date
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        {
-            $sort: {
-                "sortBy": -1 // Sort by the calculated sort date
-            }
-        },
-        {
-            $match: {
-                $or: [
-                    { OP: true }, // Filter OP posts
-                    //{ OP: false, "parentPosts.OP": true } // Filter non-OP posts with a reply to an OP post
-                ]
-            }
-        }
-    ]).toArray();
-
-    return JSON.parse(JSON.stringify(data));
-}
 
 export const getPost = async (board: string, pn: string) => {
     const postNum = parseInt(pn);
@@ -88,9 +18,7 @@ export const getPost = async (board: string, pn: string) => {
     return JSON.parse(JSON.stringify({ ...post, replies }));
 }
 
-export const POST = async (req: NextRequest, res: NextResponse) => {
-    let success = false;
-
+export const POST = async (req: NextRequest) => {
     try {
         const formData = await req.formData();
 
@@ -170,5 +98,4 @@ export const POST = async (req: NextRequest, res: NextResponse) => {
             { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
         );
     }
-    //success && revalidatePath('');
 }

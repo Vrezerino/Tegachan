@@ -1,5 +1,5 @@
 import { PostType } from '@/app/lib/definitions';
-import { getPost } from '@/app/api/posts/route';
+import { getPost } from './data';
 import Post from '@/app/ui/dashboard/post';
 import { notFound } from 'next/navigation';
 

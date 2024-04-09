@@ -1,5 +1,5 @@
 import { PostType } from '../lib/definitions';
-import { getLatestPosts } from '../api/posts/route';
+import { getLatestPosts } from './data';
 import LatestPosts from '../ui/dashboard/latestPosts';
 
 const Page = async () => {

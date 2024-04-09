@@ -1,5 +1,5 @@
 import { PostType } from '@/app/lib/definitions';
-import { getBumpedPosts } from '@/app/api/posts/route';
+import { getBumpedPosts } from './data';
 
 import Board from '@/app/ui/dashboard/board';
 import { notFound } from 'next/navigation';
