@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { newPostSchema } from './app/lib/newPostSchema';
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, isErrorWithStatusCodeType } from './app/lib/utils';
-import { ErrorWithStatusCode } from './app/lib/definitions';
+//import { postAsOP, postReply } from './app/lib/posts';
 
 const middleware = async (request: NextRequest) => {
   /**
@@ -41,36 +41,25 @@ const middleware = async (request: NextRequest) => {
 
   if (request.method === 'POST') {
     try {
-      const formData = await request.formData();
-
-      const newPost = {
-        content: formData.get('content'),
-        title: formData.get('title'),
-        replyTo: parseInt(formData.get('replyTo') as string),
-        board: formData.get('board'),
-        image: formData.get('image')
-      }
-
-      if (!newPost.title) newPost.title = newPost.content;
-      const file = (formData.get('image') as File);
+      // FormData is a promise; resolve it before getting image field
+      const file = (await request.formData()).get('image') as File;
 
       // Some validations before the request even hits the server
-      if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-        throw { message: 'File is not of accepted type! JPG/PNG/WEBP only.', status: 400 };
+      if (file.size> 0) {
+        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+          throw { message: 'File is not of accepted type! JPG/PNG/WEBP only.', status: 400 };
+        }
+  
+        if (file.size >= MAX_FILE_SIZE) {
+          throw { message: 'Image must be under 1MB in size.', status: 400 };
+        }
       }
 
-      if (file.size >= MAX_FILE_SIZE) {
-        throw { message: 'Image must be under 1MB in size.', status: 400 };
-      }
-
-      const { error, value } = newPostSchema.validate(newPost);
-      if (error) throw { message: error.message, status: 400 };
-
-      //return NextResponse.json('Post successful!', { status: 200 });
+      return NextResponse.rewrite(new URL('/api/posts', request.url));
 
     } catch (e: unknown) {
       return NextResponse.json(
-        { message: e instanceof Error || isErrorWithStatusCodeType(e) && e.message },
+        { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : '' },
         { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
       );
     }
@@ -82,13 +71,12 @@ export const config = {
   matcher: [
     /*
      * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - img (images in /public foo)
+     * - img (images in /public folder)
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
      */
-    '/((?!api|img/|_next/static|_next/image|favicon.ico).*)',
+    '/((?!img/|_next/static|_next/image|favicon.ico).*)',
   ],
 }
 

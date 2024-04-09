@@ -1,18 +1,24 @@
 'use client'
 
 import { PostType } from '@/app/lib/definitions';
-import { FormEvent } from 'react';
+import { FormEvent, useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 
-const ReplyFormBig = ({ replyTo }: { replyTo: PostType }) => {
+const ReplyFormBig = ({ op }: { op: PostType }) => {
+    const [recipients, setRecipients] = useState<number[]>([]);
+
+    useEffect(() => {
+        setRecipients([ op.postNum ]);
+    }, [])
+
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const formData = new FormData(e.currentTarget);
-        formData.set('board', replyTo.board);
-        formData.set('replyTo', replyTo.postNum.toString());
+        formData.set('board', op.board);
+        formData.set('replyTo', JSON.stringify(recipients));
 
-        const response = await fetch(`/${replyTo.board}/${replyTo.postNum}`, {
+        const response = await fetch(`/api/posts`, {
             method: 'POST',
             body: formData,
         });

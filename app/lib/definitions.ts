@@ -6,8 +6,20 @@ export interface PostType {
     OP: boolean;
     board: string;
     imageUrl: string;
-    replies: PostType[]
-    replyTo: PostType[]
+    replyPostNums: Array<number>;
+    replies: PostType[];
+    replyTo: Array<number>
+}
+
+export type NewPostType = {
+    title: string;
+    content: string;
+    date: Date;
+    OP: boolean;
+    board: string;
+    replyTo: Array<number>
+    imageUrl?: string
+    image?: File
 }
 
 // Board catalog OP type
