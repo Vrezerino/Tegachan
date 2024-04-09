@@ -14,3 +14,8 @@ export interface PostType {
 export interface CatalogOPType extends Omit<PostType, 'replies' | 'replyTo' | 'OP'> {
     repliesCount: number;
 }
+
+export type ErrorWithStatusCode = {
+    message: string;
+    status: number
+}

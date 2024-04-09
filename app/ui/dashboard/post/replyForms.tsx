@@ -1,10 +1,29 @@
+'use client'
+
 import { PostType } from '@/app/lib/definitions';
+import { FormEvent } from 'react';
+import toast from 'react-hot-toast';
 
 const ReplyFormBig = ({ replyTo }: { replyTo: PostType }) => {
-    return (
-        <form className='postForm mt-10 p-3 border border-neutral-200 rounded-lg shadow md:flex-row md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900'>
-            <div>
+    const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
 
+        const formData = new FormData(e.currentTarget);
+        formData.set('board', replyTo.board);
+        formData.set('replyTo', replyTo.postNum.toString());
+
+        const response = await fetch(`/${replyTo.board}/${replyTo.postNum}`, {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (response.status >= 400) {
+            toast.error((await response.json()).message);
+        }
+    }
+    return (
+        <form onSubmit={onSubmit} className='postForm mt-10 p-3 border border-neutral-200 rounded-lg shadow md:flex-row md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900'>
+            <div>
                 {/* Text content */}
                 <div className='relative rounded-md'>
                     <div className='relative'>
