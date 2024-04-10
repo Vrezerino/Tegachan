@@ -16,6 +16,7 @@ export type NewPostType = {
     content: string;
     date: Date;
     OP: boolean;
+    IP: string;
     board: string;
     replyTo: Array<number>
     imageUrl?: string

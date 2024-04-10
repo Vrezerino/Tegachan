@@ -1,7 +1,7 @@
 'use client'
 
 import { PostType } from '@/app/lib/definitions';
-import { FormEvent, useState, useEffect } from 'react';
+import { FormEvent, useState, useEffect, useRef } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
 import LoadingAnim from '../loadingAnim';
@@ -9,9 +9,25 @@ import LoadingAnim from '../loadingAnim';
 const PostFormBig = ({ op }: { op: PostType | null }) => {
     const [recipients, setRecipients] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>();
+    const [timer, setTimer] = useState(60);
+    //const intervalRef = useRef<NodeJS.Timeout>();
 
     const pathname = usePathname();
     const router = useRouter();
+
+    /*
+    const triggerCounter = () => {
+        const intervalId = setInterval(() => {
+            setTimer((time) => {
+                if (time === 0) {
+                    clearInterval(timer);
+                    return 0;
+                } else return time - 1;
+            });
+        }, 1000);
+        intervalRef.current = intervalId;
+    }
+    */
 
     useEffect(() => {
         // If you're replying to an OP, set first recipient as OP
@@ -21,6 +37,7 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
     const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setLoading(true);
+        //triggerCounter();
 
         const formData = new FormData(e.currentTarget);
 
@@ -39,6 +56,7 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
 
         if (response.status === 200) {
             router.refresh();
+            document.getElementById('content')!.textContent = '';
         } else {
             toast.error((await response.json()).message);
         }
@@ -82,7 +100,7 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
                             </div>
                         </div>
                     </div>
-                    <button className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3' type='submit'>Post</button>
+                    <button id='postBtn' className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3' type='submit'>{timer === 60 ? 'Post' : timer}</button>
                 </div>
             </form>
         </>

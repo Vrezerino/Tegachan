@@ -1,15 +1,14 @@
 import { NextResponse, NextRequest } from 'next/server';
-import { newPostSchema } from './app/lib/newPostSchema';
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, isErrorWithStatusCodeType } from './app/lib/utils';
 //import { postAsOP, postReply } from './app/lib/posts';
 
-const middleware = async (request: NextRequest) => {
+const middleware = async (req: NextRequest) => {
   /**
    * The server will only allow GET and POST requests. It must return an
    * "Allow" header field to the 405 status code response, to inform the client
    * what methods are allowed.
    */
-  if (!('GET, POST'.includes(request.method))) {
+  if (!('GET, POST'.includes(req.method))) {
     const response = NextResponse.json({ error: 'Method not allowed!', status: 405 });
     response.headers.set('Allow', 'GET, POST');
   }
@@ -35,14 +34,14 @@ const middleware = async (request: NextRequest) => {
    * resource isn't found by postnumber, because I want the server 
    * to show a 404 page in that case.
    */
-  if (/^(?!\/dashboard(?:\/(?:random|technology|music|outdoors)\/?|\/(?:random|technology|music|outdoors)\/\d+)?$).*$/.test(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+  if (/^(?!\/dashboard(?:\/(?:random|technology|music|outdoors)\/?|\/(?:random|technology|music|outdoors)\/\d+)?$).*$/.test(req.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 
-  if (request.method === 'POST') {
+  if (req.method === 'POST') {
     try {
       // FormData is a promise; resolve it before getting image field
-      const file = (await request.formData()).get('image') as File;
+      const file = (await req.formData()).get('image') as File;
 
       // Some validations before the request even hits the server
       if (file.size> 0) {
@@ -55,7 +54,7 @@ const middleware = async (request: NextRequest) => {
         }
       }
 
-      return NextResponse.rewrite(new URL('/api/posts', request.url));
+      return NextResponse.rewrite(new URL('/api/posts', req.url));
 
     } catch (e: unknown) {
       return NextResponse.json(

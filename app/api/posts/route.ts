@@ -10,10 +10,15 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export const POST = async (req: NextRequest) => {
     try {
+        const ip = req.headers.get('x-real-ip');
+        if (ip && process.env.BANLIST?.includes(ip)) {
+            throw { message: 'Can not post at this time.', status: 403 };
+        }
+
         const formData = await req.formData();
 
         /**
-         * FormData can not have arrays as is, the array of replied-to post 
+         * FormData can not have arrays as is; the array of replied-to post 
          * numbers was stringified first on the client-side
          */
         const replyTo = JSON.parse(formData.get('replyTo') as string);
@@ -30,7 +35,8 @@ export const POST = async (req: NextRequest) => {
              */
             OP: replyTo.length > 0 ? false : true,
             board: formData.get('board') as string,
-            date: new Date()
+            date: new Date(),
+            IP: req.headers.get('x-real-ip') || 'none'
 
         }
 
@@ -46,15 +52,11 @@ export const POST = async (req: NextRequest) => {
         const { error, value } = newPostSchema.validate(newPost);
         if (error) throw { message: error.message, status: 400 };
 
+        // Replace possible spaces in filename with underscores
         const filename = image.size > 0 && `${image.name.replaceAll(' ', '_')}`;
 
         // If user submitted a file...
         if (image.size > 0) {
-            /**
-             * Create filename from customer name, replacing spaces with underscores,
-             * add period, add file extension. If no file was uploaded, filename refers
-             * to a fallback/generic profile image in the storage.
-             */
 
             // create a byte array from it
             const buffer = Buffer.from(await image.arrayBuffer());
@@ -89,7 +91,7 @@ export const POST = async (req: NextRequest) => {
         }
     } catch (e) {
         return NextResponse.json(
-            { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : '' },
+            { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
             { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
         );
     }

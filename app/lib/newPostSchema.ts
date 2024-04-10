@@ -7,5 +7,6 @@ export const newPostSchema = Joi.object({
     board: Joi.string().required(),
     replyTo: Joi.array(),
     OP: Joi.boolean(),
-    date: Joi.date()
+    date: Joi.date(),
+    IP: Joi.string()
 });

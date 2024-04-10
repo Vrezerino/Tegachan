@@ -36,6 +36,11 @@ export const getBumpedPosts = async (board: string) => {
             $sort: {
                 'sortBy': -1 // Sort by the calculated sort date
             }
+        },
+        {
+            $project: {
+                IP: 0
+            }
         }
     ]).toArray();
 
