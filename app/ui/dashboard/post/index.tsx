@@ -31,10 +31,6 @@ const Post = ({ post }: { post: PostType }) => {
                     <span className='text-xs text-red-400 dark:text-red-200/30 inline-block'>{parseDate(post.date)} <b>№ {post.postNum}</b></span>
                     <h1 className='text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>
                     <p className='font-normal text-gray-700 dark:text-gray-400 mt-5'>{post.content}</p>
-
-                    {post.replies?.length > 0 && post.replies.map((reply) => (
-                        <span key={`repliesToOpSpan-${reply.postNum}`} className='text-xs text-gray-700 dark:text-gray-400'>{reply.postNum}</span>
-                    ))}
                 </div>
             </div>
 
