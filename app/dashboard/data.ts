@@ -11,4 +11,4 @@ export const getLatestPosts = async () => {
         .toArray();
 
     return JSON.parse(JSON.stringify(data));
-}
+};

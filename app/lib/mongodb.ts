@@ -35,11 +35,11 @@ const getMongoClient = async () => {
     }
   }
   return globalWithMongo._mongoClientPromise;
-}
+};
 
 // Export database to be used in all CRUD methods
 export const getMongoDb = async () => {
   const mongoClient = await getMongoClient();
   const db = mongoClient?.db(MONGODB_NAME);
   return db as Db;
-}
+};

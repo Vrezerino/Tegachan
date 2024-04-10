@@ -9,7 +9,7 @@ export interface PostType {
     replyPostNums: Array<number>;
     replies: PostType[];
     replyTo: Array<number>
-}
+};
 
 export type NewPostType = {
     title: string;
@@ -20,14 +20,14 @@ export type NewPostType = {
     replyTo: Array<number>
     imageUrl?: string
     image?: File
-}
+};
 
 // Board catalog OP type
 export interface CatalogOPType extends Omit<PostType, 'replies' | 'replyTo' | 'OP'> {
     repliesCount: number;
-}
+};
 
 export type ErrorWithStatusCode = {
     message: string;
     status: number
-}
+};

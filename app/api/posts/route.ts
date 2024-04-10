@@ -36,7 +36,12 @@ export const POST = async (req: NextRequest) => {
 
         const image = formData.get('image') as File;
         if (image.size > 0) newPost.image = image;
-        if (!newPost.title) newPost.title = newPost.content.substring(0, 21) + '...';
+
+        if (!newPost.title) {
+            newPost.title = newPost.content.length > 25
+                ? newPost.content.substring(0, 21) + '...'
+                : newPost.content;
+        }
 
         const { error, value } = newPostSchema.validate(newPost);
         if (error) throw { message: error.message, status: 400 };

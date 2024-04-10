@@ -78,6 +78,10 @@ body {
   background-size: cover;
 }
 
+.postForm {
+  margin: 3em auto;
+}
+
 .posts-container {
   display: flex;
   flex-wrap: wrap;
@@ -119,8 +123,6 @@ body {
   overflow: hidden;
 }
 
-.postForm {}
-
 .navLinks,
 .sideNav {
   background-image: linear-gradient(to bottom right,
@@ -137,4 +139,71 @@ h1 {
   text-shadow: 1px 1px 1px #a3c2d1,
     2px 2px 1px #aeeaf5,
     3px 3px 2px #ffca7a
+}
+
+.loadingAnimContainer {
+  height: 70vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.loadingAnimWave {
+  width: 5px;
+  height: 100px;
+  background-color: white;
+  margin: 10px;
+  animation: loadingAnimWave 0.5s linear infinite;
+  border-radius: 20px;
+}
+
+.loadingAnimWave:nth-child(2) {
+  animation-delay: 0.1s;
+}
+
+.loadingAnimWave:nth-child(3) {
+  animation-delay: 0.2s;
+}
+
+.loadingAnimWave:nth-child(4) {
+  animation-delay: 0.3s;
+}
+
+.loadingAnimWave:nth-child(5) {
+  animation-delay: 0.4s;
+}
+
+.loadingAnimWave:nth-child(6) {
+  animation-delay: 0.5s;
+}
+
+.loadingAnimWave:nth-child(7) {
+  animation-delay: 0.6s;
+}
+
+.loadingAnimWave:nth-child(8) {
+  animation-delay: 0.7s;
+}
+
+.loadingAnimWave:nth-child(9) {
+  animation-delay: 0.8s;
+}
+
+.loadingAnimWave:nth-child(10) {
+  animation-delay: 0.9s;
+}
+
+@keyframes loadingAnimWave {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(0);
+  }
 }

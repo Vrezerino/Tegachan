@@ -40,4 +40,4 @@ export const getBumpedPosts = async (board: string) => {
     ]).toArray();
 
     return JSON.parse(JSON.stringify(data));
-}
+};

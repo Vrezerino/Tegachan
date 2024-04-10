@@ -49,7 +49,7 @@ const Error = ({
         </Link>
       </div>
     </div>
-  )
-}
+  );
+};
 
 export default Error;

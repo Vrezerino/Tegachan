@@ -12,7 +12,7 @@ const Page = async () => {
             </div>
             <LatestPosts posts={data}/>
         </main>
-    )
-}
+    );
+};
 
 export default Page;

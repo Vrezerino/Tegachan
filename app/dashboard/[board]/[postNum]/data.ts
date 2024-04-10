@@ -8,4 +8,4 @@ export const getPost = async (board: string, pn: string) => {
     const replies = await (await db()).collection('posts').find({ replyTo: { $in: [postNum] } }).toArray();
 
     return JSON.parse(JSON.stringify({ ...post, replies }));
-}
+};

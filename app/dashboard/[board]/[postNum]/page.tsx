@@ -8,7 +8,7 @@ type PostParams = {
         board: string;
         postNum: number;
     }
-}
+};
 
 const Page = async ({ params }: PostParams) => {
     const data: PostType = await getPost(params.board, params.postNum.toString());
@@ -16,7 +16,7 @@ const Page = async ({ params }: PostParams) => {
 
     return (
         <Post post={data}/>
-    )
-}
+    );
+};
 
 export default Page;

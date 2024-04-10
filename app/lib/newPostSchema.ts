@@ -8,4 +8,4 @@ export const newPostSchema = Joi.object({
     replyTo: Joi.array(),
     OP: Joi.boolean(),
     date: Joi.date()
-})
+});

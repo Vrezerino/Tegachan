@@ -9,7 +9,7 @@ type BoardParams = {
     params: {
         board: string;
     }
-}
+};
 
 const Page = async ({ params }: BoardParams) => {
     // Get thread starter posts from given board
@@ -20,7 +20,7 @@ const Page = async ({ params }: BoardParams) => {
 
     return (
         <Board posts={data}/>
-    )
-}
+    );
+};
 
 export default Page;

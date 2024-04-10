@@ -1,6 +1,6 @@
 import { PostType } from '@/app/lib/definitions';
 import { parseDate } from '@/app/lib/utils';
-import ReplyFormBig from './replyForms';
+import { PostFormBig } from './postForm';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -70,9 +70,9 @@ const Post = ({ post }: { post: PostType }) => {
             ))}
 
             {/* Reply form */}
-            <ReplyFormBig op={post} />
+            <PostFormBig op={post} />
         </>
-    )
-}
+    );
+};
 
 export default Post;

@@ -36,8 +36,7 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
                 </ul>
             </div>
         </div>
-
-    )
-}
+    );
+};
 
 export default LatestPosts;
