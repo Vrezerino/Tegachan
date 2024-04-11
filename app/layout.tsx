@@ -5,8 +5,8 @@ import './globals.css';
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: 'TegaChan',
-  description: 'TegaChan Imageboard',
+  title: 'Tegachan',
+  description: 'Tegachan Imageboard',
 };
 
 export default function RootLayout({
