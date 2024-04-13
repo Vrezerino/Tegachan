@@ -35,7 +35,7 @@ const Post = ({ post }: { post: PostType }) => {
             </div>
 
             {/* Possible replies */}
-            {post.replies.length > 0 && post.replies.map((reply) => (
+            {post.replies?.length > 0 && post.replies.map((reply) => (
                 <div key={`post-${reply.postNum}`} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
                     {reply.imageUrl && (
                         <div key={`imgContainer-${reply.postNum}`} className='min-w-40 relative'>

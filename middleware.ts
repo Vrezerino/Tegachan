@@ -35,7 +35,7 @@ const middleware = async (req: NextRequest) => {
    * resource isn't found by postnumber, because I want the server 
    * to show a 404 page in that case.
    */
-  if (/^(?!\/dashboard(?:\/(?:random|technology|music|outdoors)\/?|\/(?:random|technology|music|outdoors)\/\d+)?$).*$/.test(req.nextUrl.pathname)) {
+  if (/^(?!\/dashboard|\/healthcheck(?:\/(?:random|technology|music|outdoors)\/?|\/(?:random|technology|music|outdoors)\/\d+)?$).*$/.test(req.nextUrl.pathname)) {
     return NextResponse.redirect(new URL('/dashboard', req.url));
   }
 

@@ -12,7 +12,7 @@ type PostParams = {
 
 const Page = async ({ params }: PostParams) => {
     const data: PostType = await getPost(params.board, params.postNum.toString());
-    if (!data) notFound();
+    if (Object.keys(data).length === 0) notFound();
 
     return (
         <Post post={data}/>

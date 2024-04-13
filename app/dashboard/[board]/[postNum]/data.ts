@@ -15,5 +15,6 @@ export const getPost = async (board: string, pn: string) => {
         .find({ replyTo: { $in: [postNum] } }, projection)
         .toArray();
 
-    return JSON.parse(JSON.stringify({ ...post, replies }));
+    // Only add the replies member to object if the replies array isn't empty
+    return JSON.parse(JSON.stringify({ ...post, ...(replies?.length > 0 && { replies }) }));
 };
