@@ -11,6 +11,7 @@ const middleware = async (req: NextRequest) => {
   if (!('GET, POST'.includes(req.method))) {
     const response = NextResponse.json({ error: 'Method not allowed!', status: 405 });
     response.headers.set('Allow', 'GET, POST');
+    return response;
   }
 
   /**
