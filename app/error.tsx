@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { getRandomInt } from '../lib/utils';
+import { getRandomInt } from './lib/utils';
 import Image from 'next/image';
 
 /**
@@ -28,7 +28,7 @@ const Error = ({
       <div className='min-w-40 relative xsm:hidden'>
         <Image
           src={`/img/misc/ohno${getRandomInt(6)}.jpg`}
-          alt='Person being frustrated at 404 error'
+          alt='Person being frustrated at error'
           fill
           style={{
             objectFit: 'cover',

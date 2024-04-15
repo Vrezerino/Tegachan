@@ -33,7 +33,7 @@ const GlobalError = ({
                     <div className='min-w-40 relative xsm:hidden'>
                         <Image
                             src={`/img/misc/ohno${getRandomInt(6)}.jpg`}
-                            alt='Person being frustrated at 404 error'
+                            alt='Person being frustrated at error'
                             fill
                             style={{
                                 objectFit: 'cover',

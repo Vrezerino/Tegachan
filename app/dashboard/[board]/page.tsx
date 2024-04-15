@@ -16,10 +16,15 @@ const Page = async ({ params }: BoardParams) => {
     const data: PostType[] = await getBumpedPosts(params.board);
 
     // Render 404 page if board name in request doesn't refer to an existing board
-    if (!(boards.includes(params.board))) notFound();
+    const escapedBoardName = params.board.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp('\\b' + escapedBoardName + '\\b');
+    if (!regex.test(boards)) notFound();
 
     return (
-        <Board posts={data}/>
+        <>
+            <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>╬ {params.board.toUpperCase()} ╬</h1>
+            <Board posts={data} />
+        </>
     );
 };
 

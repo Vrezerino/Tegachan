@@ -14,31 +14,6 @@ const middleware = async (req: NextRequest) => {
     return response;
   }
 
-  /**
-   * This regexp returns true and user is redirected to /dashboard if 
-   * the URL pathname is e.g.:
-   * 
-   * - /dashboard/rando (typo in board name/board doesn't exist)
-   * - /dashboard/random/<any non-numeric characters>
-   * - /abc or /abc/
-   * - /dashboard/random////rejt894
-   * 
-   * It returns false and user is not redirected to /dashboard, when 
-   * the pathname is e.g.:
-   * 
-   * - /dashboard
-   * - /dashboard/outdoors
-   * - /dashboard/random//// (user will end up in /dashboard/random)
-   * - /dashboard/technology/845794
-   * 
-   * It will not redirect to dashboard in the last example if the 
-   * resource isn't found by postnumber, because I want the server 
-   * to show a 404 page in that case.
-   */
-  if (/^(?!\/dashboard|\/healthcheck(?:\/(?:random|technology|music|outdoors)\/?|\/(?:random|technology|music|outdoors)\/\d+)?$).*$/.test(req.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/dashboard', req.url));
-  }
-
   if (req.method === 'POST') {
     try {
       // FormData is a promise; resolve it before getting image field

@@ -8,7 +8,7 @@ const Page = async () => {
     return(
         <main>
             <div>
-                <h1 className='text-4xl font-bold mb-3 dark:h1-darkmode'>Welcome to Tegachan!</h1>
+                <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode'>╬ Welcome to Tegachan! ╬</h1>
             </div>
             <LatestPosts posts={data}/>
         </main>

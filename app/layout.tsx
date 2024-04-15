@@ -9,14 +9,17 @@ export const metadata: Metadata = {
   description: 'Tegachan Imageboard',
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>) {
+}>) => {
   return (
     <html lang='en'>
       <body className={`${inter.className} dark:body-dark`}>{children}</body>
     </html>
   );
 };
+
+
+export default RootLayout;
