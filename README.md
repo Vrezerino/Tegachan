@@ -1,8 +1,10 @@
 ## Tegachan (Next.js/MongoDB)
 
-Tegachan is an imageboard type discussion forum. It features dynamic app routing within a dashboard, and styles mostly employ Tailwind CSS.
-
-Thread starter posts are sorted by bump order, and new threads and replies that can be posted with a form, get validated in the middleware (between request and response).
+Tegachan is an imageboard type discussion forum. It features dynamic app routing, 
+styles that mostly utilize Tailwind CSS, light and dark mode themes, so far four discussion 
+boards (Technology, Music, Outdoors, Random), and thread starter and reply posting forms.
+Image files that are uploaded with new posts, are hosted on Amazon S3 cloud object storage, 
+and the posts themselves are inserted into a MongoDB Atlas document-oriented database.
 
 To run the project on your own computer, install Git CLI, Node.js, and npm (Node package manager).   
 https://git-scm.com/book/en/v2/Getting-Started-Installing-Git   
