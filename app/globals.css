@@ -194,6 +194,16 @@ h1 {
   animation-delay: 0.9s;
 }
 
+button :disabled,
+button[disabled],
+button :disabled :hover,
+button[disabled] :hover {
+  color: rgb(102, 102, 102);
+  background-color: rgba(170, 170, 170, 0.12);
+  border-color: #979797;
+  pointer-events: none;
+}
+
 @keyframes loadingAnimWave {
   0% {
     transform: scale(0);

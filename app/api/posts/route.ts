@@ -41,7 +41,7 @@ export const POST = async (req: NextRequest) => {
         }
 
         const image = formData.get('image') as File;
-        if (image.size > 0) newPost.image = image;
+        if (image && image.size > 0) newPost.image = image;
 
         if (!newPost.title) {
             newPost.title = newPost.content.length > 25
@@ -53,10 +53,10 @@ export const POST = async (req: NextRequest) => {
         if (error) throw { message: error.message, status: 400 };
 
         // Replace possible spaces in filename with underscores
-        const filename = image.size > 0 && `${image.name.replaceAll(' ', '_')}`;
+        const filename = (image && image.size > 0) && `${image.name.replaceAll(' ', '_')}`;
 
         // If user submitted a file...
-        if (image.size > 0) {
+        if (image && image.size > 0) {
 
             // create a byte array from it
             const buffer = Buffer.from(await image.arrayBuffer());
@@ -81,7 +81,7 @@ export const POST = async (req: NextRequest) => {
             await upload.done();
         }
 
-        newPost.imageUrl = image.size > 0 ? `${AWS_URL}/img/posts/${filename}` : ''
+        newPost.imageUrl = image && image.size > 0 ? `${AWS_URL}/img/posts/${filename}` : ''
 
         delete newPost.image;
         const result = await (await db()).collection('posts').insertOne(newPost);
