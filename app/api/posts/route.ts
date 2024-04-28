@@ -67,6 +67,7 @@ export const POST = async (req: NextRequest) => {
                 // Key needs to be dir/subdir/filename
                 Key: `img/posts/${filename}`,
                 Body: buffer,
+                ContentType: image.type,
             };
 
             const upload = new Upload({
