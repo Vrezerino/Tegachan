@@ -49,7 +49,7 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
 
         response && setLoading(false);
 
-        if (response.status === 200) {
+        if (response.status === 201) {
             // Clear state on successful post
             setContent('');
             setImage(null);

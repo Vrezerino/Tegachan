@@ -11,7 +11,7 @@ import { NextRequest, NextResponse } from 'next/server';
 export const POST = async (req: NextRequest) => {
     try {
         const ip = req.headers.get('x-real-ip');
-        if (ip && process.env.BANLIST?.includes(ip)) {
+        if (ip && process.env.BANLIST?.split('').includes(ip)) {
             throw { message: 'Can not post at this time.', status: 403 };
         }
 
@@ -82,13 +82,15 @@ export const POST = async (req: NextRequest) => {
             await upload.done();
         }
 
-        newPost.imageUrl = image && image.size > 0 ? `${AWS_URL}/img/posts/${filename}` : ''
-
+        // Set post's imageUrl as the url of the image we just uploaded, and delete file
+        newPost.imageUrl = image && image.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
         delete newPost.image;
+
+        // Finally, save post to database
         const result = await (await db()).collection('posts').insertOne(newPost);
 
         if (result.acknowledged && result.insertedId !== null) {
-            return NextResponse.json('ok', { status: 200 });
+            return NextResponse.json('Created', { status: 201 });
         }
     } catch (e) {
         return NextResponse.json(
