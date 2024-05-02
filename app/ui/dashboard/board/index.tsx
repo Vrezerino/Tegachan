@@ -35,7 +35,7 @@ const Board = ({ posts }: { posts: PostType[] }) => {
                 ))}
             </div>
             <div>
-                <PostFormBig op={null} />
+                <PostFormBig recipients={[]} setRecipients={null} op={null} />
             </div>
         </div>
     );

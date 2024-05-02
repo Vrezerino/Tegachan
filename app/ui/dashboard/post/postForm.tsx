@@ -9,19 +9,16 @@ import { sanitizeString } from '@/app/lib/utils';
 
 interface PostFormProps {
     op: PostType | null;
-    content: string;
     recipients: number[];
-    setContent: Dispatch<SetStateAction<string>>;
-    setRecipients: Dispatch<SetStateAction<number[]>>;
+    setRecipients: Dispatch<SetStateAction<number[]>> | null;
 }
 
 const PostFormBig = ({
     op,
-    content,
-    setContent,
     recipients,
     setRecipients
 }: PostFormProps) => {
+    const [content, setContent] = useState<string>('');
     const [image, setImage] = useState<Blob | null>();
     const [loading, setLoading] = useState<boolean>();
 
@@ -31,12 +28,16 @@ const PostFormBig = ({
     const router = useRouter();
 
     const removeRecipient = (postNumber: number) => {
-        op?.postNum !== postNumber && setRecipients(recipients.filter((r) => r !== postNumber));
+        op?.postNum
+            !== postNumber
+            && recipients
+            && setRecipients
+            && setRecipients(recipients.filter((r) => r !== postNumber));
     }
 
     useEffect(() => {
         // If you're replying to an OP, set first recipient as OP
-        op && setRecipients([op.postNum]);
+        op && setRecipients && setRecipients([op.postNum]);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -71,8 +72,9 @@ const PostFormBig = ({
             // Clear state, reset recipient array, clear textarea on successful post
             setContent('');
             setImage(null);
-            op && setRecipients([op.postNum]);
+            op && setRecipients && setRecipients([op.postNum]);
             if (fileRef.current) fileRef.current.value = '';
+            
             router.refresh();
         } else {
             toast.error((await response.json()).message);

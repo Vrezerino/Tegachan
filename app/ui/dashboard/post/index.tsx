@@ -9,14 +9,11 @@ import { Dispatch, SetStateAction, useState } from 'react';
 import toast from 'react-hot-toast';
 
 const Post = ({ post }: { post: PostType }) => {
-    const [content, setContent] = useState<string>('');
     const [recipients, setRecipients] = useState<number[]>([]);
     return (
         <>
             {/* Thread starter (OP) */}
             <PostContent
-                content={content}
-                setContent={setContent}
                 recipients={recipients}
                 setRecipients={setRecipients}
                 post={post} />
@@ -24,8 +21,6 @@ const Post = ({ post }: { post: PostType }) => {
             {/* Possible replies */}
             {post.replies?.length > 0 && post.replies.map((r) => (
                 <PostContent
-                    content={content}
-                    setContent={setContent}
                     key={r.postNum}
                     recipients={recipients}
                     setRecipients={setRecipients}
@@ -34,8 +29,6 @@ const Post = ({ post }: { post: PostType }) => {
 
             {/* Reply form */}
             <PostFormBig
-                content={content}
-                setContent={setContent}
                 recipients={recipients}
                 setRecipients={setRecipients} op={post} />
         </>
@@ -44,9 +37,7 @@ const Post = ({ post }: { post: PostType }) => {
 
 interface PostContentProps {
     post: PostType;
-    content: string;
     recipients: number[];
-    setContent: Dispatch<SetStateAction<string>>;
     setRecipients: Dispatch<SetStateAction<number[]>>;
 }
 
@@ -98,8 +89,12 @@ const PostContent = ({
                     </div>
                 )}
 
+                {/* Post content, possible links to replied-to posts */}
                 {post.OP && <h1 className='text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
-                <p className='whitespace-pre-wrap font-normal text-gray-700 dark:text-gray-400 mt-5'>{post.content}</p>
+                <p className='whitespace-pre-wrap font-normal text-gray-700 dark:text-gray-400 mt-5'>
+                    {post.replyTo?.map((pn, i) => i > 0 && <a href={`#${pn}`} key={`replyToPostNum-${pn}`}>&gt;&gt;{pn}<br /></a>)}
+                    {post.content}
+                </p>
             </div>
         </div>
     )
