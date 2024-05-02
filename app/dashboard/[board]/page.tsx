@@ -3,7 +3,7 @@ import { getBumpedPosts } from './data';
 
 import Board from '@/app/ui/dashboard/board';
 import { notFound } from 'next/navigation';
-import { boards } from '@/app/lib/utils';
+import { boards, sanitizeString } from '@/app/lib/utils';
 
 type BoardParams = {
     params: {
@@ -16,8 +16,8 @@ const Page = async ({ params }: BoardParams) => {
     const data: PostType[] = await getBumpedPosts(params.board);
 
     // Render 404 page if board name in request doesn't refer to an existing board
-    const escapedBoardName = params.board.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-    const regex = new RegExp('\\b' + escapedBoardName + '\\b');
+    const sanitizedBoardName = sanitizeString(params.board);
+    const regex = new RegExp('\\b' + sanitizedBoardName + '\\b');
     if (!regex.test(boards)) notFound();
 
     return (

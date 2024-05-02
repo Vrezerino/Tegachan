@@ -1,6 +1,5 @@
 import { NextResponse, NextRequest } from 'next/server';
 import { ACCEPTED_IMAGE_TYPES, MAX_FILE_SIZE, isErrorWithStatusCodeType } from './app/lib/utils';
-//import { postAsOP, postReply } from './app/lib/posts';
 
 const middleware = async (req: NextRequest) => {
   /**

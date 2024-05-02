@@ -13,7 +13,7 @@ export const getLatestPosts = async () => {
             .find({}, projection)
             // Sort by date descending
             .sort({ date: -1 })
-            .limit(20)
+            .limit(15)
             .toArray();
 
         return JSON.parse(JSON.stringify(data));

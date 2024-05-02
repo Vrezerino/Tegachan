@@ -20,3 +20,14 @@ export const getRandomInt = (max: number): number => {
 export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
     return x.status !== undefined && x.message !== undefined;
 };
+
+export const sanitizeString = (content: string) => {
+    // Remove consecutive spaces and linebreaks and escape special chars
+    if (content) return content
+        .replace(/ +/g, ' ')
+        .replace(/\n\n+/g, "\n\n")
+        .replace(/\t+/g, '')
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+
+    return '';
+};

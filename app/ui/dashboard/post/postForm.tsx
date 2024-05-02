@@ -1,21 +1,38 @@
 'use client'
 
 import { PostType } from '@/app/lib/definitions';
-import { FormEvent, useState, useEffect, useRef } from 'react';
+import { FormEvent, useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import toast from 'react-hot-toast';
 import LoadingAnim from '../loadingAnim';
+import { sanitizeString } from '@/app/lib/utils';
 
-const PostFormBig = ({ op }: { op: PostType | null }) => {
-    const [content, setContent] = useState<string>('');
+interface PostFormProps {
+    op: PostType | null;
+    content: string;
+    recipients: number[];
+    setContent: Dispatch<SetStateAction<string>>;
+    setRecipients: Dispatch<SetStateAction<number[]>>;
+}
+
+const PostFormBig = ({
+    op,
+    content,
+    setContent,
+    recipients,
+    setRecipients
+}: PostFormProps) => {
     const [image, setImage] = useState<Blob | null>();
-    const [recipients, setRecipients] = useState<number[]>([]);
     const [loading, setLoading] = useState<boolean>();
 
     const fileRef = useRef<HTMLInputElement>(null);
 
     const pathname = usePathname();
     const router = useRouter();
+
+    const removeRecipient = (postNumber: number) => {
+        op?.postNum !== postNumber && setRecipients(recipients.filter((r) => r !== postNumber));
+    }
 
     useEffect(() => {
         // If you're replying to an OP, set first recipient as OP
@@ -33,7 +50,8 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
         const formData = new FormData(e.currentTarget);
 
         // Set post content and image from state and don't get them directly from form data
-        formData.set('content', content);
+        // Content will be stripped of multiple linebreaks and spaces
+        formData.set('content', sanitizeString(content));
         if (image) formData.set('image', image);
 
         // Arrays must be stringified in FormData objects — parse it on server
@@ -50,9 +68,10 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
         response && setLoading(false);
 
         if (response.status === 201) {
-            // Clear state on successful post
+            // Clear state, reset recipient array, clear textarea on successful post
             setContent('');
             setImage(null);
+            op && setRecipients([op.postNum]);
             if (fileRef.current) fileRef.current.value = '';
             router.refresh();
         } else {
@@ -62,11 +81,11 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
     return (
         <>
             {loading && <LoadingAnim />}
-            <form onSubmit={onSubmit} className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-lg shadow ${!op && 'w-full'} md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
+            <form onSubmit={onSubmit} className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-lg shadow w-full md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
                 <div>
                     {/* Text content */}
                     <label htmlFor='postlabel' className='mb-2 block text-sm font-medium dark:label-darkmode'>
-                        {op ? 'Reply to OP' : 'Post new thread'}
+                        {op ? 'Reply' : 'Post new thread'}
                     </label>
                     <div className='relative rounded-md'>
                         <div className='relative'>
@@ -79,6 +98,17 @@ const PostFormBig = ({ op }: { op: PostType | null }) => {
                             />
                         </div>
                     </div>
+
+                    {/* Recipients */}
+                    {recipients && <div className='flex flex-wrap gap-x-1'>
+                        <label className='mt-2 mb-2 block text-sm font-medium dark:label-darkmode'>
+                            Recipients:
+                        </label>
+                        {recipients.map(
+                            (r) => <span onClick={() => removeRecipient(r)} className={`${r !== op?.postNum && 'hover:cursor-pointer hover:bg-blue-200/60 '} rounded-md p-1 mt-1 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 md:flex-none md:justify-start md:p-1 md:px-2`} key={r}>{r === op?.postNum ? 'OP' : `${r} ❌`}</span>
+                        )
+                        }
+                    </div>}
 
                     {/* Image */}
                     <div className='mb-4'>
