@@ -92,7 +92,7 @@ const PostContent = ({
                 {/* Post content, possible links to replied-to posts */}
                 {post.OP && <h1 className='text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
                 <p className='whitespace-pre-wrap font-normal text-gray-700 dark:text-gray-400 mt-5'>
-                    {post.replyTo?.map((pn, i) => i > 0 && <a href={`#${pn}`} key={`replyToPostNum-${pn}`}>&gt;&gt;{pn}<br /></a>)}
+                    {post.replyTo?.map((pn, i) => i > 0 && <a className='font-bold underline' href={`#${pn}`} key={`replyToPostNum-${pn}`}>&gt;&gt;{pn}<br /></a>)}
                     {post.content}
                 </p>
             </div>
