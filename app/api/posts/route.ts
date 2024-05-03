@@ -23,12 +23,12 @@ export const POST = async (req: NextRequest) => {
         const formData = await req.formData();
         const file = formData.get('image') as File;
 
-        if (file && file.size > 0) {
+        if (file?.size > 0) {
             if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
                 throw { message: 'File is not of accepted type! JPG/PNG/WEBP only.', status: 400 };
             }
 
-            if (file && file.size >= MAX_FILE_SIZE) {
+            if (file?.size >= MAX_FILE_SIZE) {
                 throw { message: 'Image must be under 1MB in size.', status: 400 };
             }
         }
@@ -59,7 +59,7 @@ export const POST = async (req: NextRequest) => {
         }
 
 
-        if (file && file.size > 0) newPost.image = file;
+        if (file?.size > 0) newPost.image = file;
 
         if (!newPost.title) {
             newPost.title = newPost.content.length > 25
@@ -71,10 +71,10 @@ export const POST = async (req: NextRequest) => {
         if (error) throw { message: error.message, status: 400 };
 
         // Replace possible spaces in filename with underscores
-        const filename = (file && file.size > 0) && `${file.name.replaceAll(' ', '_')}`;
+        const filename = (file?.size > 0) && `${file.name.replaceAll(' ', '_')}`;
 
         // If user submitted a file...
-        if (file && file.size > 0) {
+        if (file?.size > 0) {
 
             // create a byte array from it
             const buffer = Buffer.from(await file.arrayBuffer());
@@ -101,7 +101,7 @@ export const POST = async (req: NextRequest) => {
         }
 
         // Set post's imageUrl as the url of the image we just uploaded, and delete file
-        newPost.imageUrl = file && file.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
+        newPost.imageUrl = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
         delete newPost.image;
 
         // Finally, save post to database
