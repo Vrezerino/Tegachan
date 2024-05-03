@@ -76,9 +76,9 @@ const PostContent = ({
                 </div>
             )}
             <div key={`textContent-${post.postNum}`} className='flex flex-col justify-between p-3 leading-normal'>
-                <span onClick={() => addRecipient(post.postNum)} className='text-xs text-red-400 dark:text-red-200/30 inline-block'>
+                <a onClick={() => addRecipient(post.postNum)} href={`#postForm`} className='text-xs text-red-400 dark:text-red-200/30 inline-block'>
                     {parseDate(post.date)} <b>№ <a className='underline hover:cursor-pointer'>{post.postNum}</a></b>
-                </span>
+                </a>
 
                 {/* Clickable reply postnumbers */}
                 {post.replies?.length > 0 && (
