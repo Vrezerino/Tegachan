@@ -42,3 +42,4 @@ It is possible to reply to up to five other posters at a time, not counting the 
 How to contact an admin
 
 As of now you can invoke an administrator simply by stating in a post that you wish to communicate with them. You will then get a reply as soon as possible.
+</div>
