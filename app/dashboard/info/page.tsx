@@ -44,7 +44,7 @@ const Page = () => {
 
             <p className='text-sm font-medium text-gray-900 dark:text-white mt-7'>
                 These sitewide rules exist to ensure an enjoyable experience and this site encourages submitting 
-                constructive, fun and interesting posts.
+                constructive, fun and interesting posts. Site rules and information are subject to change.
             </p>
 
             <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-16 mb-6 dark:h1-darkmode'>Site Information</h1>

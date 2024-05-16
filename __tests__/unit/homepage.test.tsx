@@ -10,7 +10,7 @@ beforeAll(async () => {
 describe('Home page', () => {
     it('heading exists', async () => {
         render(await Page());
-        expect(screen.getByRole('heading', { level: 1, name: '╬ Welcome to Tegachan! ╬' })).toBeDefined();
+        expect(screen.getByRole('heading', { level: 1, name: '✵ Welcome to Tegachan! ✵' })).toBeDefined();
     });
 
     it('latest posts list exists', async () => {
