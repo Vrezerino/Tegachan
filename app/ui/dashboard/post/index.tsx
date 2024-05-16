@@ -56,7 +56,7 @@ const PostContent = ({
         }
     }
     return (
-        <div key={`post-${post.postNum}`} id={post.postNum.toString()} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-lg shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
+        <div key={`post-${post.postNum}`} id={post.postNum.toString()} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-sm shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
             {post.imageUrl && (
                 <div key={`imgContainer-${post.postNum}`} className='min-w-40 relative'>
                     <Link key={post.postNum} href={post.imageUrl} target='_blank'>
@@ -71,13 +71,13 @@ const PostContent = ({
                             }}
                             placeholder='blur'
                             blurDataURL='/img/misc/blurred.jpg'
-                            className='object-cover rounded-tl-lg' />
+                            className='object-cover rounded-tl-sm' />
                     </Link>
                 </div>
             )}
             <div key={`textContent-${post.postNum}`} className='flex flex-col justify-between p-3 leading-normal'>
                 <a onClick={() => addRecipient(post.postNum)} href={`#postForm`} className='text-xs text-red-400 dark:text-red-200/30 inline-block'>
-                    {parseDate(post.date)} <b>№ <span className='underline hover:cursor-pointer'>{post.postNum}</span></b>
+                    {parseDate(post.date)} <b>№ <span className='underline hover:cursor-pointer'>{post.postNum}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
                 </a>
 
                 {/* Clickable reply postnumbers */}

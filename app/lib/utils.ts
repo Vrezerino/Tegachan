@@ -21,13 +21,20 @@ export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
     return x.status !== undefined && x.message !== undefined;
 };
 
-export const sanitizeString = (content: string) => {
+export const sanitizeString = (str: string) => {
     // Remove consecutive spaces and linebreaks and escape special chars
-    if (content) return content
+    if (str) return str
         .replace(/ +/g, ' ')
         .replace(/\n\n+/g, "\n\n")
         .replace(/\t+/g, '')
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     return '';
+};
+
+export const toTitleCase = (str: string) => str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
+
+export const findExactInString = (searchWord: string, target: string) => {
+    const regex = new RegExp('\\b' + searchWord + '\\b');
+    return regex.test(target);
 };

@@ -5,18 +5,20 @@ import {
     ACCEPTED_IMAGE_TYPES,
     MAX_FILE_SIZE, boards,
     sanitizeString,
-    isErrorWithStatusCodeType
+    isErrorWithStatusCodeType,
+    findExactInString
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
 import { AWS_NAME, AWS_URL } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
+const banlist = process.env.BANLIST;
 
 export const POST = async (req: NextRequest) => {
     try {
         const ip = req.headers.get('x-real-ip');
-        if (ip && process.env.BANLIST?.split('').includes(ip)) {
+        if (ip && banlist && findExactInString(ip, banlist)) {
             throw { message: 'Can not post at this time.', status: 403 };
         }
 

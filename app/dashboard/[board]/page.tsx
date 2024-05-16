@@ -3,7 +3,7 @@ import { getBumpedPosts } from './data';
 
 import Board from '@/app/ui/dashboard/board';
 import { notFound } from 'next/navigation';
-import { boards, sanitizeString } from '@/app/lib/utils';
+import { boards, sanitizeString, toTitleCase } from '@/app/lib/utils';
 
 type BoardParams = {
     params: {
@@ -22,7 +22,7 @@ const Page = async ({ params }: BoardParams) => {
 
     return (
         <>
-            <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>╬ {params.board.toUpperCase()} ╬</h1>
+            <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>✵ {toTitleCase(params.board)} ✵</h1>
             <Board posts={data} />
         </>
     );

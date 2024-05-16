@@ -8,7 +8,8 @@ export interface PostType {
     imageUrl: string;
     replyPostNums: Array<number>;
     replies: PostType[];
-    replyTo: Array<number>
+    replyTo: Array<number>;
+    admin: boolean;
 };
 
 export type NewPostType = {
