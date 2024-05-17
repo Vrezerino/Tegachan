@@ -49,7 +49,7 @@ const Page = () => {
 
             <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-16 mb-6 dark:h1-darkmode'>Site Information</h1>
 
-            <p className='py-4 text-md font-bold dark:text-white'>
+            <p className='py-4 text-md font-bold text-gray-900 dark:text-white'>
                 How to post
             </p>
             <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white mb-5'>
@@ -63,7 +63,7 @@ const Page = () => {
                 It is possible to reply to up to five other posters at a time, not counting the thread starter &#40;OP&#41;.
             </p>
 
-            <p className='py-6 text-md font-bold dark:text-white'>
+            <p className='py-6 text-md font-bold text-gray-900 dark:text-white'>
                 How to contact an admin
             </p>
             <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white'>

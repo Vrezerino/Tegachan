@@ -39,7 +39,7 @@ You can submit a new thread on a board (for example on Music) and/or reply to ot
 
 It is possible to reply to up to five other posters at a time, not counting the thread starter (OP).
 
-How to contact an admin
+<h4>How to contact an admin</h4>
 
 As of now you can invoke an administrator simply by stating in a post that you wish to communicate with them. You will then get a reply as soon as possible.
 </div>
