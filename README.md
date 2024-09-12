@@ -7,6 +7,8 @@ boards (Technology, Music, Outdoors, Random), and thread starter and reply posti
 Image files that are uploaded with new posts, are hosted on Amazon S3 cloud object storage, 
 and the posts themselves are inserted into a MongoDB Atlas document-oriented database.
 
+This was not created by using any imageboard templates. It is made from scratch.
+
 <h2>Posting Rules On The Website</h2>
 
 <h4>1. Be respectful</h4>
