@@ -122,8 +122,8 @@ export const POST = async (req: NextRequest) => {
         // Get the postNum of the post we just inserted
         const newPostNum = await fetchPostWithPostNum(result.insertedId);
 
-        // Add the postNum to all recipient's reply array
-        const recipients: number[] = JSON.parse(formData.get('replyTo') as string);
+        // Add the postNum to all recipients' reply arrays
+        const recipients = JSON.parse(formData.get('replyTo') as string);
 
         if (recipients?.length > 0) {
             await (await db()).collection('posts').updateMany(
