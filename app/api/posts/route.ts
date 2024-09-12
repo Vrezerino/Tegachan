@@ -16,6 +16,26 @@ import { NextRequest, NextResponse } from 'next/server';
 const banlist = process.env.BANLIST;
 
 export const POST = async (req: NextRequest) => {
+
+    // This function is called after an insertion of a new post
+    const fetchPostWithPostNum = async (postId: any, retries = 5, delay = 100) => {
+        for (let i = 0; i < retries; i++) {
+            const insertedPost = await (await db())
+                .collection('posts')
+                .findOne({ _id: postId }, { projection: { postNum: 1 } });
+
+            if (insertedPost && insertedPost.postNum !== undefined) {
+                return insertedPost.postNum;
+            }
+
+            // Wait before the next attempt
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+
+        console.error('PostNum not found after multiple attempts.');
+    }
+
+    // Make new post and insert into database
     try {
         const ip = req.headers.get('x-real-ip');
         if (ip && banlist && findExactInString(ip, banlist)) {
@@ -39,35 +59,25 @@ export const POST = async (req: NextRequest) => {
         const regex = new RegExp('\\b' + sanitizedBoardName + '\\b');
         if (!regex.test(boards)) throw { message: 'Unknown board', status: 400 };
 
-        /**
-         * FormData can not have arrays as is; the array of replied-to post 
-         * numbers was stringified first on the client-side
-         */
-        const replyTo = JSON.parse(formData.get('replyTo') as string);
+        const content = sanitizeString(formData.get('content') as string);
+        const OP = (formData.get('OP') as unknown) === 'true';
+        const threadNum = formData.get('thread') as string;
 
         const newPost: NewPostType = {
-            // Content will be stripped of multiple linebreaks and spaces
-            content: sanitizeString(formData.get('content') as string),
-            title: sanitizeString(formData.get('title') as string),
-            replyTo,
-            /**
-             * OPs haven't replied to any other posts and they are programmatically not able to
-             * do so directly.
-             */
-            OP: replyTo?.length > 0 ? false : true,
+            content,
+            // Generate title from truncated post content, only if you're OP
+            title: OP ? content.length > 25
+                ? content.substring(0, 21) + '...'
+                : content : '',
+            OP,
+            thread: parseInt(threadNum),
             board: sanitizedBoardName,
+            replies: [],
             date: new Date(),
             IP: req.headers.get('x-real-ip') || 'none'
         }
 
-
         if (file?.size > 0) newPost.image = file;
-
-        if (!newPost.title) {
-            newPost.title = newPost.content.length > 25
-                ? newPost.content.substring(0, 21) + '...'
-                : newPost.content;
-        }
 
         const { error } = newPostSchema.validate(newPost);
         if (error) throw { message: error.message, status: 400 };
@@ -106,10 +116,25 @@ export const POST = async (req: NextRequest) => {
         newPost.imageUrl = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
         delete newPost.image;
 
-        // Finally, save post to database
+        // Save post to database
         const result = await (await db()).collection('posts').insertOne(newPost);
 
-        if (result.acknowledged && result.insertedId !== null) {
+        // Get the postNum of the post we just inserted
+        const newPostNum = await fetchPostWithPostNum(result.insertedId);
+
+        // Add the postNum to all recipient's reply array
+        const recipients: number[] = JSON.parse(formData.get('replyTo') as string);
+
+        if (recipients?.length > 0) {
+            await (await db()).collection('posts').updateMany(
+                { 'postNum': { $in: recipients } },
+                {
+                    $push: { replies: newPostNum }
+                }
+            );
+        }
+
+        if (result.acknowledged && result.insertedId) {
             return NextResponse.json('Created', { status: 201 });
         }
     } catch (e) {

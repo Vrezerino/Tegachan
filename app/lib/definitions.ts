@@ -1,5 +1,6 @@
 export interface PostType {
     title: string | null;
+    thread: number | null;
     content: string;
     postNum: number;
     date: Date;
@@ -14,12 +15,13 @@ export interface PostType {
 
 export type NewPostType = {
     title: string;
+    thread: number | null;
     content: string;
     date: Date;
     OP: boolean;
     IP: string;
     board: string;
-    replyTo: Array<number>
+    replies: Array<number>
     imageUrl?: string
     image?: File
 };

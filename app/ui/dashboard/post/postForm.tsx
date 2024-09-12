@@ -58,6 +58,14 @@ const PostFormBig = ({
         // Arrays must be stringified in FormData objects — parse it on server
         formData.set('replyTo', JSON.stringify(recipients));
 
+        // If postForm gets existing OP as prop, the new post will be a reply. Otherwise it is itself OP
+        if (op) {
+            formData.set('OP', 'false');
+            formData.set('thread', op.postNum.toString());
+        } else {
+            formData.set('OP', 'true');
+        }
+
         // Get the name of the board you're posting on and set it to formData
         formData.set('board', pathname.split('/')[2]);
 

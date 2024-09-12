@@ -16,26 +16,26 @@ export const getBumpedPosts = async (board: string) => {
         {
             $lookup: {
                 from: 'posts',
-                localField: 'replyTo',
-                foreignField: 'postNum',
-                as: 'parentPosts'
+                localField: 'replies', // Array of postNums
+                foreignField: 'postNum', // Find posts by postNum
+                as: 'repliedPosts' // Output the matched posts in repliedPosts array
             }
         },
+        // Add a field "lastReplyDate" that is the date of the last reply, or null if no replies
         {
             $addFields: {
-                sortBy: {
+                lastReplyDate: {
                     $cond: {
-                        if: { $eq: ['$OP', true] }, // Check if the post is OP
-                        then: '$date', // If OP, sort by the post date
-                        else: { $max: '$parentPosts.date' } // Otherwise, sort by the max date in parentPosts
+                        if: { $gt: [{ $size: '$repliedPosts' }, 0] }, // Check if there are any replies
+                        then: { $max: '$repliedPosts.date' }, // Get the maximum date from replies
+                        else: '$date' // If no replies, use the post's own date
                     }
                 }
             }
         },
+        // Sort by lastReplyDate in descending order
         {
-            $sort: {
-                'sortBy': -1 // Sort by the calculated sort date
-            }
+            $sort: { lastReplyDate: -1 }
         },
         {
             $project: {

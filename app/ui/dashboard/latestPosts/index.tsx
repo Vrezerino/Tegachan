@@ -17,7 +17,8 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
                                     {post?.imageUrl && <Image src={post?.imageUrl} alt={post.title || ''} width={32} height={32} />}
                                 </div>
                                 <div className='flex-1 min-w-0 ms-1'>
-                                    <Link href={`dashboard/${post?.board}/${(post?.replyTo && post?.replyTo[0]) ?? post?.postNum}`}>
+                                    {/* Link to threadnum and #postnum if post is not an OP, otherwise just postnum */}
+                                    <Link href={`dashboard/${post?.board}${post?.thread ? '/' + post.thread + '#' : '' + '/'}${post?.postNum}`}>
                                         <p className='text-sm font-medium text-gray-900 truncate dark:text-white'>
                                         {post?.title}
                                         </p>

@@ -56,7 +56,7 @@ const PostContent = ({
         }
     }
     return (
-        <div key={`post-${post.postNum}`} id={post.postNum.toString()} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-sm shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
+        <div key={`post-${post.postNum}`} id={post.postNum?.toString()} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-sm shadow sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
             {post.imageUrl && (
                 <div key={`imgContainer-${post.postNum}`} className='min-w-40 relative'>
                     <Link key={post.postNum} href={post.imageUrl} target='_blank'>
