@@ -35,3 +35,8 @@ export type ErrorWithStatusCode = {
     message: string;
     status: number
 };
+
+export interface CounterDocument {
+    _id: string;
+    seq_value: number;
+}

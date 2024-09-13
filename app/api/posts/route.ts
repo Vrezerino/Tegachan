@@ -1,6 +1,6 @@
 import { getMongoDb as db } from '@/app/lib/mongodb';
 import { newPostSchema } from '@/app/lib/newPostSchema';
-import { NewPostType } from '@/app/lib/definitions';
+import { NewPostType, CounterDocument } from '@/app/lib/definitions';
 import {
     ACCEPTED_IMAGE_TYPES,
     MAX_FILE_SIZE, boards,
@@ -116,23 +116,42 @@ export const POST = async (req: NextRequest) => {
         newPost.imageUrl = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
         delete newPost.image;
 
-        // Save post to database
-        const result = await (await db()).collection('posts').insertOne(newPost);
+        // Increment counter value atomically
+        const getNextPostNum = async (): Promise<number> => {
+            const result = await (await db()).collection<CounterDocument>('counters').findOneAndUpdate(
+                { _id: 'postNum' },
+                { $inc: { seq_value: 1 } },
+                { returnDocument: 'after', upsert: true }
+            );
 
-        // Get the postNum of the post we just inserted
-        const newPostNum = await fetchPostWithPostNum(result.insertedId);
+            if (result) {
+                return result.seq_value;
+            } else {
+                throw { message: 'Failed incrementing postNum counter', status: 500 };
+            }
+        };
+
+        const newPostNum = await getNextPostNum();
+
+        // Save post to database
+        const result = await (await db()).collection('posts').insertOne({
+            ...newPost,
+            postNum: newPostNum
+        });
 
         // Add the postNum to all recipients' reply arrays
         const recipients = JSON.parse(formData.get('replyTo') as string);
 
         if (recipients?.length > 0) {
-            await (await db()).collection('posts').updateMany(
+            await (await db()).collection<NewPostType>('posts').updateMany(
                 { 'postNum': { $in: recipients } },
                 {
                     $push: { replies: newPostNum }
                 }
             );
         }
+
+
 
         if (result.acknowledged && result.insertedId) {
             return NextResponse.json('Created', { status: 201 });
