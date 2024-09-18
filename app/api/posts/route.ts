@@ -16,25 +16,6 @@ import { NextRequest, NextResponse } from 'next/server';
 const banlist = process.env.BANLIST;
 
 export const POST = async (req: NextRequest) => {
-
-    // This function is called after an insertion of a new post
-    const fetchPostWithPostNum = async (postId: any, retries = 5, delay = 100) => {
-        for (let i = 0; i < retries; i++) {
-            const insertedPost = await (await db())
-                .collection('posts')
-                .findOne({ _id: postId }, { projection: { postNum: 1 } });
-
-            if (insertedPost && insertedPost.postNum !== undefined) {
-                return insertedPost.postNum;
-            }
-
-            // Wait before the next attempt
-            await new Promise(resolve => setTimeout(resolve, delay));
-        }
-
-        console.error('PostNum not found after multiple attempts.');
-    }
-
     // Make new post and insert into database
     try {
         const ip = req.headers.get('x-real-ip');
