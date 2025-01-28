@@ -3,9 +3,10 @@
 import { PostType } from '@/app/lib/definitions';
 import { FormEvent, useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import { sanitizeString } from '@/app/lib/utils';
+
 import toast from 'react-hot-toast';
 import LoadingAnim from '../loadingAnim';
-import { sanitizeString } from '@/app/lib/utils';
 
 interface PostFormProps {
     op: PostType | null;
@@ -20,7 +21,7 @@ const PostFormBig = ({
 }: PostFormProps) => {
     const [content, setContent] = useState<string>('');
     const [image, setImage] = useState<Blob | null>();
-    const [loading, setLoading] = useState<boolean>();
+    const [loading, setLoading] = useState<boolean>(false);
 
     const fileRef = useRef<HTMLInputElement>(null);
 
@@ -74,7 +75,7 @@ const PostFormBig = ({
             body: formData,
         });
 
-        response && setLoading(false);
+        response && setLoading(false);;
 
         if (response.status === 201) {
             // Clear state, reset recipient array, clear textarea on successful post
@@ -82,7 +83,7 @@ const PostFormBig = ({
             setImage(null);
             op && setRecipients && setRecipients([op.postNum]);
             if (fileRef.current) fileRef.current.value = '';
-            
+
             router.refresh();
         } else {
             toast.error((await response.json()).message);

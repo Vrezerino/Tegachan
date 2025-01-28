@@ -12,17 +12,20 @@ type BoardParams = {
 };
 
 const Page = async ({ params }: BoardParams) => {
+    // Asynchronous access of params is now necessary
+    const { board } = await params;
+
     // Get thread starter posts from given board
-    const data: PostType[] = await getBumpedPosts(params.board);
+    const data: PostType[] = await getBumpedPosts(board);
 
     // Render 404 page if board name in request doesn't refer to an existing board
-    const sanitizedBoardName = sanitizeString(params.board);
+    const sanitizedBoardName = sanitizeString(board);
     const regex = new RegExp('\\b' + sanitizedBoardName + '\\b');
     if (!regex.test(boards)) notFound();
 
     return (
         <>
-            <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>✵ {toTitleCase(params.board)} ✵</h1>
+            <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>✵ {toTitleCase(board)} ✵</h1>
             <Board posts={data} />
         </>
     );

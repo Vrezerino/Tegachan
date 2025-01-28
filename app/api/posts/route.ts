@@ -51,7 +51,7 @@ export const POST = async (req: NextRequest) => {
                 ? content.substring(0, 21) + '...'
                 : content : '',
             OP,
-            thread: parseInt(threadNum),
+            thread: parseInt(threadNum) || 0,
             board: sanitizedBoardName,
             replies: [],
             date: new Date(),

@@ -149,10 +149,10 @@ h1 {
 }
 
 .loadingAnimWave {
-  width: 5px;
-  height: 100px;
+  width: 1px;
+  height: 50px;
   background-color: white;
-  margin: 10px;
+  margin: 5px;
   animation: loadingAnimWave 0.5s linear infinite;
   border-radius: 20px;
 }
