@@ -155,6 +155,7 @@ h1 {
   margin: 5px;
   animation: loadingAnimWave 0.5s linear infinite;
   border-radius: 20px;
+  z-index: 2000;
 }
 
 .loadingAnimWave:nth-child(2) {
