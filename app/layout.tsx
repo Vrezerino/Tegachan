@@ -8,7 +8,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'Tegachan',
-  description: 'Tegachan Imageboard',
+  description: 'Tegachan is an imageboard type discussion forum, free to use for everyone.',
 };
 
 const RootLayout = ({
