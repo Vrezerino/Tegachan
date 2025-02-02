@@ -93,7 +93,7 @@ const PostFormBig = ({
     }
     return (
         <>
-            {loading && <LoadingAnim />}
+            
             <form onSubmit={onSubmit} id='postForm' className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-sm shadow w-full md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
                 <div>
                     {/* Text content */}
@@ -108,8 +108,11 @@ const PostFormBig = ({
                                 placeholder='Max 1500 characters'
                                 className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
                                 required
+                                disabled={loading}
                             />
+                            {<LoadingAnim />}
                         </div>
+                        
                     </div>
 
                     {/* Recipients */}
