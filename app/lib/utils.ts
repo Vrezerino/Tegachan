@@ -12,7 +12,7 @@ import {
     BeakerIcon,
     GlobeEuropeAfricaIcon,
     ChatBubbleLeftRightIcon
-  } from '@heroicons/react/24/outline';
+} from '@heroicons/react/24/outline';
 
 export const boards = 'random, music, technology, outdoors';
 
@@ -105,12 +105,25 @@ export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
     return x.status !== undefined && x.message !== undefined;
 };
 
-export const sanitizeString = (str: string) => {
-    // Remove consecutive spaces and linebreaks and escape special chars
-    if (str) return str
+/**
+ * Remove consecutive spaces, linebreaks and tabs.
+ * @param str string
+ * @returns 
+ */
+export const removeGapsFromString = (str: string) => {
+    return str
         .replace(/ +/g, ' ')
         .replace(/\n\n+/g, "\n\n")
         .replace(/\t+/g, '')
+}
+
+/**
+ * Remove consecutive spaces, linebreaks, tabs and special characters.
+ * @param str string
+ * @returns 
+ */
+export const sanitizeString = (str: string) => {
+    return removeGapsFromString(str)
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 
     return '';

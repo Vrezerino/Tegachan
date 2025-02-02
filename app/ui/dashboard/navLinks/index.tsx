@@ -17,7 +17,6 @@ const NavLinks = () => {
     const result = links.find((l) => l.name === board);
     router.push(`${result?.href}`);
   }
-
   return (
     <>
       <NextTopLoader color='white' height={9} />

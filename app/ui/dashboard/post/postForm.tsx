@@ -5,7 +5,7 @@ import { FormEvent, useState, useEffect, useRef, Dispatch, SetStateAction } from
 
 import { useRouter } from 'nextjs-toploader/app';
 import { usePathname } from 'next/navigation';
-import { sanitizeString } from '@/app/lib/utils';
+import { removeGapsFromString } from '@/app/lib/utils';
 
 import toast from 'react-hot-toast';
 import PostingAnim from '../postingAnim';
@@ -55,7 +55,8 @@ const PostFormBig = ({
 
         // Set post content and image from state and don't get them directly from form data
         // Content will be stripped of multiple linebreaks and spaces
-        formData.set('content', sanitizeString(content));
+        const noGapContent = removeGapsFromString(content);
+        formData.set('content', String(noGapContent));
         if (image) formData.set('image', image);
 
         // Arrays must be stringified in FormData objects — parse it on server

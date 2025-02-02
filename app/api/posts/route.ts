@@ -7,7 +7,8 @@ import {
     sanitizeString,
     isErrorWithStatusCodeType,
     findExactInString,
-    links
+    links,
+    removeGapsFromString
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
@@ -41,7 +42,8 @@ export const POST = async (req: NextRequest) => {
         const boardSearchResult = links.find((l) => l.href.split('/')[2] === sanitizedBoardName);
         if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
-        const content = sanitizeString(formData.get('content') as string);
+        // Enforce string type so MongoDB won't read content as object in possible NoSQL attack
+        const content = removeGapsFromString(String(formData.get('content')));
         const OP = (formData.get('OP') as unknown) === 'true';
         const threadNum = formData.get('thread') as string;
 
@@ -94,7 +96,7 @@ export const POST = async (req: NextRequest) => {
             await upload.done();
         }
 
-        // Set post's imageUrl as the url of the image we just uploaded, and delete file
+        // Set post's imageUrl as url of the image we just uploaded to Amazon S3
         newPost.imageUrl = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
         delete newPost.image;
 
