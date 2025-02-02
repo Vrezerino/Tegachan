@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import NavLinks from '@/app/ui/dashboard/navLinks';
 
 // Mock Next.js useRouter hook
-vi.mock('next/navigation', () => ({
+vi.mock('nextjs-toploader/app', () => ({
     useRouter: vi.fn().mockReturnValue({
         push: vi.fn(),
     }),
