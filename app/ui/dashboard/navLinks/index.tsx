@@ -11,7 +11,7 @@ const NavLinks = () => {
   const router = useRouter();
 
   const onPickBoard = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const board = e.target.value.replace(/[^a-zA-Z]/g, '');
+    const board = e.target.value.replace(/[^a-zA-Z &]/g, '');
     const result = links.find((l) => l.name === board);
     router.push(`${result?.href}`);
   }
