@@ -1,44 +1,9 @@
 'use client';
 
-import {
-  HomeIcon,
-  ComputerDesktopIcon,
-  MusicalNoteIcon,
-  SunIcon,
-  ChatBubbleLeftRightIcon
-} from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { links } from '@/app/lib/utils';
 import clsx from 'clsx';
-
-// Map of links to display in the side navigation
-const links = [
-  {
-    name: 'Index',
-    href: '/dashboard',
-    icon: HomeIcon
-  },
-  {
-    name: 'Tech',
-    href: '/dashboard/technology',
-    icon: ComputerDesktopIcon,
-  },
-  {
-    name: 'Music',
-    href: '/dashboard/music',
-    icon: MusicalNoteIcon,
-  },
-  {
-    name: 'Outdoors',
-    href: '/dashboard/outdoors',
-    icon: SunIcon,
-  },
-  {
-    name: 'Random',
-    href: '/dashboard/random',
-    icon: ChatBubbleLeftRightIcon
-  }
-];
 
 const NavLinks = () => {
   const pathname = usePathname();

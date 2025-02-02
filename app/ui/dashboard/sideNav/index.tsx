@@ -4,7 +4,7 @@ import NavLinks from '@/app/ui/dashboard/navLinks';
 import { useEffect } from 'react';
 
 const SideNav = () => {
-  // Enable dark mode colors on website if input is toggled
+  // Toggle darkmode on website
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 
     if (e.target.checked) {

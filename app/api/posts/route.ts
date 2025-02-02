@@ -132,8 +132,6 @@ export const POST = async (req: NextRequest) => {
             );
         }
 
-
-
         if (result.acknowledged && result.insertedId) {
             return NextResponse.json('Created', { status: 201 });
         }
