@@ -125,8 +125,6 @@ export const removeGapsFromString = (str: string) => {
 export const sanitizeString = (str: string) => {
     return removeGapsFromString(str)
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-
-    return '';
 };
 
 export const toTitleCase = (str: string) => str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
