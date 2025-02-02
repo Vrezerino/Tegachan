@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-const LoadingAnim = () => {
+const PostingAnim = () => {
     return (
         <div className='absolute z-50 top-6 left-14'>
             <Image
@@ -13,4 +13,4 @@ const LoadingAnim = () => {
     );
 };
 
-export default LoadingAnim;
+export default PostingAnim;

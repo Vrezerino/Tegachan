@@ -8,7 +8,7 @@ import { usePathname } from 'next/navigation';
 import { sanitizeString } from '@/app/lib/utils';
 
 import toast from 'react-hot-toast';
-import LoadingAnim from '../loadingAnim';
+import PostingAnim from '../postingAnim';
 
 interface PostFormProps {
     op: PostType | null;
@@ -48,7 +48,7 @@ const PostFormBig = ({
         e.preventDefault();
 
         // Set true so loading anim is rendered
-        // While true, form post button is disabled
+        // While true, form post button and text area are disabled
         setLoading(true);
 
         const formData = new FormData(e.currentTarget);
@@ -110,7 +110,7 @@ const PostFormBig = ({
                                 required
                                 disabled={loading}
                             />
-                            {<LoadingAnim />}
+                            {loading && <PostingAnim />}
                         </div>
                         
                     </div>
