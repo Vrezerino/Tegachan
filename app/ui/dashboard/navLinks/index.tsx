@@ -1,10 +1,12 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { useRouter } from 'nextjs-toploader/app';
 
 import { links } from '@/app/lib/utils';
 import clsx from 'clsx';
+import NextTopLoader from 'nextjs-toploader';
 
 const NavLinks = () => {
   const pathname = usePathname();
@@ -15,8 +17,10 @@ const NavLinks = () => {
     const result = links.find((l) => l.name === board);
     router.push(`${result?.href}`);
   }
+
   return (
     <>
+      <NextTopLoader color='white' height={9} />
       {/** Vertical button list is shown on larger-than-mobile devices (>767 px) */}
       <div className='xsm:hidden'>
         {links.map((link) => {
@@ -41,7 +45,7 @@ const NavLinks = () => {
 
       {/** On mobile devices, a dropdown list is shown instead */}
       <div className='xsm:block hidden'>
-        <select name='boards' id='boards' onChange={onPickBoard} className='text-sm text-slate-900 dark:text-slate-200 dark:bg-neutral-800'>
+        <select name='boards' id='boards' onChange={onPickBoard} className='text-sm p-0.5 text-slate-900 dark:text-slate-200 dark:bg-neutral-800'>
           {links.map((link) => {
             return (
               <option key={link.name} value={link.name}>

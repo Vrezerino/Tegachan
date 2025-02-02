@@ -3,10 +3,11 @@ import { newPostSchema } from '@/app/lib/newPostSchema';
 import { NewPostType, CounterDocument } from '@/app/lib/definitions';
 import {
     ACCEPTED_IMAGE_TYPES,
-    MAX_FILE_SIZE, boards,
+    MAX_FILE_SIZE,
     sanitizeString,
     isErrorWithStatusCodeType,
-    findExactInString
+    findExactInString,
+    links
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
@@ -37,8 +38,8 @@ export const POST = async (req: NextRequest) => {
         }
 
         const sanitizedBoardName = sanitizeString(formData.get('board') as string);
-        const regex = new RegExp('\\b' + sanitizedBoardName + '\\b');
-        if (!regex.test(boards)) throw { message: 'Unknown board', status: 400 };
+        const boardSearchResult = links.find((l) => l.href.split('/')[2] === sanitizedBoardName);
+        if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
         const content = sanitizeString(formData.get('content') as string);
         const OP = (formData.get('OP') as unknown) === 'true';

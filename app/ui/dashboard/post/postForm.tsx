@@ -2,7 +2,9 @@
 
 import { PostType } from '@/app/lib/definitions';
 import { FormEvent, useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
+
+import { useRouter } from 'nextjs-toploader/app';
+import { usePathname } from 'next/navigation';
 import { sanitizeString } from '@/app/lib/utils';
 
 import toast from 'react-hot-toast';
