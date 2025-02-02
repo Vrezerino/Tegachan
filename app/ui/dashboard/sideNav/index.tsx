@@ -22,7 +22,7 @@ const SideNav = () => {
    */
   useEffect(() => {
     const theme = window.localStorage.getItem('theme');
-    
+
     if (theme) {
       document.documentElement.classList.add(theme);
 
@@ -34,18 +34,16 @@ const SideNav = () => {
   }, [])
 
   return (
-    <div className='sideNav flex h-full flex-col px-3 py-4 md:px-2 dark:sideNav-darkmode'>
+    <div className='sideNav flex h-full flex-col xsm:flex-row px-3 py-4 md:px-2 dark:sideNav-darkmode'>
       <div className='flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2'>
         <NavLinks />
-        <div className='hidden h-auto w-full grow rounded-md md:block'></div>
       </div>
 
-      <label className='flex justify-center items-center cursor-pointer mt-4  dark:label-darkmode'>
+      <label className='flex justify-center xsm:justify-end cursor-pointer md:mt-4 dark:label-darkmode'>
         <input id='toggle' type='checkbox' value='' className='sr-only peer' onChange={onChange} />
         <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-400/40"></div>
         <span className='ms-3 text-sm font-medium text-gray-900 dark:text-gray-300'>Dark mode</span>
       </label>
-
     </div>
   );
 };

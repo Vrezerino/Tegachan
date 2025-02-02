@@ -130,6 +130,10 @@ body {
       rgb(228, 242, 247));
 }
 
+option {
+  border-radius: 10px;
+}
+
 .posts-container-post-title,
 .linkName,
 label,

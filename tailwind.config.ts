@@ -16,7 +16,7 @@ const config: Config = {
       },
       screens: {
         // Mobile device breakpoint
-        'xsm': { 'max': '640px' }
+        'xsm': { 'max': '767px' }
       }
     },
   },

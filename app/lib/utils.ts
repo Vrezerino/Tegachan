@@ -54,7 +54,7 @@ export const links = [
         icon: TvIcon,
     },
     {
-        name: 'Auto',
+        name: 'Automobiles',
         href: '/dashboard/auto',
         icon: TruckIcon,
     },
