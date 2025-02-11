@@ -34,3 +34,10 @@ jobs:
         run: npm run build --if-present
       - name: Run unit and integration tests
         run: npm test
+      - name: Run e2e tests
+        uses: cypress-io/github-action@v6
+        with:
+          start: npm start
+          browser: chrome
+          headed: true
+          wait-on: http://localhost:3000
