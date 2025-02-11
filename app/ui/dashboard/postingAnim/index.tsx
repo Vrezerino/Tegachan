@@ -8,6 +8,7 @@ const PostingAnim = () => {
         width={229}
         height={58}
         alt='Posting animation'
+        unoptimized={true}
       />
     </div>
   );
