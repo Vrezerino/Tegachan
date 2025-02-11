@@ -19,11 +19,11 @@ const middleware = async (req: NextRequest) => {
       const file = (await req.formData()).get('image') as File;
 
       // Some validations before the request even hits the server
-      if (file && file.size> 0) {
+      if (file && file.size > 0) {
         if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
           throw { message: 'File is not of accepted type! JPG/PNG/WEBP only.', status: 400 };
         }
-  
+
         if (file && file.size >= MAX_FILE_SIZE) {
           throw { message: 'Image must be under 1MB in size.', status: 400 };
         }
