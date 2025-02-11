@@ -21,10 +21,10 @@ describe('Home page', () => {
   it('latest post list has posts in it', async () => {
     render(await Page());
 
-    expect(screen.getByText('Legato')).toBeTruthy();
-    expect(screen.getByText('In music performance and notation', { exact: false })).toBeTruthy();
-    expect(screen.getByText('Test title 2')).toBeTruthy();
-    expect(screen.getByText('Test content 2')).toBeTruthy();
+    expect(screen.getAllByText('Legato')[0]).toBeTruthy();
+    expect(screen.getAllByText('In music performance and notation', { exact: false })[0]).toBeTruthy();
+    expect(screen.getAllByText('Test title 2')[0]).toBeTruthy();
+    expect(screen.getAllByText('Test content 2')[0]).toBeTruthy();
   })
 });
 

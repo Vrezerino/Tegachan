@@ -110,6 +110,7 @@ const PostFormBig = ({
                 className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
                 required
                 disabled={loading}
+                data-testid='postFormTextArea'
               />
               {loading && <PostingAnim />}
             </div>
