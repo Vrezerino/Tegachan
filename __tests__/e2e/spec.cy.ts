@@ -36,10 +36,11 @@ describe('Posting', () => {
 
     // Thread's post content is visible and it's clickable
     cy.contains(`Cypress posted this thread ${rand}`).click();
+    
     // Title/content can now be seen, again
     cy.contains(`Cypress posted this thread ${rand}`);
 
-    // Find form and post new thread
+    // Find form and post reply
     cy.contains('Reply');
     cy.get('#postForm').should('exist');
     cy.get('[data-testid="postFormTextArea"]').should('exist');
