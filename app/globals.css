@@ -1,60 +1,99 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@config '../tailwind.config.ts';
+
+/*
+  The default border color has changed to `currentcolor` in Tailwind CSS v4,
+  so we've added these compatibility styles to make sure everything still
+  looks the same as it did with Tailwind CSS v3.
+
+  If we ever want to remove these styles, we need to add an explicit border
+  color utility to any element that depends on these defaults.
+*/
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-gray-200, currentcolor);
+  }
+}
 
 /* Define custom darkmode selectors */
-@layer utilities {
-
-  .body-dark {
-    background-image: url('/img/sky-dark.jpg');
-  }
-
-  .posts-container-post-darkmode {
-    width: 160px;
-    height: 225px;
-    border-radius: 5px;
-    background-color: #1d1d1d;
-    background-image: none;
-  }
-
-  .post-darkmode,
-  .posts-container-post-darkmode {
-    box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 1);
-  }
-
-  .posts-container-post-title-darkmode,
-  .linkName-darkmode,
-  .label-darkmode,
-  .h1-darkmode {
-    color: #f8ddd6;
-    text-shadow: 1px 1px 1px #11587c,
-      2px 2px 1px #14515c,
-      3px 3px 2px #441815
-  }
-
-  .postForm-darkmode {
-    background-image: linear-gradient(to bottom right,
-        rgba(24, 24, 24, 0.9),
-        rgba(41, 41, 48, 0.3),
-        rgba(24, 24, 24, 0.9),
-        rgba(41, 41, 48, 0.3),
-        rgba(24, 24, 24, 0.9),
-        rgba(41, 41, 48, 0.3),
-        rgba(24, 24, 24, 0.9),
-        rgba(41, 41, 48, 0.3))
-  }
-
-  .navLinks-darkmode,
-  .sideNav-darkmode {
-    background-image: linear-gradient(to bottom right,
-        rgba(31, 30, 34, 0.2),
-        rgba(26, 26, 31, 0.4),
-        rgba(8, 15, 17, 0.5));
-  }
-
-  .text-balance {
-    text-wrap: balance;
-  }
+@utility body-dark {
+  background-image: url('/img/sky-dark.jpg');
+}
+@utility posts-container-post-darkmode {
+  width: 160px;
+  height: 225px;
+  border-radius: 5px;
+  background-color: #1d1d1d;
+  background-image: none;
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 1);
+}
+@utility post-darkmode {
+  box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 1);
+}
+@utility posts-container-post-title-darkmode {
+  color: #f8ddd6;
+  text-shadow:
+    1px 1px 1px #11587c,
+    2px 2px 1px #14515c,
+    3px 3px 2px #441815;
+}
+@utility linkName-darkmode {
+  color: #f8ddd6;
+  text-shadow:
+    1px 1px 1px #11587c,
+    2px 2px 1px #14515c,
+    3px 3px 2px #441815;
+}
+@utility label-darkmode {
+  color: #f8ddd6;
+  text-shadow:
+    1px 1px 1px #11587c,
+    2px 2px 1px #14515c,
+    3px 3px 2px #441815;
+}
+@utility h1-darkmode {
+  color: #f8ddd6;
+  text-shadow:
+    1px 1px 1px #11587c,
+    2px 2px 1px #14515c,
+    3px 3px 2px #441815;
+}
+@utility postForm-darkmode {
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(24, 24, 24, 0.9),
+    rgba(41, 41, 48, 0.3),
+    rgba(24, 24, 24, 0.9),
+    rgba(41, 41, 48, 0.3),
+    rgba(24, 24, 24, 0.9),
+    rgba(41, 41, 48, 0.3),
+    rgba(24, 24, 24, 0.9),
+    rgba(41, 41, 48, 0.3)
+  );
+}
+@utility navLinks-darkmode {
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(31, 30, 34, 0.2),
+    rgba(26, 26, 31, 0.4),
+    rgba(8, 15, 17, 0.5)
+  );
+}
+@utility sideNav-darkmode {
+  background-image: linear-gradient(
+    to bottom right,
+    rgba(31, 30, 34, 0.2),
+    rgba(26, 26, 31, 0.4),
+    rgba(8, 15, 17, 0.5)
+  );
+}
+@utility text-balance {
+  text-wrap: balance;
 }
 
 :root {

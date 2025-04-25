@@ -24,7 +24,7 @@ const Error = ({
 
 
   return (
-    <div className='flex flex-col bg-white border border-gray-200 rounded-lg shadow md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-neutral-900'>
+    <div className='flex flex-col bg-white border border-gray-200 rounded-lg shadow-sm md:flex-row md:max-w-xl dark:border-gray-700 dark:bg-neutral-900'>
       <div className='min-w-40 relative xsm:hidden'>
         <Image
           src={`/img/misc/ohno${getRandomInt(6)}.jpg`}

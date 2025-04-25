@@ -1,6 +1,6 @@
 const Page = () => {
   return (
-    <div className='mt-0 mb-16 mx-auto w-full max-w-md p-2 bg-white border border-gray-200 rounded-sm rounded-br-2xl shadow sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
+    <div className='mt-0 mb-16 mx-auto w-full max-w-md p-2 bg-white border border-gray-200 rounded-xs rounded-br-2xl shadow-sm sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
       <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mb-6 dark:h1-darkmode'>Rules</h1>
 
       <p className='py-4 text-md font-bold text-red-600'>

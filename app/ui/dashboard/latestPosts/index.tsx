@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const LatestPosts = ({ posts }: { posts: PostType[] }) => {
   return (
-    <div className='w-full max-w-md p-3 bg-white border border-gray-200 rounded-sm rounded-br-2xl shadow sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
+    <div className='w-full max-w-md p-3 bg-white border border-gray-200 rounded-xs rounded-br-2xl shadow-sm sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
       <div className='flex items-center justify-between mb-4'>
         <h5 className='my-0 mx-auto text-xl font-bold leading-none text-gray-900 dark:text-white'>Latest Posts</h5>
       </div>
@@ -13,7 +13,7 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
           {posts?.map((post) => (
             <li className='py-2 sm:py-3' key={post.postNum}>
               <div className='flex items-center'>
-                <div className='flex-shrink-0'>
+                <div className='shrink-0'>
                   {post?.imageUrl && <Image src={post?.imageUrl} alt={post.title || ''} width={32} height={32} />}
                 </div>
                 <div className='flex-1 min-w-0 ms-1'>

@@ -115,7 +115,7 @@ const PostFormBig = ({
   return (
     <>
 
-      <form onSubmit={onSubmit} id='postForm' className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-sm shadow w-full md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
+      <form onSubmit={onSubmit} id='postForm' className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-xs shadow-sm w-full md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
         <div>
           {/* Text content */}
           <label htmlFor='postlabel' className='mb-2 block text-sm font-medium dark:label-darkmode'>

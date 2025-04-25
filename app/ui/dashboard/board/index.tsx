@@ -6,7 +6,7 @@ import { PostFormBig } from '../post/postForm';
 const BoardItem = ({ post }: { post: PostType }) => {
   return (
     <Link href={`/dashboard/${post.board}/${post.postNum}`}>
-      <div className='posts-container-post m-1 border-gray-200 shadow dark:border-neutral-800 dark:posts-container-post-darkmode'>
+      <div className='posts-container-post m-1 border-gray-200 shadow-sm dark:border-neutral-800 dark:posts-container-post-darkmode'>
         {post.imageUrl && <div className='posts-container-post-image'>
           <Image
             className='w-full'
