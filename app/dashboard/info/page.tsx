@@ -47,7 +47,7 @@ const Page = () => {
         constructive, fun and interesting posts. Site rules and information are subject to change.
       </p>
 
-      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-16 mb-6 dark:h1-darkmode'>Site Information</h1>
+      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-12 mb-6 dark:h1-darkmode'>Site Information</h1>
 
       <p className='py-4 text-md font-bold text-gray-900 dark:text-white'>
         How to post
@@ -56,9 +56,9 @@ const Page = () => {
         You can submit a new thread on a board &#40;for example on <b>Music</b>&#41; and/or reply to others by clicking either the
         date or the post count number &#40;preceded by &ldquo;№&rdquo;&#41; on top of each post.
       </p>
-      {/*<p className='text-sm font-medium text-gray-900 dark:text-white my-5'>
-                There is a 60 second timeout after posting to prevent flooding i.e. posting the same content multiple times in a short amount of time.
-            </p>*/}
+      <p className='ml-4 my-4 text-sm font-medium text-gray-900 dark:text-white'>
+        There is a 30 second timeout after posting from the same IP, to prevent flooding.
+      </p>
       <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white'>
         It is possible to reply to up to five other posters at a time, not counting the thread starter &#40;OP&#41;.
       </p>
@@ -71,6 +71,12 @@ const Page = () => {
         communicate with them. You will then get a reply as soon as possible.
       </p>
 
+      <p className='py-6 text-md font-bold text-gray-900 dark:text-white'>
+        About Tegachan
+      </p>
+      <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white mb-5'>
+        Tegachan was launched on 8th April 2024. It is not based on previous or existing imageboard templates.
+      </p>
     </div>
   );
 };

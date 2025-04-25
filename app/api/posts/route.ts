@@ -38,7 +38,7 @@ export const POST = async (req: NextRequest) => {
 
     if (file?.size > 0) {
       if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-        throw { message: 'File is not of accepted type! JPG/PNG/WEBP only.', status: 400 };
+        throw { message: 'File type not accepted, JPG/PNG/WEBP/AVIF only.', status: 400 };
       }
 
       if (file?.size >= MAX_FILE_SIZE) {

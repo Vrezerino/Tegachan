@@ -46,7 +46,7 @@ const PostFormBig = ({
   // Check file size and type
   const setImageFile = (file: File) => {
     if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      toast.error('File is not of accepted type! JPG/PNG/WEBP only.');
+      toast.error('File type not accepted, JPG/PNG/WEBP/AVIF only.');
       if (fileRef.current) fileRef.current.value = '';
     }
 
