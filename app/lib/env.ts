@@ -49,4 +49,6 @@ switch (process.env.NODE_ENV) {
     throw new Error('Invalid NODE_ENV!');
 };
 
-export { MONGO_URI, MONGODB_NAME, AWS_NAME, AWS_URL };
+const banlist = process.env.BANLIST;
+
+export { MONGO_URI, MONGODB_NAME, AWS_NAME, AWS_URL, banlist };

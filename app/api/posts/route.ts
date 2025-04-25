@@ -8,20 +8,29 @@ import {
   isErrorWithStatusCodeType,
   findExactInString,
   links,
-  removeGapsFromString
+  removeGapsFromString,
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
-import { AWS_NAME, AWS_URL } from '../../lib/env';
+import { AWS_NAME, AWS_URL, banlist } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
-const banlist = process.env.BANLIST;
+import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
   try {
     const ip = req.headers.get('x-real-ip');
+
+    // Check if ip in banlist
     if (findExactInString(ip, banlist)) {
       throw { message: 'Can not post at this time.', status: 403 };
+    }
+
+    // Limit rate based on ip
+    const { limited, retryAfterSeconds } = await checkRateLimit(ip as string);
+
+    if (limited) {
+      throw { message: `Too many requests. Try again in ${retryAfterSeconds}s`, status: 429 };
     }
 
     const formData = await req.formData();
