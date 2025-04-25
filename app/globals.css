@@ -10,7 +10,10 @@
   If we ever want to remove these styles, we need to add an explicit border
   color utility to any element that depends on these defaults.
 */
+
+/* Layer base contains light mode selectors */
 @layer base {
+
   *,
   ::after,
   ::before,
@@ -18,12 +21,70 @@
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
   }
+
+  body {
+    color: rgb(var(--foreground-rgb));
+    background-image: url('/img/sky1.jpg');
+    background-size: cover;
+  }
+
+  .posts-container-post-title,
+  .linkName,
+  label,
+  h1 {
+    color: #2a3f79;
+    text-shadow: 1px 1px 1px #a3c2d1,
+      2px 2px 1px #aeeaf5,
+      3px 3px 2px #ffca7a
+  }
+
+  .navLinks,
+  .sideNav {
+    background-image: linear-gradient(to bottom right,
+        rgba(247, 225, 165, 0),
+        rgb(255, 255, 255),
+        rgb(228, 242, 247));
+  }
+
+  .postForm {
+    margin: 3em auto;
+  }
+
+  .posts-container-post {
+    width: 160px;
+    height: 225px;
+    border-radius: 5px;
+    background-image: linear-gradient(to bottom right,
+        rgb(255, 237, 225),
+        rgb(255, 255, 255),
+        rgb(228, 242, 247));
+  }
+
+  .post,
+  .posts-container-post {
+    box-shadow: 0 3px 2px 0 rgba(255, 142, 98, 0.12);
+  }
+
+  button :disabled,
+  button[disabled],
+  button :disabled :hover,
+  button[disabled] :hover {
+    color: rgb(102, 102, 102);
+    background-color: rgba(170, 170, 170, 0.12);
+    border-color: #979797;
+    pointer-events: none;
+  }
+
+  .fileInput {
+    color: #2a3f79;
+  }
 }
 
-/* Define custom darkmode selectors */
+/* Custom darkmode selectors */
 @utility body-dark {
   background-image: url('/img/sky-dark.jpg');
 }
+
 @utility posts-container-post-darkmode {
   width: 160px;
   height: 225px;
@@ -32,9 +93,11 @@
   background-image: none;
   box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 1);
 }
+
 @utility post-darkmode {
   box-shadow: 0 3px 2px 0 rgba(0, 0, 0, 1);
 }
+
 @utility posts-container-post-title-darkmode {
   color: #f8ddd6;
   text-shadow:
@@ -42,6 +105,7 @@
     2px 2px 1px #14515c,
     3px 3px 2px #441815;
 }
+
 @utility linkName-darkmode {
   color: #f8ddd6;
   text-shadow:
@@ -49,6 +113,7 @@
     2px 2px 1px #14515c,
     3px 3px 2px #441815;
 }
+
 @utility label-darkmode {
   color: #f8ddd6;
   text-shadow:
@@ -56,6 +121,7 @@
     2px 2px 1px #14515c,
     3px 3px 2px #441815;
 }
+
 @utility h1-darkmode {
   color: #f8ddd6;
   text-shadow:
@@ -63,37 +129,39 @@
     2px 2px 1px #14515c,
     3px 3px 2px #441815;
 }
+
 @utility postForm-darkmode {
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(24, 24, 24, 0.9),
-    rgba(41, 41, 48, 0.3),
-    rgba(24, 24, 24, 0.9),
-    rgba(41, 41, 48, 0.3),
-    rgba(24, 24, 24, 0.9),
-    rgba(41, 41, 48, 0.3),
-    rgba(24, 24, 24, 0.9),
-    rgba(41, 41, 48, 0.3)
-  );
+  background-image: linear-gradient(to bottom right,
+      rgba(24, 24, 24, 0.9),
+      rgba(41, 41, 48, 0.3),
+      rgba(24, 24, 24, 0.9),
+      rgba(41, 41, 48, 0.3),
+      rgba(24, 24, 24, 0.9),
+      rgba(41, 41, 48, 0.3),
+      rgba(24, 24, 24, 0.9),
+      rgba(41, 41, 48, 0.3));
 }
+
 @utility navLinks-darkmode {
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(31, 30, 34, 0.2),
-    rgba(26, 26, 31, 0.4),
-    rgba(8, 15, 17, 0.5)
-  );
+  background-image: linear-gradient(to bottom right,
+      rgba(31, 30, 34, 0.2),
+      rgba(26, 26, 31, 0.4),
+      rgba(8, 15, 17, 0.5));
 }
+
 @utility sideNav-darkmode {
-  background-image: linear-gradient(
-    to bottom right,
-    rgba(31, 30, 34, 0.2),
-    rgba(26, 26, 31, 0.4),
-    rgba(8, 15, 17, 0.5)
-  );
+  background-image: linear-gradient(to bottom right,
+      rgba(31, 30, 34, 0.2),
+      rgba(26, 26, 31, 0.4),
+      rgba(8, 15, 17, 0.5));
 }
+
 @utility text-balance {
   text-wrap: balance;
+}
+
+@utility fileInput-darkmode {
+  color: #f8ddd6;
 }
 
 :root {
@@ -110,35 +178,10 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background-image: url('/img/sky1.jpg');
-  background-size: cover;
-}
-
-.postForm {
-  margin: 3em auto;
-}
-
 .posts-container {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.posts-container-post {
-  width: 160px;
-  height: 225px;
-  border-radius: 5px;
-  background-image: linear-gradient(to bottom right,
-      rgb(255, 237, 225),
-      rgb(255, 255, 255),
-      rgb(228, 242, 247));
-}
-
-.post,
-.posts-container-post {
-  box-shadow: 0 3px 2px 0 rgba(255, 142, 98, 0.12);
 }
 
 .posts-container-text {
@@ -161,36 +204,8 @@ body {
   overflow: hidden;
 }
 
-.navLinks,
-.sideNav {
-  background-image: linear-gradient(to bottom right,
-      rgba(247, 225, 165, 0),
-      rgb(255, 255, 255),
-      rgb(228, 242, 247));
-}
-
 option {
   border-radius: 10px;
-}
-
-.posts-container-post-title,
-.linkName,
-label,
-h1 {
-  color: #2a3f79;
-  text-shadow: 1px 1px 1px #a3c2d1,
-    2px 2px 1px #aeeaf5,
-    3px 3px 2px #ffca7a
-}
-
-button :disabled,
-button[disabled],
-button :disabled :hover,
-button[disabled] :hover {
-  color: rgb(102, 102, 102);
-  background-color: rgba(170, 170, 170, 0.12);
-  border-color: #979797;
-  pointer-events: none;
 }
 
 @keyframes loadingAnimWave {

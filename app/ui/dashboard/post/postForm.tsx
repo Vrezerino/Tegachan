@@ -161,7 +161,7 @@ const PostFormBig = ({
                   type='file'
                   step='0.01'
                   placeholder='Image (optional)'
-                  className='peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 placeholder:text-neutral-500'
+                  className='fileInput peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 placeholder:text-neutral-500 dark:fileInput-darkmode'
                 />
               </div>
             </div>

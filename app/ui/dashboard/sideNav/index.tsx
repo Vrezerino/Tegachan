@@ -9,10 +9,12 @@ const SideNav = () => {
 
     if (e.target.checked) {
       window.localStorage.setItem('theme', 'dark');
+      document.documentElement.classList.remove('light');
       document.documentElement.classList.add('dark');
     } else {
       window.localStorage.setItem('theme', 'light');
       document.documentElement.classList.remove('dark');
+      document.documentElement.classList.add('light');
     }
   }
 
