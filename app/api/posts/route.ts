@@ -30,7 +30,7 @@ export const POST = async (req: NextRequest) => {
     const { limited, retryAfterSeconds } = await checkRateLimit(ip as string);
 
     if (limited) {
-      throw { message: `Too many requests. Try again in ${retryAfterSeconds}s`, status: 429 };
+      throw { message: `Don't flood/spam. Try again in ${retryAfterSeconds} seconds.`, status: 429 };
     }
 
     const formData = await req.formData();
