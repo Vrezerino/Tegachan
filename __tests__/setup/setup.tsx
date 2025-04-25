@@ -14,7 +14,7 @@ export const initDb = async () => {
 
 export const clearDb = async () => {
   try {
-    await (await db())?.collection('posts').deleteMany({});
+    await (await db())?.collection('posts').deleteMany({ content: { $regex: /^Cypress posted this/ } });
     console.log('Database cleared!')
   } catch (e) {
     console.error(e);

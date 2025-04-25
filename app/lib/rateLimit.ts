@@ -1,7 +1,7 @@
 import { Redis } from '@upstash/redis';
+import { THROTTLE_WINDOW } from './utils';
 
 const redis = Redis.fromEnv();
-const THROTTLE_WINDOW = 30; // 30 secs
 
 /**
  * Used to throttle posting from the same IP

@@ -30,15 +30,32 @@ describe('Posting', () => {
     cy.contains(`Cypress posted this thread ${rand}`);
   })
 
-  it('form submits new reply', () => {
+  it('post throttling (anti-spam) works', () => {
     cy.visit('http://localhost:3000/dashboard/random');
     cy.intercept('POST', '/api/posts').as('postFormRequest');
 
     // Thread's post content is visible and it's clickable
     cy.contains(`Cypress posted this thread ${rand}`).click();
-    
+
     // Title/content can now be seen, again
     cy.contains(`Cypress posted this thread ${rand}`);
+
+    // Find form and post reply
+    cy.contains('Reply');
+    cy.get('#postForm').should('exist');
+    cy.get('[data-testid="postFormTextArea"]').should('exist');
+    cy.get('[data-testid="postFormTextArea"]').type(`Cypress attempted to reply`);
+    cy.get('#postBtn').click();
+
+    // 429 = too many requests
+    cy.wait('@postFormRequest').its('response.statusCode').should('eq', 429);
+  })
+
+  it('form submits new reply', () => {
+    cy.visit('http://localhost:3000/dashboard/random');
+    cy.intercept('POST', '/api/posts').as('postFormRequest');
+
+    cy.contains(`Cypress posted this thread ${rand}`).click();
 
     // Find form and post reply
     cy.contains('Reply');

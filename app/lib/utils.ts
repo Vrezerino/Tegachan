@@ -135,3 +135,6 @@ export const findExactInString = (searchWord: string | null, target: string | un
   const regex = new RegExp('\\b' + searchWord + '\\b');
   return regex.test(target);
 };
+
+// 30 or 5 seconds
+export const THROTTLE_WINDOW = process.env.NODE_ENV === 'production' ? 30 : 5;
