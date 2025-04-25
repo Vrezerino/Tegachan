@@ -3,9 +3,14 @@
 import { PostType } from '@/app/lib/definitions';
 import { FormEvent, useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
 
+import {
+  ACCEPTED_IMAGE_TYPES,
+  MAX_FILE_SIZE,
+  removeGapsFromString
+} from '@/app/lib/utils';
+
 import { useRouter } from 'nextjs-toploader/app';
 import { usePathname } from 'next/navigation';
-import { removeGapsFromString } from '@/app/lib/utils';
 
 import toast from 'react-hot-toast';
 import PostingAnim from '../postingAnim';
@@ -36,6 +41,21 @@ const PostFormBig = ({
       && recipients
       && setRecipients
       && setRecipients(recipients.filter((r) => r !== postNumber));
+  }
+
+  // Check file size and type
+  const setImageFile = (file: File) => {
+    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+      toast.error('File is not of accepted type! JPG/PNG/WEBP only.');
+      if (fileRef.current) fileRef.current.value = '';
+    }
+
+    if (file?.size >= MAX_FILE_SIZE) {
+      toast.error('Image must be under 1MB in size.');
+      if (fileRef.current) fileRef.current.value = '';
+    }
+
+    setImage(file);
   }
 
   useEffect(() => {
@@ -137,7 +157,7 @@ const PostFormBig = ({
               <div className='relative'>
                 <input
                   ref={fileRef}
-                  onChange={(e) => e.target.files && setImage(e.target.files[0])}
+                  onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
                   type='file'
                   step='0.01'
                   placeholder='Image (optional)'
