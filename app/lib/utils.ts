@@ -141,6 +141,5 @@ export const findExactInString = (searchWord: string | null, target: string | un
   return regex.test(target);
 };
 
-// 30 or 5 seconds
-//export const THROTTLE_WINDOW = process.env.NODE_ENV === 'production' ? 30 : 5;
-export const THROTTLE_WINDOW = 30;
+// 6 seconds for CI test
+export const THROTTLE_WINDOW = process.env.CI ? 6 : 30;
