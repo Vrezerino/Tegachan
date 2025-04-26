@@ -49,6 +49,13 @@ describe('Posting', () => {
 
     // 429 = too many requests
     cy.wait('@postFormRequest').its('response.statusCode').should('eq', 429);
+
+    /* Hold for 23 seconds for post throttling to disable before next test.
+      This is necessary because these tests run more slowly on Github Actions
+      so making the throttle window smaller (i.e. 2 secs) just for smoother
+      testing won't work.
+     */
+    cy.wait(23000);
   })
 
   it('form submits new reply', () => {
