@@ -74,8 +74,20 @@ const Page = () => {
       <p className='py-6 text-md font-bold text-gray-900 dark:text-white'>
         About Tegachan
       </p>
-      <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white mb-5'>
-        Tegachan was launched on 8th April 2024. It is not based on previous or existing imageboard templates.
+      <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white'>
+        Tegachan was launched on 8th April 2024. It was not created using any imageboard templates.
+      </p>
+
+      <p className='py-6 text-md font-bold text-gray-900 dark:text-white'>
+        Support me!
+      </p>
+
+      <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white mb-5 break-all'>
+        <b>BTC</b>: 12z26XmZ8NDQnyorikAGTAwUGyqfR1qVyq<br />
+        <b>ETH</b>: 0xAA217342517acf1B0bedc2e2080dC3DA2f4e89fE<br />
+        <b>XMR</b>: 45HDz4NUeStNLCKCREoKDZCo4KqcysmcLNLe41av4raGLQCniYtEjokDuVm2EuWm7hejaqFME7nXBM367xLtZHSNEUtCp7R<br />
+        <b>DOGE</b>: DTmLNC4efVjQiJ64dcYrSbSS7UEtKqhUJV<br />
+        <b>XRP</b>: r4vzNgvFzddbM1aR2Q3ea4VMRYQca3kPAy
       </p>
     </div>
   );
