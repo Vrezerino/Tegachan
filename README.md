@@ -5,7 +5,7 @@ Tegachan is an imageboard type discussion forum. It features dynamic app routing
 styles that mostly utilize Tailwind CSS, light and dark mode themes, so far four discussion 
 boards (Technology, Music, Outdoors, Random), and thread starter and reply posting forms.
 Image files that are uploaded with new posts, are hosted on Amazon S3 cloud object storage, 
-and the posts themselves are inserted into a MongoDB Atlas document-oriented database.
+and the posts themselves are inserted into a Neon PostgreSQL database.
 
 This was not created by using any imageboard templates. It is made from scratch.
 
