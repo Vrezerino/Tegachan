@@ -10,7 +10,6 @@ import toast from 'react-hot-toast';
 
 const Post = ({ posts }: { posts: PostType[] }) => {
   const [recipients, setRecipients] = useState<number[]>([]);
-  console.log('post:', posts);
   return (
     <>
       {/* Thread starter (OP) and possible replies */}

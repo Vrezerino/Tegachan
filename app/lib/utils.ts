@@ -111,10 +111,12 @@ export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
 
 /**
  * Remove consecutive spaces, linebreaks and tabs.
- * @param str string
- * @returns
+ * @param str any
+ * @returns string
  */
-export const removeGapsFromString = (str: string) => {
+export const removeGapsFromString = (str: any) => {
+  if (typeof str !== 'string') throw { message: 'removeGapsFromString: argument must be a string.', status: 400 };
+
   return str
     .replace(/ +/g, ' ')
     .replace(/\n\n+/g, "\n\n")
@@ -123,13 +125,47 @@ export const removeGapsFromString = (str: string) => {
 
 /**
  * Remove consecutive spaces, linebreaks, tabs and special characters.
- * @param str string
- * @returns
+ * @param str any
+ * @returns string
  */
-export const sanitizeString = (str: string) => {
+export const sanitizeString = (str: any) => {
+  if (typeof str !== 'string') throw { message: 'sanitizeString: argument must be a string.', status: 400 };
+
   return removeGapsFromString(str)
     .replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
+
+/**
+ * Attempt to parse and check a post recipients array
+ * @param recipientsRaw unknown
+ * @returns number[]
+ */
+export const recipientsJSONparser = (recipientsRaw: unknown) => {
+  if (typeof recipientsRaw !== 'string') throw { message: `'recipients' must be a string.`, status: 400 };
+
+  const parsed = JSON.parse(recipientsRaw);
+  if (!Array.isArray(parsed)) throw { message: `'recipients' must be a JSON array.`, status: 400 };
+
+  const recipients = parsed.map((obj, i) => {
+    if (typeof obj === 'string') {
+      obj = removeGapsFromString(obj);
+      const num = Number(obj);
+      if (!Number.isInteger(num)) throw { message: `"${obj}" at ${i} not a valid number.`, status: 400 };
+
+      return num;
+    }
+
+    if (typeof obj === 'number') {
+      if (!Number.isInteger(obj)) throw { message: `"${obj}" at ${i} not an integer.`, status: 400 };
+
+      return obj;
+    }
+
+    throw { message: `Type ${typeof obj} at ${i} is not allowed.`, status: 400 };
+  });
+
+  return recipients;
+}
 
 export const toTitleCase = (str: string) => str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
 

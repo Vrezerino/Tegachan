@@ -6,11 +6,12 @@ import { NewPostType } from '@/app/lib/definitions';
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
-  sanitizeString,
   isErrorWithStatusCodeType,
   findExactInString,
   links,
+  sanitizeString,
   removeGapsFromString,
+  recipientsJSONparser,
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
@@ -48,28 +49,31 @@ export const POST = async (req: NextRequest) => {
       }
     }
 
-    const sanitizedBoardName = sanitizeString(formData.get('board') as string);
+    // Sanitize form data entries
+    const sanitizedBoardName = sanitizeString(formData.get('board'));
     const boardSearchResult = links.find((l) => l.href.split('/')[2] === sanitizedBoardName);
     if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
-    // Enforce string type so MongoDB won't read content as object in possible NoSQL attack
-    // NOTE: MongoDB not in use anymore but leave as is
-    const content = removeGapsFromString(String(formData.get('content')));
-    const OP = (formData.get('OP') as unknown) === 'true';
-    const threadNum = formData.get('thread') as string;
+    const content = removeGapsFromString(formData.get('content'));
 
-    // Parse stringified array first
-    const recipientsRaw = JSON.parse(formData.get('recipients') as unknown as string);
-    const recipients = recipientsRaw.map((num: number) => Number(num)).filter((num: number) => !isNaN(num));
+    const is_op_raw = sanitizeString((formData.get('OP')));
+    const is_op = is_op_raw === 'true';
+
+    // Null at the time of creating thread/you're op, so null is allowed here
+    const threadNum = formData.get('thread') ? sanitizeString(formData.get('thread')) : null;
+
+    // Parse and check stringified recipients array
+    const recipientsRaw: unknown = formData.get('recipients');
+    const recipients = recipientsJSONparser(recipientsRaw);
 
     const newPost: NewPostType = {
       content,
       // Generate title from truncated post content, only if you're OP
-      title: OP ? content.length > 25
+      title: is_op_raw ? content.length > 25
         ? content.substring(0, 21) + '...'
         : content : '',
-      is_op: OP,
-      thread: parseInt(threadNum) || 0,
+      is_op,
+      thread: threadNum ? parseInt(threadNum) : 0,
       board: sanitizedBoardName,
       recipients,
       created_at: new Date(),
@@ -117,7 +121,7 @@ export const POST = async (req: NextRequest) => {
     delete newPost.image;
 
     // Insert post into db
-    const { thread, title, image_url, created_at, is_op, board, admin } = newPost;
+    const { thread, title, image_url, created_at, board, admin } = newPost;
     const sql = neon(PGDB_URL);
     const res = await sql`
       INSERT INTO posts (
@@ -142,7 +146,7 @@ export const POST = async (req: NextRequest) => {
         ${admin}
       )
       RETURNING post_num`
-    ;
+      ;
 
     const newPostNum = res[0].post_num;
 
@@ -152,7 +156,7 @@ export const POST = async (req: NextRequest) => {
         await sql`
           INSERT INTO replies (post_num, parent_post_num)
           VALUES (${newPostNum}, ${parentPostNum})`
-        ;
+          ;
       }
     }
 
