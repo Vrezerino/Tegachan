@@ -1,8 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import NextTopLoader from 'nextjs-toploader';
 import './globals.css';
+import NextTopLoader from 'nextjs-toploader';
+import Particles from './ui/dashboard/particles';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ const RootLayout = ({
     <html lang='en'>
       <body className={`${inter.className} dark:body-dark`}>
         <NextTopLoader color='white' height={9}/>
+        <Particles />
         {children}
       </body>
     </html>
