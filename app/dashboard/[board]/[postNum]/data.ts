@@ -1,38 +1,81 @@
-import { getMongoDb as db } from '@/app/lib/mongodb';
-import { FindOptions } from 'mongodb';
+import { neon } from '@neondatabase/serverless';
+import { NextResponse } from 'next/server';
+import { PGDB_URL } from '../../../lib/env';
+import { isErrorWithStatusCodeType } from '../../../lib/utils';
 
-export const getPost = async (board: string, pn: string) => {
-  const postNum = parseInt(pn);
-  const post = await (await db()).collection('posts').findOne({ board, postNum });
+export const getPost = async (board: string, postNum: string) => {
+  const sql = neon(PGDB_URL);
 
-  // Recursive function to fetch replies for a given post number
-  const fetchReplies = async (postNum: number) => {
-    // Find the post with the given postNum and get its replies
-    const postWithReplies = await (await db())
-      .collection('posts')
-      .findOne({ postNum: postNum }, { projection: { replies: 1 } });
+  try {
+    /**
+     * Result set will have a post, all of its replies, and an array of post numbers
+     * from posts that the post replied to
+     */
+    const res = await sql`
+    WITH RECURSIVE thread_tree AS (
+      SELECT
+        p.post_num,
+        p.thread,
+        p.title,
+        p.content,
+        p.image_url,
+        p.created_at,
+        p.is_op,
+        p.board,
+        p.admin,
+        NULL::BIGINT AS parent_post_num
+      FROM posts p
+      WHERE p.board = ${board}
+        AND p.post_num = ${postNum}
 
-    // Exclude IP field
-    const projection: FindOptions = { projection: { IP: 0 } };
-    if (postWithReplies && postWithReplies.replies && postWithReplies.replies.length > 0) {
-      // Fetch all posts whose postNum is in the replies array
-      const repliesArray = await (await db())
-        .collection('posts')
-        .find({ postNum: { $in: postWithReplies.replies } }, projection) // Use the projection to limit fields
-        .toArray();
+      UNION ALL
 
+      SELECT
+        child.post_num,
+        child.thread,
+        child.title,
+        child.content,
+        child.image_url,
+        child.created_at,
+        child.is_op,
+        child.board,
+        child.admin,
+        r.parent_post_num
+      FROM replies r
+      INNER JOIN posts child ON child.post_num = r.post_num
+      INNER JOIN thread_tree parent ON r.parent_post_num = parent.post_num
+    )
 
-      // Iterate through replies and fetch their own replies recursively
-      for (const reply of repliesArray) {
-        reply.replies = await fetchReplies(reply.postNum);
-      }
+    SELECT
+      post_num,
+      thread,
+      title,
+      content,
+      image_url,
+      created_at,
+      is_op,
+      board,
+      admin,
+    ARRAY_AGG(parent_post_num) FILTER (WHERE parent_post_num IS NOT NULL) AS parent_post_nums
+    FROM thread_tree
+    GROUP BY
+      post_num,
+      thread,
+      title,
+      content,
+      image_url,
+      created_at,
+      is_op,
+      board,
+      admin
+    ORDER BY created_at ASC;
+    `;
 
-      return repliesArray;
-    }
+    return JSON.parse(JSON.stringify(res));
+  } catch (e) {
+    return NextResponse.json(
+      { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
+      { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
+    );
   }
-
-  const replies = await fetchReplies(postNum);
-
-  // Only add the replies member to object if the replies array isn't empty
-  return JSON.parse(JSON.stringify({ ...post, ...(replies && { replies }) }));
 };

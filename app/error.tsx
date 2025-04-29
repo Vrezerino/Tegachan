@@ -6,10 +6,10 @@ import { getRandomInt } from './lib/utils';
 import Image from 'next/image';
 
 /**
- * Catch unexpected errors that occur in Server Components and 
+ * Catch unexpected errors that occur in Server Components and
  * Client Components and display a fallback UI
- * @param param0 
- * @returns 
+ * @param param0
+ * @returns
  */
 const Error = ({
   error,

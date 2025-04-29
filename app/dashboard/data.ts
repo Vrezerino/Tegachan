@@ -1,22 +1,29 @@
-import { getMongoDb as db } from '@/app/lib/mongodb';
-import { FindOptions } from 'mongodb';
+import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
+import { PGDB_URL } from '../lib/env';
 import { isErrorWithStatusCodeType } from '../lib/utils';
 
 export const getLatestPosts = async () => {
-  // Get twenty latest posts from all boards
+  const sql = neon(PGDB_URL);
+
+  // Get fifteen latest posts from all boards
   try {
-    const projection: FindOptions = { projection: { IP: 0 } };
+    const res = await sql
+      `SELECT
+      post_num,
+      thread,
+      title,
+      content,
+      image_url,
+      created_at,
+      is_op,
+      board
+      FROM posts
+      ORDER BY created_at
+      DESC LIMIT 15`
+      ;
 
-    const data = await (await db())
-      .collection('posts')
-      .find({}, projection)
-      // Sort by date descending
-      .sort({ date: -1 })
-      .limit(15)
-      .toArray();
-
-    return JSON.parse(JSON.stringify(data));
+    return JSON.parse(JSON.stringify(res));
   } catch (e) {
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },

@@ -2,6 +2,11 @@ import { expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import NavLinks from '@/app/ui/dashboard/navLinks';
 
+import { neon } from '@neondatabase/serverless';
+import { PGDB_URL } from '../../app/lib/env';
+
+const sql = neon(PGDB_URL);
+
 // Mock Next.js useRouter hook
 vi.mock('nextjs-toploader/app', () => ({
   useRouter: vi.fn().mockReturnValue({

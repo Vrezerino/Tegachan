@@ -20,8 +20,6 @@ const Page = async ({ params }: { params: ParamsType }) => {
   // Get thread starter posts from given board
   const data: PostType[] = await getBumpedPosts(sanitizedBoardName);
 
-  //if (!regex.test(boards)) notFound();
-
   return (
     <>
       <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>✵ {result.name} ✵</h1>

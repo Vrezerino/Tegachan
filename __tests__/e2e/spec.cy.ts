@@ -79,3 +79,9 @@ describe('Posting', () => {
     cy.contains(`Cypress posted this reply ${rand}`);
   })
 })
+
+describe('DB Cleanup', () => {
+  it('clears test posts', () => {
+    cy.task('cypressCleanup');
+  });
+});

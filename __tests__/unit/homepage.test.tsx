@@ -1,11 +1,6 @@
 import { describe, expect } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import Page from '@/app/dashboard/page';
-import { initDb, clearDb } from '../setup/setup';
-
-beforeAll(async () => {
-  await initDb();
-});
 
 describe('Home page', () => {
   it('heading exists', async () => {
@@ -27,7 +22,3 @@ describe('Home page', () => {
     expect(screen.getAllByText('Test content 2')[0]).toBeTruthy();
   })
 });
-
-afterAll(async () => {
-  await clearDb();
-})

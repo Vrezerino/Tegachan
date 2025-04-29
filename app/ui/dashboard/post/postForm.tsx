@@ -35,12 +35,12 @@ const PostFormBig = ({
   const pathname = usePathname();
   const router = useRouter();
 
-  const removeRecipient = (postNumber: number) => {
-    op?.postNum
-      !== postNumber
+  const removeRecipient = (post_number: number) => {
+    op?.post_num
+      !== post_number
       && recipients
       && setRecipients
-      && setRecipients(recipients.filter((r) => r !== postNumber));
+      && setRecipients(recipients.filter((r) => r !== post_number));
   }
 
   // Check file size and type
@@ -60,7 +60,7 @@ const PostFormBig = ({
 
   useEffect(() => {
     // If you're replying to an OP, set first recipient as OP
-    op && setRecipients && setRecipients([op.postNum]);
+    op && setRecipients && setRecipients([op.post_num]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -80,12 +80,12 @@ const PostFormBig = ({
     if (image) formData.set('image', image);
 
     // Arrays must be stringified in FormData objects — parse it on server
-    formData.set('replyTo', JSON.stringify(recipients));
+    formData.set('recipients', JSON.stringify(recipients));
 
     // If postForm gets existing OP as prop, the new post will be a reply. Otherwise it is itself OP
     if (op) {
       formData.set('OP', 'false');
-      formData.set('thread', op.postNum.toString());
+      formData.set('thread', op.post_num.toString());
     } else {
       formData.set('OP', 'true');
     }
@@ -104,7 +104,7 @@ const PostFormBig = ({
       // Clear state, reset recipient array, clear textarea on successful post
       setContent('');
       setImage(null);
-      op && setRecipients && setRecipients([op.postNum]);
+      op && setRecipients && setRecipients([op.post_num]);
       if (fileRef.current) fileRef.current.value = '';
 
       router.refresh();
@@ -143,7 +143,7 @@ const PostFormBig = ({
               Recipients:
             </label>
             {recipients.map(
-              (r) => <span onClick={() => removeRecipient(r)} className={`${r !== op?.postNum && 'hover:cursor-pointer hover:bg-blue-200/60 '} rounded-md p-1 mt-1 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 md:flex-none md:justify-start md:p-1 md:px-2`} key={r}>{r === op?.postNum ? 'OP' : `${r} ❌`}</span>
+              (r) => <span onClick={() => removeRecipient(r)} className={`${r !== op?.post_num && 'hover:cursor-pointer hover:bg-blue-200/60 '} rounded-md p-1 mt-1 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 md:flex-none md:justify-start md:p-1 md:px-2`} key={r}>{r === op?.post_num ? 'OP' : `${r} ❌`}</span>
             )
             }
           </div>}

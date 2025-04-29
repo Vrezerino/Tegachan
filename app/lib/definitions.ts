@@ -2,14 +2,12 @@ export interface PostType {
   title: string | null;
   thread: number | null;
   content: string;
-  postNum: number;
-  date: Date;
-  OP: boolean;
+  post_num: number;
+  parent_post_nums: number[];
+  created_at: Date;
+  is_op: boolean;
   board: string;
-  imageUrl: string;
-  replyPostNums: Array<number>;
-  replies: PostType[];
-  replyTo: Array<number>;
+  image_url: string;
   admin: boolean;
 };
 
@@ -17,17 +15,18 @@ export type NewPostType = {
   title: string;
   thread: number | null;
   content: string;
-  date: Date;
-  OP: boolean;
-  IP: string;
+  created_at: Date;
+  is_op: boolean;
+  ip: string;
   board: string;
-  replies: Array<number>
-  imageUrl?: string
+  recipients: Array<number> | null;
+  image_url?: string
   image?: File
+  admin: boolean
 };
 
 // Board catalog OP type
-export interface CatalogOPType extends Omit<PostType, 'replies' | 'replyTo' | 'OP'> {
+export interface CatalogOPType extends Omit<PostType, 'is_op'> {
   repliesCount: number;
 };
 
@@ -35,8 +34,3 @@ export type ErrorWithStatusCode = {
   message: string;
   status: number
 };
-
-export interface CounterDocument {
-  _id: string;
-  seq_value: number;
-}

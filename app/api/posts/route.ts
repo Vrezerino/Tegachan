@@ -1,6 +1,8 @@
-import { getMongoDb as db } from '@/app/lib/mongodb';
+import { neon } from '@neondatabase/serverless';
+import { PGDB_URL } from '../../lib/env';
+
 import { newPostSchema } from '@/app/lib/newPostSchema';
-import { NewPostType, CounterDocument } from '@/app/lib/definitions';
+import { NewPostType } from '@/app/lib/definitions';
 import {
   ACCEPTED_IMAGE_TYPES,
   MAX_FILE_SIZE,
@@ -38,7 +40,7 @@ export const POST = async (req: NextRequest) => {
 
     if (file?.size > 0) {
       if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-        throw { message: 'File type not accepted, JPG/PNG/WEBP/AVIF only.', status: 400 };
+        throw { message: 'GIF/JPG/PNG/WEBP/AVIF only.', status: 400 };
       }
 
       if (file?.size >= MAX_FILE_SIZE) {
@@ -55,18 +57,23 @@ export const POST = async (req: NextRequest) => {
     const OP = (formData.get('OP') as unknown) === 'true';
     const threadNum = formData.get('thread') as string;
 
+    // Parse stringified array first
+    const recipientsRaw = JSON.parse(formData.get('recipients') as unknown as string);
+    const recipients = recipientsRaw.map((num: number) => Number(num)).filter((num: number) => !isNaN(num));
+
     const newPost: NewPostType = {
       content,
       // Generate title from truncated post content, only if you're OP
       title: OP ? content.length > 25
         ? content.substring(0, 21) + '...'
         : content : '',
-      OP,
+      is_op: OP,
       thread: parseInt(threadNum) || 0,
       board: sanitizedBoardName,
-      replies: [],
-      date: new Date(),
-      IP: ip || 'none'
+      recipients,
+      created_at: new Date(),
+      ip: ip || 'none',
+      admin: false // fuck with later
     }
 
     if (file?.size > 0) newPost.image = file;
@@ -105,47 +112,51 @@ export const POST = async (req: NextRequest) => {
     }
 
     // Set post's imageUrl as url of the image we just uploaded to Amazon S3
-    newPost.imageUrl = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
+    newPost.image_url = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
     delete newPost.image;
 
-    // Increment counter value atomically
-    const getNextPostNum = async (): Promise<number> => {
-      const result = await (await db()).collection<CounterDocument>('counters').findOneAndUpdate(
-        { _id: 'postNum' },
-        { $inc: { seq_value: 1 } },
-        { returnDocument: 'after', upsert: true }
-      );
+    // Insert post into db
+    const { thread, title, image_url, created_at, is_op, board, admin } = newPost;
+    const sql = neon(PGDB_URL);
+    const res = await sql`
+      INSERT INTO posts (
+        thread,
+        title,
+        content,
+        image_url,
+        created_at,
+        ip,
+        is_op,
+        board,
+        admin
+      ) VALUES (
+        ${thread},
+        ${title},
+        ${content},
+        ${image_url},
+        ${created_at},
+        ${ip},
+        ${is_op},
+        ${board},
+        ${admin}
+      )
+      RETURNING post_num`
+      ;
 
-      if (result) {
-        return result.seq_value;
-      } else {
-        throw { message: 'Failed incrementing postNum counter', status: 500 };
+    const newPostNum = res[0].post_num;
+
+    // Insert replies (if any)
+    if (recipients.length > 0) {
+      for (const parentPostNum of recipients) {
+        const res2 = await sql`
+          INSERT INTO replies (post_num, parent_post_num)
+          VALUES (${newPostNum}, ${parentPostNum})
+        `;
       }
-    };
-
-    const newPostNum = await getNextPostNum();
-
-    // Save post to database
-    const result = await (await db()).collection('posts').insertOne({
-      ...newPost,
-      postNum: newPostNum
-    });
-
-    // Add the postNum to all recipients' reply arrays
-    const recipients = JSON.parse(formData.get('replyTo') as string);
-
-    if (recipients?.length > 0) {
-      await (await db()).collection<NewPostType>('posts').updateMany(
-        { 'postNum': { $in: recipients } },
-        {
-          $push: { replies: newPostNum }
-        }
-      );
     }
 
-    if (result.acknowledged && result.insertedId) {
-      return NextResponse.json('Created', { status: 201 });
-    }
+    return NextResponse.json('Created', { status: 201 });
+
   } catch (e) {
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },

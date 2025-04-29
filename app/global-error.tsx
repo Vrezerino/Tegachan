@@ -21,7 +21,7 @@ const GlobalError = ({
    * Unlike the root error.js, the global-error.js error boundary wraps the entire application,
    * and its fallback component replaces the root layout when active. Because of this, it is
    * important to note that global-error.js must define its own <html> and <body> tags.
-   * 
+   *
    * Even if a global-error.js is defined, it is still recommended to define a root error.js whose
    * fallback component will be rendered within the root layout, which includes globally shared UI
    * and branding.

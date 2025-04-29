@@ -11,14 +11,14 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
       <div className='flow-root m-0'>
         <ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
           {posts?.map((post) => (
-            <li className='py-2 sm:py-3' key={post.postNum}>
+            <li className='py-2 sm:py-3' key={post.post_num}>
               <div className='flex items-center'>
                 <div className='shrink-0'>
-                  {post?.imageUrl && <Image src={post?.imageUrl} alt={post.title || ''} width={32} height={32} />}
+                  {post?.image_url && <Image src={post?.image_url} alt={post.title || ''} width={32} height={32} />}
                 </div>
                 <div className='flex-1 min-w-0 ms-1'>
                   {/* Link to threadnum and #postnum if post is not an OP, otherwise just postnum */}
-                  <Link href={`dashboard/${post?.board}${post?.thread ? '/' + post.thread + '#' : '' + '/'}${post?.postNum}`}>
+                  <Link href={`dashboard/${post?.board}${!post?.is_op ? '/' + post.thread + '#' : '' + '/'}${post?.post_num}`}>
                     <p className='text-sm font-medium text-gray-900 truncate dark:text-white'>
                       {post?.title}
                     </p>
@@ -26,7 +26,7 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
                       {post?.content}
                     </p>
                     <p className='text-sm text-gray-500 truncate dark:text-gray-400'>
-                      {new Date(post?.date).toUTCString()}
+                      {new Date(post?.created_at).toUTCString()}
                     </p>
                   </Link>
                 </div>

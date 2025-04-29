@@ -6,8 +6,9 @@ export const newPostSchema = Joi.object({
   thread: Joi.number().allow(null).default(null),
   image: Joi.any(),
   board: Joi.string().required(),
-  OP: Joi.boolean(),
-  date: Joi.date(),
-  replies: Joi.array(),
-  IP: Joi.string()
+  is_op: Joi.boolean(),
+  created_at: Joi.date(),
+  recipients: Joi.array(),
+  ip: Joi.string(),
+  admin: Joi.boolean()
 });

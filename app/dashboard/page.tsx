@@ -4,7 +4,7 @@ import LatestPosts from '../ui/dashboard/latestPosts';
 import Intro from '../ui/dashboard/intro';
 
 const Page = async () => {
-  const data: PostType[] = await getLatestPosts();
+  const data: any = await getLatestPosts();
 
   return (
     <main>

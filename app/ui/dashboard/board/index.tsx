@@ -5,12 +5,12 @@ import { PostFormBig } from '../post/postForm';
 
 const BoardItem = ({ post }: { post: PostType }) => {
   return (
-    <Link href={`/dashboard/${post.board}/${post.postNum}`}>
+    <Link href={`/dashboard/${post.board}/${post.post_num}`}>
       <div className='posts-container-post m-1 border-gray-200 shadow-sm dark:border-neutral-800 dark:posts-container-post-darkmode'>
-        {post.imageUrl && <div className='posts-container-post-image'>
+        {post.image_url && <div className='posts-container-post-image'>
           <Image
             className='w-full'
-            src={post.imageUrl}
+            src={post.image_url}
             width={160}
             height={160}
             alt={post.title || 'Post image'}
@@ -31,7 +31,7 @@ const Board = ({ posts }: { posts: PostType[] }) => {
     <div>
       <div className='posts-container'>
         {posts?.map((post: PostType) => (
-          <BoardItem post={post} key={post.postNum} />
+          <BoardItem post={post} key={post.post_num} />
         ))}
       </div>
       <div>

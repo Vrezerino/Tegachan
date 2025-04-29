@@ -7,11 +7,11 @@ import { resolve } from 'node:path';
 export default defineConfig({
     plugins: [tsconfigPaths(), react()],
     test: {
-        include: ['**/*.test.tsx'],
+        include: ["**/*.test.ts", "**/*.test.tsx"],
         environment: 'jsdom',
         globals: true,
         env: loadEnv('', process.cwd(), ''),
-        setupFiles: ['__tests__/setup/setup.tsx', 'dotenv/config']
+        setupFiles: ['__tests__/setup/setup.tsx', '__tests__/setup/teardown.tsx', 'dotenv/config'],
     },
     resolve: {
         alias: [{ find: '@', replacement: resolve(__dirname, './') }]
