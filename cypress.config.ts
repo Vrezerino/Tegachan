@@ -17,7 +17,7 @@ export default defineConfig({
         cypressCleanup() {
           return sql`
             DELETE FROM posts
-            WHERE content LIKE 'Cypress posted this%'`
+            WHERE content LIKE '[TEST]: Cypress%'`
             .then(() => {
               console.log('Database cleared!');
               return null;

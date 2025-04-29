@@ -22,12 +22,12 @@ describe('Posting', () => {
     cy.contains('Post new thread');
     cy.get('#postForm').should('exist');
     cy.get('[data-testid="postFormTextArea"]').should('exist');
-    cy.get('[data-testid="postFormTextArea"]').type(`Cypress posted this thread ${rand}`);
+    cy.get('[data-testid="postFormTextArea"]').type(`[TEST]: Cypress posted this thread ${rand}`);
     cy.get('#postBtn').click();
 
     // 201 = successful creation
     cy.wait('@postFormRequest').its('response.statusCode').should('eq', 201);
-    cy.contains(`Cypress posted this thread ${rand}`);
+    cy.contains(`[TEST]: Cypress posted this thread ${rand}`);
   })
 
   it('post throttling (anti-spam) works', () => {
@@ -35,16 +35,16 @@ describe('Posting', () => {
     cy.intercept('POST', '/api/posts').as('postFormRequest');
 
     // Thread's post content is visible and it's clickable
-    cy.contains(`Cypress posted this thread ${rand}`).click();
+    cy.contains(`[TEST]: Cypress posted this thread ${rand}`).click();
 
     // Title/content can now be seen, again
-    cy.contains(`Cypress posted this thread ${rand}`);
+    cy.contains(`[TEST]: Cypress posted this thread ${rand}`);
 
     // Find form and post reply
     cy.contains('Reply', { timeout: 10000 });
     cy.get('#postForm').should('exist');
     cy.get('[data-testid="postFormTextArea"]').should('exist');
-    cy.get('[data-testid="postFormTextArea"]').type(`Cypress attempted to reply`);
+    cy.get('[data-testid="postFormTextArea"]').type(`[TEST]: Cypress attempted to reply`);
     cy.get('#postBtn').click();
 
     cy.wait('@postFormRequest').then((interception) => {
@@ -66,17 +66,17 @@ describe('Posting', () => {
     cy.visit('http://localhost:3000/dashboard/random');
     cy.intercept('POST', '/api/posts').as('postFormRequest');
 
-    cy.contains(`Cypress posted this thread ${rand}`).click();
+    cy.contains(`[TEST]: Cypress posted this thread ${rand}`).click();
 
     // Find form and post reply
     cy.contains('Reply');
     cy.get('#postForm').should('exist');
     cy.get('[data-testid="postFormTextArea"]').should('exist');
-    cy.get('[data-testid="postFormTextArea"]').type(`Cypress posted this reply ${rand}`);
+    cy.get('[data-testid="postFormTextArea"]').type(`[TEST]: Cypress posted this reply ${rand}`);
     cy.get('#postBtn').click();
 
     cy.wait('@postFormRequest').its('response.statusCode').should('eq', 201);
-    cy.contains(`Cypress posted this reply ${rand}`);
+    cy.contains(`[TEST]: Cypress posted this reply ${rand}`);
   })
 })
 
