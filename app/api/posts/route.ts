@@ -53,6 +53,7 @@ export const POST = async (req: NextRequest) => {
     if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
     // Enforce string type so MongoDB won't read content as object in possible NoSQL attack
+    // NOTE: MongoDB not in use anymore but leave as is
     const content = removeGapsFromString(String(formData.get('content')));
     const OP = (formData.get('OP') as unknown) === 'true';
     const threadNum = formData.get('thread') as string;
