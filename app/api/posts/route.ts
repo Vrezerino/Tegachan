@@ -69,7 +69,7 @@ export const POST = async (req: NextRequest) => {
     const newPost: NewPostType = {
       content,
       // Generate title from truncated post content, only if you're OP
-      title: is_op_raw ? content.length > 25
+      title: is_op ? content.length > 25
         ? content.substring(0, 21) + '...'
         : content : '',
       is_op,
