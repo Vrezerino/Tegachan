@@ -10,18 +10,18 @@ export const getLatestPosts = async () => {
   try {
     const res = await sql
       `SELECT
-      post_num,
-      thread,
-      title,
-      content,
-      image_url,
-      created_at,
-      is_op,
-      board
+        post_num,
+        thread,
+        title,
+        content,
+        image_url,
+        created_at,
+        is_op,
+        board
       FROM posts
       ORDER BY created_at
       DESC LIMIT 15`
-      ;
+    ;
 
     return JSON.parse(JSON.stringify(res));
   } catch (e) {

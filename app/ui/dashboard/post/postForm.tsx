@@ -43,10 +43,10 @@ const PostFormBig = ({
       && setRecipients(recipients.filter((r) => r !== post_number));
   }
 
-  // Check file size and type
+  // Check file type and size
   const setImageFile = (file: File) => {
     if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-      toast.error('File type not accepted, JPG/PNG/WEBP/AVIF only.');
+      toast.error('GIF/JPG/PNG/WEBP/AVIF only.');
       if (fileRef.current) fileRef.current.value = '';
     }
 
@@ -114,7 +114,6 @@ const PostFormBig = ({
   }
   return (
     <>
-
       <form onSubmit={onSubmit} id='postForm' className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-xs shadow-sm w-full md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
         <div>
           {/* Text content */}
@@ -173,11 +172,13 @@ const PostFormBig = ({
   );
 };
 
+/**
 const PostFormSmall = ({ replyTo }: { replyTo: PostType }) => {
   return (
     <form>
     </form>
   );
 };
+*/
 
-export { PostFormBig, PostFormSmall };
+export { PostFormBig, /* PostFormSmall */ };

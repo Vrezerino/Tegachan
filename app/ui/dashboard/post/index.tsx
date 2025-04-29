@@ -15,7 +15,7 @@ const Post = ({ posts }: { posts: PostType[] }) => {
     <>
       {/* Thread starter (OP) and possible replies */}
       {posts.map((post) => {
-        // Each post will have a reply number array (and already has an array of replied-to posts)
+        // Each post will have a replies number array (and already has an array of replied-to posts)
         const replies = posts.filter(p => p.parent_post_nums?.includes(post.post_num))
         .map(r => r.post_num);
         

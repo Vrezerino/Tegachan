@@ -32,7 +32,7 @@ export const POST = async (req: NextRequest) => {
     const { limited, retryAfterSeconds } = await checkRateLimit(ip as string);
 
     if (limited) {
-      throw { message: `Don't flood/spam. Try again in ${retryAfterSeconds} seconds.`, status: 429 };
+      throw { message: `Try again in ${retryAfterSeconds} seconds.`, status: 429 };
     }
 
     const formData = await req.formData();
@@ -141,17 +141,17 @@ export const POST = async (req: NextRequest) => {
         ${admin}
       )
       RETURNING post_num`
-      ;
+    ;
 
     const newPostNum = res[0].post_num;
 
     // Insert replies (if any)
     if (recipients.length > 0) {
       for (const parentPostNum of recipients) {
-        const res2 = await sql`
+        await sql`
           INSERT INTO replies (post_num, parent_post_num)
-          VALUES (${newPostNum}, ${parentPostNum})
-        `;
+          VALUES (${newPostNum}, ${parentPostNum})`
+        ;
       }
     }
 

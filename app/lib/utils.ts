@@ -14,8 +14,6 @@ import {
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
 
-export const boards = 'random, music, technology, outdoors';
-
 // Links to display in the side navigation
 export const links = [
   {
@@ -100,8 +98,8 @@ export const parseDate = (date: Date): string => {
 
 /**
  * Returns a number between 1 and max
- * @param max 
- * @returns 
+ * @param max
+ * @returns
  */
 export const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * (max - 1)) + 1;
@@ -114,7 +112,7 @@ export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
 /**
  * Remove consecutive spaces, linebreaks and tabs.
  * @param str string
- * @returns 
+ * @returns
  */
 export const removeGapsFromString = (str: string) => {
   return str
@@ -126,7 +124,7 @@ export const removeGapsFromString = (str: string) => {
 /**
  * Remove consecutive spaces, linebreaks, tabs and special characters.
  * @param str string
- * @returns 
+ * @returns
  */
 export const sanitizeString = (str: string) => {
   return removeGapsFromString(str)

@@ -14,24 +14,24 @@ export const getBumpedPosts = async (board: string) => {
   try {
     const res = await sql
       `SELECT
-      p.post_num,
-      p.thread,
-      p.title,
-      p.content,
-      p.image_url,
-      p.created_at AS op_created_at,
-      p.is_op,
-      p.board,
+        p.post_num,
+        p.thread,
+        p.title,
+        p.content,
+        p.image_url,
+        p.created_at AS op_created_at,
+        p.is_op,
+        p.board,
       COUNT(r.post_num) AS num_replies,
       MAX(reply_posts.created_at) AS latest_reply_created_at
       FROM posts p
       LEFT JOIN replies r ON p.post_num = r.parent_post_num
-      LEFT JOIN posts reply_posts ON r.post_num = reply_posts.post_num  -- Join to get created_at for replies
+      LEFT JOIN posts reply_posts ON r.post_num = reply_posts.post_num -- Join to get created_at for replies
       WHERE p.is_op = true
         AND p.board = ${board}
       GROUP BY p.post_num
       ORDER BY COALESCE(MAX(reply_posts.created_at), p.created_at) DESC;`
-      ;
+    ;
 
     return JSON.parse(JSON.stringify(res));
   } catch (e) {

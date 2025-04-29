@@ -68,8 +68,8 @@ export const getPost = async (board: string, postNum: string) => {
       is_op,
       board,
       admin
-    ORDER BY created_at ASC;
-    `;
+    ORDER BY created_at ASC;`
+  ;
 
     return JSON.parse(JSON.stringify(res));
   } catch (e) {
