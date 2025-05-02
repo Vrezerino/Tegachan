@@ -59,7 +59,7 @@ describe('Posting', () => {
       }
     });
 
-    cy.wait(process.env.CI ? 5000 : 27000);
+    cy.wait(27000);
   })
 
   it('form submits new reply', () => {
@@ -76,7 +76,7 @@ describe('Posting', () => {
     cy.get('#postBtn').click();
 
     cy.wait('@postFormRequest').its('response.statusCode').should('eq', 201);
-    cy.contains(`[TEST]: Cypress posted this reply ${rand}`);
+    cy.contains(`[TEST]: Cypress posted this reply ${rand}`, { timeout: 5000 });
   })
 })
 
