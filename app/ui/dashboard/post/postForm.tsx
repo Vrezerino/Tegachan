@@ -14,34 +14,29 @@ import { usePathname } from 'next/navigation';
 
 import toast from 'react-hot-toast';
 import PostingAnim from '../postingAnim';
+import { useRecipients } from './useRecipients';
 
 interface PostFormProps {
   op: PostType | null;
   recipients: number[];
-  setRecipients: Dispatch<SetStateAction<number[]>> | null;
+  setRecipients: Dispatch<SetStateAction<number[]>>;
+  content: string;
+  setContent: Dispatch<SetStateAction<string>>;
 }
 
 const PostFormBig = ({
   op,
   recipients,
-  setRecipients
+  setRecipients,
+  content,
+  setContent
 }: PostFormProps) => {
-  const [content, setContent] = useState<string>('');
   const [image, setImage] = useState<Blob | null>();
   const [loading, setLoading] = useState<boolean>(false);
 
   const fileRef = useRef<HTMLInputElement>(null);
-
   const pathname = usePathname();
   const router = useRouter();
-
-  const removeRecipient = (post_number: number) => {
-    op?.post_num
-      !== post_number
-      && recipients
-      && setRecipients
-      && setRecipients(recipients.filter((r) => r !== post_number));
-  }
 
   // Check file type and size
   const setImageFile = (file: File) => {
@@ -58,11 +53,11 @@ const PostFormBig = ({
     setImage(file);
   }
 
-  useEffect(() => {
-    // If you're replying to an OP, set first recipient as OP
-    op && setRecipients && setRecipients([op.post_num]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  useRecipients({
+    content,
+    opPostNum: op?.post_num,
+    setRecipients
+  });
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -79,9 +74,6 @@ const PostFormBig = ({
     formData.set('content', String(noGapContent));
     if (image) formData.set('image', image);
 
-    // Arrays must be stringified in FormData objects — parse it on server
-    formData.set('recipients', JSON.stringify(recipients));
-
     // If postForm gets existing OP as prop, the new post will be a reply. Otherwise it is itself OP
     if (op) {
       formData.set('OP', 'false');
@@ -92,6 +84,8 @@ const PostFormBig = ({
 
     // Get the name of the board you're posting on and set it to formData
     formData.set('board', pathname.split('/')[2]);
+
+    formData.set('recipients', JSON.stringify(recipients));
 
     const response = await fetch(`/api/posts`, {
       method: 'POST',
@@ -135,17 +129,6 @@ const PostFormBig = ({
             </div>
 
           </div>
-
-          {/* Recipients */}
-          {op && <div className='flex flex-wrap gap-x-1'>
-            <label className='mt-2 mb-2 block text-sm font-medium dark:label-darkmode'>
-              Recipients:
-            </label>
-            {recipients.map(
-              (r) => <span onClick={() => removeRecipient(r)} className={`${r !== op?.post_num && 'hover:cursor-pointer hover:bg-blue-200/60 '} rounded-md p-1 mt-1 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 md:flex-none md:justify-start md:p-1 md:px-2`} key={r}>{r === op?.post_num ? 'OP' : `${r} ❌`}</span>
-            )
-            }
-          </div>}
 
           {/* Image */}
           <div className='mb-4'>
