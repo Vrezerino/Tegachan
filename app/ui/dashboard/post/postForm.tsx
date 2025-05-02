@@ -19,7 +19,7 @@ import { useRecipients } from './useRecipients';
 interface PostFormProps {
   op: PostType | null;
   recipients: number[];
-  setRecipients: Dispatch<SetStateAction<number[]>>;
+  setRecipients?: Dispatch<SetStateAction<number[]>>;
   content: string;
   setContent: Dispatch<SetStateAction<string>>;
 }

@@ -1,7 +1,10 @@
+'use client'
+
 import { PostType } from '@/app/lib/definitions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PostFormBig } from '../post/postForm';
+import { useState } from 'react';
 
 const BoardItem = ({ post }: { post: PostType }) => {
   return (
@@ -26,6 +29,21 @@ const BoardItem = ({ post }: { post: PostType }) => {
   );
 };
 
+const NewThreadForm = () => {
+  const [recipients, setRecipients] = useState<number[]>([]);
+  const [content, setContent] = useState<string>('');
+
+  return (
+    <PostFormBig
+      content={content}
+      setContent={setContent}
+      recipients={recipients}
+      setRecipients={setRecipients}
+      op={null}
+    />
+  );
+};
+
 const Board = ({ posts }: { posts: PostType[] }) => {
   return (
     <div>
@@ -35,7 +53,7 @@ const Board = ({ posts }: { posts: PostType[] }) => {
         ))}
       </div>
       <div>
-        <PostFormBig recipients={[]} setRecipients={null} op={null} />
+        <NewThreadForm />
       </div>
     </div>
   );

@@ -3,7 +3,7 @@ import { useEffect, useRef, Dispatch, SetStateAction } from 'react';
 interface useRecipientsProps {
   content: string;
   opPostNum: number | null | undefined;
-  setRecipients: Dispatch<SetStateAction<number[]>>;
+  setRecipients?: Dispatch<SetStateAction<number[]>>;
   delay?: number;
 }
 
@@ -20,7 +20,10 @@ export const useRecipients = ({
 }: useRecipientsProps) => {
   const timeoutRef = useRef<number | undefined>(undefined);
 
+  // Skip if setRecipients is not provided e.g. when creating thread
   useEffect(() => {
+    if (!setRecipients) return;
+
     timeoutRef.current && clearTimeout(timeoutRef.current);
 
     timeoutRef.current = window.setTimeout(() => {
@@ -39,4 +42,4 @@ export const useRecipients = ({
 
     return () => clearTimeout(timeoutRef.current);
   }, [content, opPostNum, setRecipients, delay]);
-}
+};
