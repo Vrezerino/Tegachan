@@ -81,26 +81,27 @@ const PostContent = ({
     let lastIndex = 0;
     let match;
 
-    // Iterate over all matches
     while ((match = regex.exec(content)) !== null) {
-      // Push the text before the match
+      const [fullMatch, post_num, trailingSpace] = match;
+
       if (match.index > lastIndex) {
         parts.push(content.slice(lastIndex, match.index));
       }
 
-      // Push the link for the match
-      const post_num = match[1];
       parts.push(
-        <a href={`#${post_num}`} key={`link-${post_num}`} className='font-bold underline'>
+        <a href={`#${post_num}`} key={`link-${post_num}`} className="font-bold underline">
           {`>>${post_num}`}
         </a>
       );
 
-      // Update the last index to the end of the match
+      // Preserve trailing space or newline after the link
+      if (trailingSpace) {
+        parts.push(trailingSpace);
+      }
+
       lastIndex = regex.lastIndex;
     }
 
-    // Push the remaining text after the last match
     if (lastIndex < content.length) {
       parts.push(content.slice(lastIndex));
     }
@@ -109,7 +110,7 @@ const PostContent = ({
   };
 
   return (
-    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
+    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
       {post.image_url && (
         <div key={`imgContainer-${post.post_num}`} className='min-w-40 relative'>
           <Link key={post.post_num} href={post.image_url} target='_blank'>
@@ -124,18 +125,19 @@ const PostContent = ({
               }}
               placeholder='blur'
               blurDataURL='/img/misc/blurred.jpg'
-              className='object-cover rounded-tl-sm' />
+              className='object-cover rounded-tl-sm'
+              data-testid='post-image' />
           </Link>
         </div>
       )}
-      <div key={`textContent-${post.post_num}`} className='flex flex-col justify-between p-3 leading-normal'>
-        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className='text-xs text-red-400 dark:text-red-200/30 inline-block'>
+      <div key={`textContent-${post.post_num}`} className='flex flex-col justify-between p-3 leading-normal w-full'>
+        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className='text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent' data-testid='post-timestamp-and-post_num'>
           {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
         </a>
 
         {/* Clickable reply post_numbers except on OP */}
         {!post.is_op && replies?.length > 0 && (
-          <div className='flex flex-wrap gap-x-1'>
+          <div className='flex flex-wrap gap-x-1 bg-sky-600/5 dark:bg-transparent w-full'>
             {replies.map((r) => (
               <a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700 dark:text-gray-400 underline'>&gt;&gt;{r}</a>
             ))}
@@ -143,7 +145,7 @@ const PostContent = ({
         )}
 
         {post.is_op && <h1 className='text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
-        <p className='whitespace-pre-wrap font-normal text-gray-700 dark:text-gray-400 mt-5'>
+        <p className='break-all font-normal text-gray-700 dark:text-gray-400 mt-5' data-testid='post-content'>
           {renderContentWithLinks(post.content)}
         </p>
       </div>

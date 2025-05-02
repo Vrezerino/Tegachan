@@ -21,8 +21,8 @@ const BoardItem = ({ post }: { post: PostType }) => {
         </div>}
 
         <div className='posts-container-text p-3'>
-          <h5 className='posts-container-post-title line-clamp-2 dark:posts-container-post-title-darkmode'>{post?.title}</h5>
-          <p className='line-clamp-4 font-normal text-neutral-600 dark:text-neutral-300'>{post?.content}</p>
+          <h5 className='posts-container-post-title line-clamp-2 dark:posts-container-post-title-darkmode' data-testid='boardtype-post-title'>{post?.title}</h5>
+          <p className='line-clamp-4 font-normal text-neutral-600 dark:text-neutral-300' data-testid='boardtype-post-content'>{post?.content}</p>
         </div>
       </div>
     </Link>
