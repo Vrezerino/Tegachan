@@ -15,10 +15,11 @@ describe('Navigating', () => {
 
 describe('PostForm', () => {
   let rand: string;
-  let replyAttemptSuccessful = false;
+
   before(() => {
     rand = `${Math.floor(Math.random() * 100000)}`;
     Cypress.env('testRand', rand);
+    Cypress.env('firstPostWasThrottled', false);
   });
 
   it('submits new thread and it can be seen in catalogue', () => {
