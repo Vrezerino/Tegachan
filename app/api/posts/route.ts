@@ -95,6 +95,20 @@ export const POST = async (req: NextRequest) => {
       // create a byte array from it
       const buffer = Buffer.from(await file.arrayBuffer());
 
+      if (AWS_NAME.includes('test')) {
+        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" INCLUDES test');
+      } else if (AWS_NAME.includes('dev')) {
+        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" INCLUDES dev');
+      } else if (AWS_NAME === 'tegachan') {
+        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" IS production');
+      } else if (AWS_NAME === null) {
+        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" IS null');
+      } else if (AWS_NAME === undefined) {
+        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" IS undefined');
+      } else {
+        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" ????')
+      }
+
       // and upload the image file to Amazon S3 storage
       const params = {
         Bucket: AWS_NAME,
