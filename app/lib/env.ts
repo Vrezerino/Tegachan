@@ -1,4 +1,4 @@
-/** 
+/**
  * This file holds database and storage variables that depend on
  * the existence and values of environment variables in .env
 */
