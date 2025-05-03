@@ -176,4 +176,24 @@ export const findExactInString = (searchWord: string | null, target: string | un
   return regex.test(target);
 };
 
-export const THROTTLE_WINDOW = process.env.NODE_ENV !== 'production' ? 6 : 30;
+// 'other' includes 'development'
+let envType: 'ci' | 'production' | 'other';
+
+if (process.env.CI) {
+  envType = 'ci';
+} else if (process.env.NODE_ENV === 'production') {
+  envType = 'production';
+} else {
+  envType = 'other';
+}
+
+export const THROTTLE_WINDOW = (() => {
+  switch (envType) {
+    case 'production':
+      return 30;
+    case 'ci':
+      return 2;
+    default:
+      return 6;
+  }
+})();

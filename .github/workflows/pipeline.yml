@@ -38,6 +38,6 @@ jobs:
         run: npx vitest run
 
       - name: Run e2e tests
-        env: 
+        env:
           NODE_ENV: test
         run: npx playwright install --with-deps && npx playwright test
