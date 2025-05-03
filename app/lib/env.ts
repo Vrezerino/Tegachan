@@ -16,12 +16,14 @@ if (!process.env.AWS_BUCKET_URL || !process.env.AWS_BUCKET_URL_DEV || !process.e
   throw new Error('One or more Amazon S3 bucket URLs are missing!')
 };
 
+// Assign database and storage variables conditionally
 let PGDB_URL: string;
 let AWS_NAME: string;
 let AWS_URL: string;
 
-// Assign database and storage variables conditionally
-switch (process.env.NODE_ENV) {
+const env = process.env.CI ? 'test' : process.env.NODE_ENV;
+
+switch (env) {
   case 'production':
     PGDB_URL = process.env.PGDB_URL;
     AWS_NAME = process.env.AWS_BUCKET_NAME;
