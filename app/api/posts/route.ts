@@ -1,5 +1,5 @@
 import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '../../lib/env';
+import { PGDB_URL } from '@/app//lib/env';
 
 import { newPostSchema } from '@/app/lib/newPostSchema';
 import { NewPostType } from '@/app/lib/definitions';

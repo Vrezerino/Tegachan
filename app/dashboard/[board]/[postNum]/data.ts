@@ -1,6 +1,6 @@
 import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
-import { PGDB_URL } from '../../../lib/env';
+import { PGDB_URL } from '@/app/lib/env';
 import { isErrorWithStatusCodeType } from '../../../lib/utils';
 
 export const getPost = async (board: string, postNum: string) => {

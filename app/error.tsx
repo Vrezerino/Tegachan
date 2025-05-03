@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useEffect } from 'react';
-import { getRandomInt } from './lib/utils';
+import { getRandomInt } from '@/app/lib/utils';
 import Image from 'next/image';
 
 /**

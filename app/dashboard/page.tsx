@@ -1,7 +1,7 @@
-import { PostType } from '../lib/definitions';
+import { PostType } from '@/app/lib/definitions';
 import { getLatestPosts } from './data';
-import LatestPosts from '../ui/dashboard/latestPosts';
-import Intro from '../ui/dashboard/intro';
+import LatestPosts from '@/app/ui/dashboard/latestPosts';
+import Intro from '@/app/ui/dashboard/intro';
 
 const Page = async () => {
   const data: PostType[] = await getLatestPosts();

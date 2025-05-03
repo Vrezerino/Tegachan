@@ -1,7 +1,7 @@
 'use client'
 
 import { PostType } from '@/app/lib/definitions';
-import { FormEvent, useState, useEffect, useRef, Dispatch, SetStateAction } from 'react';
+import { FormEvent, useState, useRef, Dispatch, SetStateAction } from 'react';
 
 import {
   ACCEPTED_IMAGE_TYPES,
@@ -123,7 +123,7 @@ const PostFormBig = ({
                 className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
                 required
                 disabled={loading}
-                data-testid='postFormTextArea'
+                data-testid='postform-textarea'
               />
               {loading && <PostingAnim />}
             </div>
@@ -148,7 +148,7 @@ const PostFormBig = ({
               </div>
             </div>
           </div>
-          <button id='postBtn' className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3' type='submit' disabled={!content || content.length >= 1500 || loading}>Post</button>
+          <button id='postBtn' className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3' type='submit' disabled={!content || content.length >= 1500 || loading} data-testid='postform-postbutton'>Post</button>
         </div>
       </form>
     </>

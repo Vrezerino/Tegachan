@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
-import { PGDB_URL } from '../../lib/env';
-import { isErrorWithStatusCodeType } from '../../lib/utils';
+import { PGDB_URL } from '@/app/lib/env';
+import { isErrorWithStatusCodeType } from '@/app/lib/utils';
 
 export const getBumpedPosts = async (board: string) => {
 

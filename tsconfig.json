@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "baseUrl": "./",
     "lib": [
       "dom",
       "dom.iterable",
@@ -16,6 +17,9 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "types": [
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -29,12 +33,14 @@
     "target": "ES2017"
   },
   "include": [
+    "__tests__/**/*.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
     "middleware.ts",
-    "vitest.config.mts"
+    "vitest.config.mts",
+    "__tests__/e2e/selenium/selenium.e2e.test.js"
   ],
   "exclude": [
     "node_modules"

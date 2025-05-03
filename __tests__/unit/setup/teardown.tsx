@@ -1,5 +1,6 @@
+import { afterAll } from 'vitest';
 import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '../../app/lib/env';
+import { PGDB_URL } from '@/app/lib/env';
 
 const sql = neon(PGDB_URL);
 
@@ -8,7 +9,7 @@ afterAll(async () => {
   try {
     await sql`
     DELETE FROM POSTS
-    WHERE ip = '999.999.999.999'`;
+      WHERE ip = '999.999.999.999'`;
     console.log('Database cleared!')
   } catch (e) {
     console.error(e);

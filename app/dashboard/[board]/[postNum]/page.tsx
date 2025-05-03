@@ -1,7 +1,7 @@
 import { PostType } from '@/app/lib/definitions';
 import { getPost } from './data';
 import Post from '@/app/ui/dashboard/post';
-import { notFound, redirect } from 'next/navigation';
+import { notFound } from 'next/navigation';
 
 type ParamsType = Promise<{ board: string; postNum: string }>;
 

@@ -1,8 +1,7 @@
-import { afterAll, vi } from 'vitest';
-
+import { beforeAll, beforeEach, vi } from 'vitest';
 import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '../../app/lib/env';
-import { posts } from '@/app/lib/placeholderData';
+import { PGDB_URL } from '@/app/lib/env';
+import { posts } from '@/__tests__/unit/setup/placeholderData';
 
 const sql = neon(PGDB_URL);
 

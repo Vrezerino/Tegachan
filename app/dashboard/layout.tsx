@@ -1,6 +1,6 @@
 export const dynamic = 'force-dynamic';
 import { Toaster } from 'react-hot-toast';
-import SideNav from '../ui/dashboard/sideNav';
+import SideNav from '@/app/ui/dashboard/sideNav';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (

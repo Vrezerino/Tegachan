@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 
-import './globals.css';
+import '@/app/globals.css';
 import NextTopLoader from 'nextjs-toploader';
-import Particles from './ui/dashboard/particles';
+import Particles from '@/app/ui/dashboard/particles';
 
 const inter = Inter({ subsets: ['latin'] });
 

@@ -3,7 +3,7 @@
 import { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { getRandomInt } from './lib/utils';
+import { getRandomInt } from '@/app/lib/utils';
 
 // Specifically handle errors in root layout (layout.tsx)
 const GlobalError = ({
