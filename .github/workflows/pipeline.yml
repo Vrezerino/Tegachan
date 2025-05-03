@@ -17,6 +17,8 @@ env:
   UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
   PGDB_URL: ${{ secrets.PGDB_URL }}
   PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
+  BANLIST: ${{ secrets.BANLIST }}
+  PROXYLIST: ${{ secrets.PROXYLIST }}
 
 jobs:
   build-and-test:

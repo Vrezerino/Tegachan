@@ -6,10 +6,10 @@ import { PGDB_URL, AWS_NAME, AWS_URL } from '@/app/lib/env';
 
 const sql = neon(PGDB_URL);
 
-console.log(PGDB_URL.includes('ep-divine-sun') ? 'PGDB_URL is prod' : 'PGDB_URL is dev');
-console.log('AWS_NAME:', AWS_NAME.includes('dev') ? 'dev' : 'not_dev');
-console.log(AWS_URL.substring(8, 21));
-
+// Logs that reveal enough for debug but not too much
+console.log('Database URL is for', PGDB_URL.includes('-cool-') ? 'dev' : 'not dev');
+console.log('AWS_NAME is for', AWS_NAME.includes('dev') ? 'dev' : AWS_NAME.includes('test') ? 'test' : 'prod or URL undefined');
+console.log('AWS_URL is for', AWS_URL.includes('dev') ? 'dev' : AWS_URL.includes('test') ? 'test' : 'prod or URL undefined');
 console.log('CI:', process.env.CI);
 console.log('NODE_ENV:', process.env.NODE_ENV);
 
@@ -71,15 +71,9 @@ test.describe.serial('Posting', () => {
     await page.waitForTimeout(5000);
     await page.getByTestId('postform-postbutton').click();
 
-    let response;
 
-    try {
-      response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
-      await expect(response.status()).toBe(201);
-    } catch (e: any) {
-      console.log('response body:', response?.body);
-      console.error('error:', e);
-    }
+    const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
+    await expect(response.status()).toBe(201);
 
     const post = page.getByTestId('post-container').nth(2);
     const image = post.getByTestId('post-image');

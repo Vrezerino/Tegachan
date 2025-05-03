@@ -16,7 +16,7 @@ import {
 
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
-import { AWS_NAME, AWS_URL, banlist } from '../../lib/env';
+import { AWS_NAME, AWS_URL, banlist, proxylist } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
@@ -27,6 +27,11 @@ export const POST = async (req: NextRequest) => {
     // Check if ip in banlist
     if (findExactInString(ip, banlist)) {
       throw { message: 'Can not post at this time.', status: 403 };
+    }
+
+    // Check if in proxy list
+    if (findExactInString(ip, proxylist)) {
+      throw { message: 'Posting from proxy not allowed.', status: 403 };
     }
 
     // Limit rate based on ip
@@ -94,20 +99,6 @@ export const POST = async (req: NextRequest) => {
 
       // create a byte array from it
       const buffer = Buffer.from(await file.arrayBuffer());
-
-      if (AWS_NAME.includes('test')) {
-        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" INCLUDES test');
-      } else if (AWS_NAME.includes('dev')) {
-        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" INCLUDES dev');
-      } else if (AWS_NAME === 'tegachan') {
-        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" IS production');
-      } else if (AWS_NAME === null) {
-        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" IS null');
-      } else if (AWS_NAME === undefined) {
-        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" IS undefined');
-      } else {
-        console.log('BEFORE UPLOAD: AWS_NAME FOR "BUCKET" ????')
-      }
 
       // and upload the image file to Amazon S3 storage
       const params = {
@@ -177,7 +168,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json('Created', { status: 201 });
 
   } catch (e) {
-    console.error('Error from route.ts:', e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!');
+    console.error('Error on POST:', e instanceof Error || isErrorWithStatusCodeType(e) && e.message);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
