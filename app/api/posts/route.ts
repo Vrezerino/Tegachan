@@ -163,6 +163,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json('Created', { status: 201 });
 
   } catch (e) {
+    console.error('Error from route.ts:', e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!');
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
