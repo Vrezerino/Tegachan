@@ -17,7 +17,7 @@ export default defineConfig({
 
   // Opt out of parallel tests on CI
   workers: process.env.CI ? 1 : undefined,
-  reporter: 'html',
+  reporter: process.env.CI ? 'dot' : 'html',
 
   use: {
     // Base URL to use in actions like `await page.goto('/')`
@@ -33,7 +33,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: process.env.CI? 'npm start' : 'npm run dev',
+    command: process.env.CI ? 'npm start' : 'npm run dev',
     port: 3000,
     reuseExistingServer: !process.env.CI,
   },
