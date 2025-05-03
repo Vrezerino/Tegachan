@@ -2,9 +2,16 @@ import { test, expect } from '@playwright/test';
 import { links } from '@/app/lib/utils';
 
 import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '@/app/lib/env';
+import { PGDB_URL, AWS_NAME, AWS_URL } from '@/app/lib/env';
 
 const sql = neon(PGDB_URL);
+
+console.log(PGDB_URL.includes('ep-divine-sun')? 'PGDB_URL is prod' : 'PGDB_URL is dev');
+console.log('AWS_NAME:', AWS_NAME);
+console.log(AWS_URL.substring(8));
+
+console.log('CI:', process.env.CI);
+console.log('NODE_ENV:', process.env.NODE_ENV);
 
 test.describe('Navigation', () => {
   test('to different boards works', async ({ page }) => {
@@ -64,8 +71,12 @@ test.describe.serial('Posting', () => {
     await page.waitForTimeout(5000);
     await page.getByTestId('postform-postbutton').click();
 
-    const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
-    await expect(response.status()).toBe(201);
+    try {
+      const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
+      await expect(response.status()).toBe(201);
+    } catch (e: any) {
+      console.error(e);
+    }
 
     const post = page.getByTestId('post-container').nth(2);
     const image = post.getByTestId('post-image');

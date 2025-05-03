@@ -37,5 +37,8 @@ jobs:
       - name: Run unit tests
         run: npx vitest run
 
+      - name: Debug image presence
+        run: ls -l __tests__/assets/
+
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
