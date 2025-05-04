@@ -140,7 +140,7 @@ const PostContent = ({
 
         {/* Clickable reply post_nums except on OP */}
         {!post.is_op && replies?.length > 0 && (
-          <div className={`${!post.image_url && 'ml-4'} break-all flex flex-wrap gap-x-1 bg-sky-600/5 dark:bg-transparent w-full`}>
+          <div className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
             {replies.map((r) => (
               <a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700 dark:text-gray-400 underline'>&gt;&gt;{r}</a>
             ))}
