@@ -80,21 +80,29 @@ const PostContent = ({
     const parts = [];
     let lastIndex = 0;
     let match;
+    let brCounter = 0; // necessary for unique elem keys
 
     while ((match = regex.exec(content)) !== null) {
-      const [post_num, trailingSpace] = match;
+      // >>500, 500, space
+      const [fullMatch, postNumber, trailingSpace] = match;
 
       if (match.index > lastIndex) {
-        parts.push(content.slice(lastIndex, match.index));
+        const preceding = content.slice(lastIndex, match.index);
+        parts.push(preceding);
+
+        // Insert breaks if preceding text does not end in a newline
+        if (!preceding.endsWith('<br />')) {
+          parts.push(<br key={`br-${postNumber}-${brCounter++}`} />);
+          parts.push(<br key={`br-${postNumber}-${brCounter++}`} />);
+        }
       }
 
       parts.push(
-        <a href={`#${post_num}`} key={`link-${post_num}`} className="font-bold underline">
-          {`>>${post_num}`}
+        <a href={`#${postNumber}`} key={`link-${postNumber}-${match.index}`} className="font-bold underline">
+          {`>>${postNumber}`}<br />
         </a>
       );
 
-      // Preserve trailing space or newline after the link
       if (trailingSpace) {
         parts.push(trailingSpace);
       }
@@ -133,25 +141,25 @@ const PostContent = ({
           </Link>
         </div>
       )}
-      
-        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className={`${!post.image_url && 'ml-4'} break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent`} data-testid='post-timestamp-and-post_num'>
-          {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
-        </a>
 
-        {/* Clickable reply post_nums except on OP */}
-        {!post.is_op && replies?.length > 0 && (
-          <div className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
-            {replies.map((r) => (
-              <a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700 dark:text-gray-400 underline'>&gt;&gt;{r}</a>
-            ))}
-          </div>
-        )}
+      <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className={`${!post.image_url && 'ml-4'} break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent`} data-testid='post-timestamp-and-post_num'>
+        {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
+      </a>
 
-        {post.is_op && <h1 className='break-all ml-4 text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
-        <p className='break-all font-normal text-gray-700 dark:text-gray-400 mt-3 pl-4 pr-4 pb-4' data-testid='post-content'>
-          {renderContentWithLinks(post.content)}
-        </p>
-      
+      {/* Clickable reply post_nums except on OP */}
+      {!post.is_op && replies?.length > 0 && (
+        <div className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
+          {replies.map((r) => (
+            <a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>&gt;&gt;{r}</a>
+          ))}
+        </div>
+      )}
+
+      {post.is_op && <h1 className='break-all ml-4 text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
+      <p className='break-all font-normal text-gray-700 dark:text-gray-400 mt-3 pl-4 pr-4 pb-4' data-testid='post-content'>
+        {renderContentWithLinks(post.content)}
+      </p>
+
     </div>
   )
 }
