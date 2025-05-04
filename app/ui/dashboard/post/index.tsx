@@ -127,13 +127,14 @@ const PostContent = ({
               placeholder='blur'
               blurDataURL='/img/misc/blurred.jpg'
               className='h-min object-cover rounded-tl-sm'
-              unoptimized={post.image_url.endsWith('.gif')}
+              // endsWith() won't work due to Next image url format
+              unoptimized={post.image_url.includes('.gif')}
               data-testid='post-image' />
           </Link>
         </div>
       )}
       
-        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className='text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent' data-testid='post-timestamp-and-post_num'>
+        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className={`${!post.image_url && 'ml-4'} mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent`} data-testid='post-timestamp-and-post_num'>
           {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
         </a>
 
@@ -146,7 +147,7 @@ const PostContent = ({
           </div>
         )}
 
-        {post.is_op && <h1 className='text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
+        {post.is_op && <h1 className='ml-4 text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
         <p className='font-normal text-gray-700 dark:text-gray-400 mt-3 pl-4 pr-4 pb-4' data-testid='post-content'>
           {renderContentWithLinks(post.content)}
         </p>
