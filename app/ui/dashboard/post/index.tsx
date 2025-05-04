@@ -128,7 +128,7 @@ const PostContent = ({
               alt={`Post num ${post.post_num}'s image`}
               fill
               style={{
-                objectFit: 'cover',
+                objectFit: 'scale-down',
                 objectPosition: 'left top'
               }}
               placeholder='blur'
