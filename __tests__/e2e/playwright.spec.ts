@@ -2,16 +2,9 @@ import { test, expect } from '@playwright/test';
 import { links } from '@/app/lib/utils';
 
 import { neon } from '@neondatabase/serverless';
-import { PGDB_URL, AWS_NAME, AWS_URL } from '@/app/lib/env';
+import { PGDB_URL } from '@/app/lib/env';
 
 const sql = neon(PGDB_URL);
-
-// Logs that reveal enough for debug but not too much
-console.log('Database URL is for', PGDB_URL.includes('-cool-') ? 'dev' : 'not dev');
-console.log('AWS_NAME is for', AWS_NAME.includes('dev') ? 'dev' : AWS_NAME.includes('test') ? 'test' : 'prod or URL undefined');
-console.log('AWS_URL is for', AWS_URL.includes('dev') ? 'dev' : AWS_URL.includes('test') ? 'test' : 'prod or URL undefined');
-console.log('CI:', process.env.CI);
-console.log('NODE_ENV:', process.env.NODE_ENV);
 
 test.describe('Navigation', () => {
   test('to different boards works', async ({ page }) => {
@@ -70,7 +63,6 @@ test.describe.serial('Posting', () => {
 
     await page.waitForTimeout(5000);
     await page.getByTestId('postform-postbutton').click();
-
 
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
     await expect(response.status()).toBe(201);

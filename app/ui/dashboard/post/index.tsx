@@ -71,7 +71,7 @@ const PostContent = ({
   }
 
   /**
-   * If post has any quotes/mentions, render them as links
+   * If post contains quotes/mentions, render them as links
    * @param content string
    * @returns (string | JSX.Element)[]
    */
@@ -82,7 +82,7 @@ const PostContent = ({
     let match;
 
     while ((match = regex.exec(content)) !== null) {
-      const [fullMatch, post_num, trailingSpace] = match;
+      const [post_num, trailingSpace] = match;
 
       if (match.index > lastIndex) {
         parts.push(content.slice(lastIndex, match.index));
@@ -110,32 +110,34 @@ const PostContent = ({
   };
 
   return (
-    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className='post dark:post-darkmode flex bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-xl dark:border-neutral-800 dark:bg-neutral-900'>
+    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className='table clear-both post dark:post-darkmode bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 dark:bg-neutral-900'>
       {post.image_url && (
-        <div key={`imgContainer-${post.post_num}`} className='min-w-40 relative'>
+        <div key={`imgContainer-${post.post_num}`} className='min-w-40 relative float-left mr-4'>
           <Link key={post.post_num} href={post.image_url} target='_blank'>
             <Image
               src={post.image_url}
               key={`image-${post.post_num}`}
-              alt='Post image'
-              fill
+              alt={`Post num ${post.post_num}'s image`}
+              width={160}
+              height={160}
               style={{
                 objectFit: 'contain',
                 objectPosition: 'left top'
               }}
               placeholder='blur'
               blurDataURL='/img/misc/blurred.jpg'
-              className='object-cover rounded-tl-sm'
+              className='h-min object-cover rounded-tl-sm'
+              unoptimized={post.image_url.endsWith('.gif')}
               data-testid='post-image' />
           </Link>
         </div>
       )}
-      <div key={`textContent-${post.post_num}`} className='flex flex-col justify-between p-3 leading-normal w-full'>
+      
         <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className='text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent' data-testid='post-timestamp-and-post_num'>
           {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
         </a>
 
-        {/* Clickable reply post_numbers except on OP */}
+        {/* Clickable reply post_nums except on OP */}
         {!post.is_op && replies?.length > 0 && (
           <div className='flex flex-wrap gap-x-1 bg-sky-600/5 dark:bg-transparent w-full'>
             {replies.map((r) => (
@@ -145,10 +147,10 @@ const PostContent = ({
         )}
 
         {post.is_op && <h1 className='text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
-        <p className='break-all font-normal text-gray-700 dark:text-gray-400 mt-5' data-testid='post-content'>
+        <p className='font-normal text-gray-700 dark:text-gray-400 mt-3 pl-4 pr-4 pb-4' data-testid='post-content'>
           {renderContentWithLinks(post.content)}
         </p>
-      </div>
+      
     </div>
   )
 }
