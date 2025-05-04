@@ -19,6 +19,7 @@ env:
   PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
   BANLIST: ${{ secrets.BANLIST }}
   PROXYLIST: ${{ secrets.PROXYLIST }}
+  BWL: ${{ secrets.BWL }}
 
 jobs:
   build-and-test:

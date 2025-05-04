@@ -176,6 +176,24 @@ export const findExactInString = (searchWord: string | null, target: string | un
   return regex.test(target);
 };
 
+/**
+ * Returns true if any word from e.g. 'yeet 5e68yu' is found in '5yj5yeetdsk'
+ * @param content string
+ * @param list string
+ * @returns boolean
+ */
+export const findInStringList = (content: string, ignoreCase: boolean, list?: string) => {
+  if (!list) throw new Error('List not found!');
+
+  if (!ignoreCase) {
+    const bannedWords = list.toLowerCase().split(/\s+/);
+    return bannedWords.some(word => content.toLowerCase().includes(word));
+  }
+
+  const bannedWords = list.split(/\s+/);
+  return bannedWords.some(word => content.includes(word));
+}
+
 // 'other' includes 'development'
 let envType: 'ci' | 'production' | 'other';
 

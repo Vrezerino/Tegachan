@@ -12,11 +12,12 @@ import {
   sanitizeString,
   removeGapsFromString,
   recipientsJSONparser,
+  findInStringList,
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
-import { AWS_NAME, AWS_URL, banlist, proxylist } from '../../lib/env';
+import { AWS_NAME, AWS_URL, banlist, proxylist, bwl } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
@@ -54,15 +55,16 @@ export const POST = async (req: NextRequest) => {
       }
     }
 
+    const content = removeGapsFromString(formData.get('content'));
+    if (findInStringList(content, false, bwl)) throw { message: 'Watch your language.', status: 403 };
+
     // Sanitize form data entries
     const sanitizedBoardName = sanitizeString(formData.get('board'));
     const boardSearchResult = links.find((l) => l.href.split('/')[2] === sanitizedBoardName);
     if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
-    // Will all be validated on line 91
     const rawTitle = formData.get('title');
     const title = rawTitle ? removeGapsFromString(rawTitle) : null;
-    const content = removeGapsFromString(formData.get('content'));
 
     const is_op_raw = sanitizeString((formData.get('OP')));
     const is_op = is_op_raw === 'true';

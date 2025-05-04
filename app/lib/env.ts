@@ -45,5 +45,6 @@ switch (env) {
 
 const banlist = process.env.BANLIST;
 const proxylist = process.env.PROXYLIST;
+const bwl = process.env.BWL;
 
-export { PGDB_URL, AWS_NAME, AWS_URL, banlist, proxylist };
+export { PGDB_URL, AWS_NAME, AWS_URL, banlist, proxylist, bwl };
