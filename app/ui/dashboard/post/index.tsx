@@ -120,16 +120,15 @@ const PostContent = ({
   return (
     <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className='table clear-both post dark:post-darkmode bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 dark:bg-neutral-900'>
       {post.image_url && (
-        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4'>
+        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 w-[100px] h-[100px]'>
           <Link key={post.post_num} href={post.image_url} target='_blank'>
             <Image
               src={post.image_url}
               key={`image-${post.post_num}`}
               alt={`Post num ${post.post_num}'s image`}
-              width={100}
-              height={100}
+              fill
               style={{
-                objectFit: 'contain',
+                objectFit: 'cover',
                 objectPosition: 'left top'
               }}
               placeholder='blur'
@@ -155,8 +154,8 @@ const PostContent = ({
         </div>
       )}
 
-      {post.is_op && <h1 className='break-all ml-4 text-3xl font-bold dark:h1-darkmode'>{post.title}</h1>}
-      <p className='break-all font-normal text-gray-700 dark:text-gray-400 mt-3 pl-4 pr-4 pb-4' data-testid='post-content'>
+      {post.is_op && <h5 className='break-all ml-4 font-bold dark:h1-darkmode'>{post.title}</h5>}
+      <p className='wrap-anywhere font-normal text-gray-700 dark:text-gray-400 mt-1 pl-4 pr-4 pb-4' data-testid='post-content'>
         {renderContentWithLinks(post.content)}
       </p>
 
