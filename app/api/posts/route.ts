@@ -59,6 +59,9 @@ export const POST = async (req: NextRequest) => {
     const boardSearchResult = links.find((l) => l.href.split('/')[2] === sanitizedBoardName);
     if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
+    // Will all be validated on line 91
+    const rawTitle = formData.get('title');
+    const title = rawTitle ? removeGapsFromString(rawTitle) : null;
     const content = removeGapsFromString(formData.get('content'));
 
     const is_op_raw = sanitizeString((formData.get('OP')));
@@ -73,10 +76,7 @@ export const POST = async (req: NextRequest) => {
 
     const newPost: NewPostType = {
       content,
-      // Generate title from truncated post content, only if you're OP
-      title: is_op ? content.length > 25
-        ? content.substring(0, 21) + '...'
-        : content : '',
+      title,
       is_op,
       thread: threadNum ? parseInt(threadNum) : 0,
       board: sanitizedBoardName,
@@ -126,7 +126,7 @@ export const POST = async (req: NextRequest) => {
     delete newPost.image;
 
     // Insert post into db
-    const { thread, title, image_url, created_at, board, admin } = newPost;
+    const { thread, image_url, created_at, board, admin } = newPost;
     const sql = neon(PGDB_URL);
     const res = await sql`
       INSERT INTO posts (

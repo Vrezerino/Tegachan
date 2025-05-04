@@ -120,21 +120,22 @@ const PostContent = ({
   return (
     <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className='table clear-both post dark:post-darkmode bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 dark:bg-neutral-900'>
       {post.image_url && (
-        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 w-[100px] h-[100px]'>
+        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 max-w-[100px]'>
           <Link key={post.post_num} href={post.image_url} target='_blank'>
             <Image
               src={post.image_url}
               key={`image-${post.post_num}`}
               alt={`Post num ${post.post_num}'s image`}
-              fill
+              // className will determine final size so these are practically compression levels, higher is better
+              width={110}
+              height={110}
               style={{
-                objectFit: 'scale-down',
+                objectFit: 'cover',
                 objectPosition: 'left top'
               }}
               placeholder='blur'
               blurDataURL='/img/misc/blurred.jpg'
-              className='h-min object-cover rounded-tl-sm'
-              // endsWith() won't work due to Next image url format
+              className='object-cover rounded-tl-sm max-h-[300px] w-[100px]'
               unoptimized={post.image_url.includes('.gif')}
               data-testid='post-image' />
           </Link>

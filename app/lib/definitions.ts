@@ -12,7 +12,7 @@ export interface PostType {
 };
 
 export type NewPostType = {
-  title: string;
+  title: string | null;
   thread: number | null;
   content: string;
   created_at: Date;

@@ -12,17 +12,22 @@ const BoardItem = ({ post }: { post: PostType }) => {
       <div className='posts-container-post m-1 border-gray-200 shadow-sm dark:border-neutral-800 dark:posts-container-post-darkmode'>
         {post.image_url && <div className='posts-container-post-image'>
           <Image
-            className='w-full'
+            className='w-[160px] h-[73px]'
             src={post.image_url}
             width={160}
-            height={160}
+            height={73}
+            style={{
+              objectFit: 'cover',
+              objectPosition: '40% 40%'
+            }}
+            unoptimized={post.image_url.includes('.gif')}
             alt={post.title || 'Post image'}
           />
         </div>}
 
         <div className='posts-container-text p-3'>
-          <h5 className='posts-container-post-title line-clamp-2 dark:posts-container-post-title-darkmode' data-testid='boardtype-post-title'>{post?.title}</h5>
-          <p className='line-clamp-4 font-normal text-neutral-600 dark:text-neutral-300' data-testid='boardtype-post-content'>{post?.content}</p>
+          <h5 className='posts-container-post-title wrap-anywhere line-clamp-2 dark:posts-container-post-title-darkmode' data-testid='boardtype-post-title'>{post?.title}</h5>
+          <p className='wrap-anywhere line-clamp-4 font-normal text-neutral-600 dark:text-neutral-300' data-testid='boardtype-post-content'>{post?.content}</p>
         </div>
       </div>
     </Link>

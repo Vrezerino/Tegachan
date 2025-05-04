@@ -114,11 +114,21 @@ const PostFormBig = ({
           <label htmlFor='postlabel' className='mb-2 block text-sm font-medium dark:label-darkmode'>
             {op ? 'Reply' : 'Post new thread'}
           </label>
+
+          {!op &&
+            <input type='text'
+              name='title'
+              placeholder='Title (optional)'
+              maxLength={80}
+              className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+            />}
+
           <div className='relative rounded-md'>
             <div className='relative'>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
+                maxLength={1500}
                 placeholder='Max 1500 characters'
                 className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
                 required

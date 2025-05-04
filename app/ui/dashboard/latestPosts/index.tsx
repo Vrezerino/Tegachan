@@ -12,14 +12,25 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
         <ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>
           {posts?.map((post) => (
             <li className='py-2 sm:py-3' key={post.post_num}>
-              <div className='flex items-center'>
-                <div className='shrink-0'>
-                  {post?.image_url && <Image src={post?.image_url} alt={post.title || ''} width={32} height={32} />}
+              <div className='flex items-start'>
+                <div className='shrink-0 mt-[5px]'>
+                  {post?.image_url && <Image
+                    src={post?.image_url}
+                    alt={post.title || ''}
+                    // className will determine final size so these are practically compression levels, higher is better
+                    width={20}
+                    height={20}
+                    style={{
+                      objectFit: 'cover',
+                      objectPosition: 'left top'
+                    }}
+                    unoptimized={post.image_url.includes('.gif')}
+                    className='max-h-[60px] w-[32px]' />}
                 </div>
                 <div className='flex-1 min-w-0 ms-1'>
-                  {/* Link to threadnum and #post_num if post is not an OP, otherwise just post_num */}
+                  {/* Link to threadnum#post_num if post is not an OP, otherwise just post_num */}
                   <Link href={`dashboard/${post?.board}${!post?.is_op ? '/' + post.thread + '#' : '' + '/'}${post?.post_num}`}>
-                    <p className='text-sm font-medium text-gray-900 truncate dark:text-white'>
+                    <p className='text-sm font-medium text-gray-900 truncate dark:text-white mt-0'>
                       {post?.title}
                     </p>
                     <p className='text-sm text-gray-500 truncate dark:text-gray-400'>
