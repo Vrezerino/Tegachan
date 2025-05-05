@@ -118,7 +118,7 @@ const PostContent = ({
   };
 
   return (
-    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className='table clear-both post dark:post-darkmode bg-white border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 dark:bg-neutral-900'>
+    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
       {post.image_url && (
         <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 max-w-[100px]'>
           <Link key={post.post_num} href={post.image_url} target='_blank'>
@@ -142,22 +142,24 @@ const PostContent = ({
         </div>
       )}
 
-      <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className={`${!post.image_url && 'ml-4'} break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-sky-600/5 dark:bg-transparent`} data-testid='post-timestamp-and-post_num'>
-        {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
-      </a>
+      <p className='pl-4 pb-4'>
+        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className={`break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-transparent`} data-testid='post-info'>
+          <b>{post.name ?? 'Noob'}</b> {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
+        </a>
 
-      {/* Clickable reply post_nums except on OP */}
-      {!post.is_op && replies?.length > 0 && (
-        <div className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
-          {replies.map((r) => (
-            <a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>&gt;&gt;{r}</a>
-          ))}
-        </div>
-      )}
+        {/* Clickable reply post_nums except on OP */}
+        {!post.is_op && replies?.length > 0 && (
+          <span className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
+            &nbsp;{replies.map((r) => (
+              <><a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>&gt;&gt;{r}</a>&nbsp;</>
+            ))}
+          </span>
+        )}
 
-      {post.is_op && <h5 className='break-all ml-4 font-bold dark:h1-darkmode'>{post.title}</h5>}
-      <p className='wrap-anywhere font-normal text-gray-700 dark:text-gray-400 mt-1 pl-4 pr-4 pb-4' data-testid='post-content'>
-        {renderContentWithLinks(post.content)}
+        {post.is_op && <><br /><span className='span-h5 wrap-anywhere font-bold dark:h1-darkmode'>{post.title}</span></>}
+        <span className='wrap-anywhere font-normal text-gray-700 dark:text-gray-400 mt-1 mb-4 pr-4' data-testid='post-content'>
+          <br />{renderContentWithLinks(post.content)}
+        </span>
       </p>
 
     </div>

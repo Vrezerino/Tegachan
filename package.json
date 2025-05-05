@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test:unit": "vitest",
-    "test:e2e": "cross-env npx playwright test"
+    "test:e2e": "cross-env NODE_ENV=test npx playwright test"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.550.0",

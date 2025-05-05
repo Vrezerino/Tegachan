@@ -31,7 +31,7 @@
   .posts-container-post-title,
   .linkName,
   label,
-  h1, h5 {
+  h1, h5, .span-h5 {
     color: #2a3f79;
     text-shadow: 1px 1px 1px #a3c2d1,
       2px 2px 1px #aeeaf5,

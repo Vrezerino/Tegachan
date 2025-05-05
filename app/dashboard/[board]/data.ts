@@ -22,6 +22,8 @@ export const getBumpedPosts = async (board: string) => {
         p.created_at AS op_created_at,
         p.is_op,
         p.board,
+        p.admin,
+        p.name,
       COUNT(r.post_num) AS num_replies,
       MAX(reply_posts.created_at) AS latest_reply_created_at
       FROM posts p

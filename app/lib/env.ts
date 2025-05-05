@@ -1,8 +1,3 @@
-/**
- * This file holds database and storage variables that depend on
- * the existence and values of environment variables in .env
-*/
-
 // Nullcheck environment variables
 if (!process.env.PGDB_URL || !process.env.PGDB_URL_DEV) {
   throw new Error('One or more PostgreSQL Neon DB URL environment variables are missing!');
@@ -46,5 +41,6 @@ switch (env) {
 const banlist = process.env.BANLIST;
 const proxylist = process.env.PROXYLIST;
 const bwl = process.env.BWL;
+const adminPass = process.env.ADMIN;
 
-export { PGDB_URL, AWS_NAME, AWS_URL, banlist, proxylist, bwl };
+export { PGDB_URL, AWS_NAME, AWS_URL, banlist, proxylist, bwl, adminPass };

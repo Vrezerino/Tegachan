@@ -82,9 +82,7 @@ const PostFormBig = ({
       formData.set('OP', 'true');
     }
 
-    // Get the name of the board you're posting on and set it to formData
     formData.set('board', pathname.split('/')[2]);
-
     formData.set('recipients', JSON.stringify(recipients));
 
     const response = await fetch(`/api/posts`, {
@@ -122,6 +120,13 @@ const PostFormBig = ({
               maxLength={80}
               className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
             />}
+
+          <input type='text'
+            name='name'
+            placeholder='Name (optional)'
+            maxLength={30}
+            className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+          />
 
           <div className='relative rounded-md'>
             <div className='relative'>

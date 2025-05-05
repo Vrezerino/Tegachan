@@ -17,7 +17,7 @@ import {
 
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
-import { AWS_NAME, AWS_URL, banlist, proxylist, bwl } from '../../lib/env';
+import { AWS_NAME, AWS_URL, banlist, proxylist, bwl, adminPass } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
@@ -71,8 +71,14 @@ export const POST = async (req: NextRequest) => {
     const recipientsRaw: unknown = formData.get('recipients');
     const recipients = recipientsJSONparser(recipientsRaw);
 
+    const rawName = formData.get('name');
+    let name = rawName ? removeGapsFromString(rawName) : 'Noob';
+    const admin = adminPass && name?.includes(adminPass) ? true : false;
+    if (admin) name = 'Expert';
+
     const newPost: NewPostType = {
       content,
+      name,
       title,
       is_op,
       thread: threadNum ? parseInt(threadNum) : 0,
@@ -123,11 +129,12 @@ export const POST = async (req: NextRequest) => {
     delete newPost.image;
 
     // Insert post into db
-    const { thread, image_url, created_at, board, admin } = newPost;
+    const { thread, image_url, created_at, board } = newPost;
     const sql = neon(PGDB_URL);
     const res = await sql`
       INSERT INTO posts (
         thread,
+        name,
         title,
         content,
         image_url,
@@ -138,6 +145,7 @@ export const POST = async (req: NextRequest) => {
         admin
       ) VALUES (
         ${thread},
+        ${name},
         ${title},
         ${content},
         ${image_url},

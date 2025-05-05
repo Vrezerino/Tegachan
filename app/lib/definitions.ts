@@ -1,5 +1,6 @@
 export interface PostType {
   title: string | null;
+  name: string | null;
   thread: number | null;
   content: string;
   post_num: number;
@@ -13,6 +14,7 @@ export interface PostType {
 
 export type NewPostType = {
   title: string | null;
+  name: string | null;
   thread: number | null;
   content: string;
   created_at: Date;

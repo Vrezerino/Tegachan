@@ -1,7 +1,7 @@
 import { neon } from '@neondatabase/serverless';
 import { NextResponse } from 'next/server';
 import { PGDB_URL } from '@/app/lib/env';
-import { isErrorWithStatusCodeType } from '@/app/lib/utils';
+import { isErrorWithStatusCodeType } from '../lib/utils';
 
 export const getLatestPosts = async () => {
   const sql = neon(PGDB_URL);
