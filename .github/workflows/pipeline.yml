@@ -20,6 +20,9 @@ env:
   PGDB_URL: ${{ secrets.PGDB_URL }}
   PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
 
+  UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+  UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+
   BANLIST: ${{ secrets.BANLIST }}
   PROXYLIST: ${{ secrets.PROXYLIST }}
   BWL: ${{ secrets.BWL }}
