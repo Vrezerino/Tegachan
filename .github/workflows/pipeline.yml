@@ -13,14 +13,11 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
 
-  UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
-  UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+  AZURE_USERNAME: ${{ secrets.AZURE_USERNAME }}
+  AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
 
   PGDB_URL: ${{ secrets.PGDB_URL }}
   PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
-
-  AZURE_USERNAME: ${{ secrets.AZURE_USERNAME }}
-  AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
 
   BANLIST: ${{ secrets.BANLIST }}
   PROXYLIST: ${{ secrets.PROXYLIST }}
