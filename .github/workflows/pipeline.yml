@@ -44,12 +44,6 @@ jobs:
       - name: Run unit tests
         run: npx vitest run
 
-      - name: Debug test image presence
-        run: ls -l __tests__/assets/
-
-      - name: Run e2e tests
-        run: npx playwright install --with-deps && npx playwright test
-
       - name: Build standalone app
         run: npm run build --if-present
 
@@ -59,6 +53,12 @@ jobs:
           cp -r public .next/standalone/
           cp -r .next/static .next/standalone/
           rm -rf .next/cache
+
+      - name: Debug test image presence
+        run: ls -l __tests__/assets/
+
+      - name: Run e2e tests
+        run: npx playwright install --with-deps && npx playwright test
 
       - name: Upload standalone build
         uses: actions/upload-artifact@v4
