@@ -1,9 +1,8 @@
-name: Build and test pipeline
+name: Build, test, deploy
 
 on: push
 
 env:
-  CI: true
   AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME}}
   AWS_BUCKET_URL: ${{ secrets.AWS_BUCKET_URL }}
   AWS_BUCKET_NAME_DEV: ${{ secrets.AWS_BUCKET_NAME_DEV }}
@@ -13,19 +12,27 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: ${{ secrets.AWS_REGION }}
+
   UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
   UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+
   PGDB_URL: ${{ secrets.PGDB_URL }}
   PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
+
+  AZURE_USERNAME: ${{ secrets.AZURE_USERNAME }}
+  AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
+
   BANLIST: ${{ secrets.BANLIST }}
   PROXYLIST: ${{ secrets.PROXYLIST }}
   BWL: ${{ secrets.BWL }}
+  CI: true
 
 jobs:
-  build-and-test:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -34,14 +41,52 @@ jobs:
       - name: Install dependencies
         run: npm ci --legacy-peer-deps
 
-      - name: Build
-        run: npm run build --if-present
-
       - name: Run unit tests
         run: npx vitest run
 
-      - name: Debug image presence
+      - name: Debug test image presence
         run: ls -l __tests__/assets/
 
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
+
+      - name: Build standalone app
+        run: npm run build --if-present
+
+      - name: Prepare standalone output
+        run: |
+          cd ${{ github.workspace }}
+          cp -r public .next/standalone/
+          cp -r .next/static .next/standalone/
+          rm -rf .next/cache
+
+      - name: Upload standalone build
+        uses: actions/upload-artifact@v4
+        with:
+          name: tegachan
+          path: |
+            .next/standalone/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: tegachan
+
+      - name: Deploy to server
+        run: |
+          echo "Deploying to VM..."
+          # Stop pm2 and clear target folder before copying files into it
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} pm2 stop tegachan && rm -rf /tegachan/.next/standalone/*
+          scp -r tegachan/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/tegachan/.next/standalone
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd /tegachan/.next/standalone && pm2 start server.js --name tegachan"
