@@ -15,6 +15,7 @@ env:
 
   AZURE_USERNAME: ${{ secrets.AZURE_USERNAME }}
   AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
+  AZURE_SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
 
   PGDB_URL: ${{ secrets.PGDB_URL }}
   PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
@@ -79,6 +80,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: tegachan
+
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
 
       - name: Deploy to server
         run: |
