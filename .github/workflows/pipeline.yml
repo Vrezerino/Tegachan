@@ -54,6 +54,13 @@ jobs:
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
 
+      - name: Upload Playwright traces on e2e failure
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: playwright-traces
+          path: test-results/**/*.zip
+
       - name: Prepare standalone output
         run: |
           cd ${{ github.workspace }}
