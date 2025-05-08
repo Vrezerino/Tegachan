@@ -59,7 +59,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: playwright-traces
-          path: test-results/**/*.zip
+          path: |
+            test-results/**/*.zip
 
       - name: Prepare standalone output
         run: |
