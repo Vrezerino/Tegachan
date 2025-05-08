@@ -90,7 +90,7 @@ const PostFormBig = ({
       body: formData,
     });
 
-    response && setLoading(false);;
+    response && setLoading(false);
 
     if (response.status === 201) {
       // Clear state, reset recipient array, clear textarea on successful post
