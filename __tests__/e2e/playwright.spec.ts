@@ -22,6 +22,11 @@ test.describe.serial('Posting', () => {
     await page.goto('/dashboard/random');
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright posted this thread');
     await page.getByTestId('postform-postbutton').click({ force: true });
+
+    // Intercept response
+    const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
+    await expect(response.status()).toBe(429);
+
     await expect(page.getByTestId('boardtype-post-content').first()).toContainText('[TEST]: Playwright posted this thread', { timeout: 20000 });
   });
 
@@ -30,7 +35,6 @@ test.describe.serial('Posting', () => {
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright attempts to post');
     await page.getByTestId('postform-postbutton').click({ force: true });
 
-    // Intercept response
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
     await expect(response.status()).toBe(429);
   });
