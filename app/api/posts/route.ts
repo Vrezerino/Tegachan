@@ -22,7 +22,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
-  let sqlError;
+  let neonError;
   try {
     const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
@@ -131,7 +131,20 @@ export const POST = async (req: NextRequest) => {
     const { thread, image_url, created_at, board } = newPost;
 
     // Insert post into db
-    const sql = neon(PGDB_URL);
+    let sql;
+    try {
+      sql = neon(PGDB_URL);
+    } catch (e) {
+      if (e instanceof Error) {
+        neonError = `Error while initializing Neon SQL client: ${e.message}, stack: ${e.stack}`;
+        console.error(`Error while initializing Neon SQL client: ${e.message}, stack: ${e.stack}`)
+        throw new Error(`Error while initializing Neon SQL client: ${e.message}, stack: ${e.stack}`);
+      }
+      neonError = `Error while initializing Neon SQL client: ${e}`;
+      console.error(`Error while initializing Neon SQL client: ${e}`)
+      throw new Error(`Error while initializing Neon SQL client: ${e}`);
+    }
+
     try {
       const res = await sql`
       INSERT INTO posts (
@@ -171,9 +184,9 @@ export const POST = async (req: NextRequest) => {
 
           } catch (e) {
             if (e instanceof Error) {
-              sqlError = `SQL insert into replies error: ${e.message}, stack: ${e.stack}`;
+              neonError = `SQL insert into replies error: ${e.message}, stack: ${e.stack}`;
             } else {
-              sqlError = `Unknown error during db insert into replies: ${e}`;
+              neonError = `Unknown error during db insert into replies: ${e}`;
             }
           }
         }
@@ -182,14 +195,14 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json('Created', { status: 201 });
     } catch (e) {
       if (e instanceof Error) {
-        sqlError = `SQL insert error: ${e.message}, stack: ${e.stack}`;
+        neonError = `SQL insert error: ${e.message}, stack: ${e.stack}`;
       } else {
-        sqlError = `Unknown error during db insert: ${e}`;
+        neonError = `Unknown error during db insert: ${e}`;
       }
     }
 
   } catch (e) {
-    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message + `: ${sqlError}`);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message + `: ${neonError}`);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
