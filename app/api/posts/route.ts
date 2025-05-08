@@ -173,7 +173,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json('Created', { status: 201 });
 
   } catch (e) {
-    console.error('Error on POST:', e instanceof Error || isErrorWithStatusCodeType(e) && e.message);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }

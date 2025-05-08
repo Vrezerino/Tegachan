@@ -52,7 +52,7 @@ jobs:
         run: |
           cd ${{ github.workspace }}
           cp -r public .next/standalone/
-          cp -r .next/static .next/standalone/
+          cp -r .next/static .next/standalone/.next/
           rm -rf .next/cache
 
       - name: Debug test image presence
