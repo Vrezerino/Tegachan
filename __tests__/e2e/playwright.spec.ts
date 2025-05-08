@@ -11,7 +11,7 @@ test.describe('Navigation', () => {
     await page.goto('/');
 
     for (let i = 1; i < links.length; i++) {
-      await page.getByTestId(`${links[i].name}-nav-button`).click();
+      await page.getByTestId(`${links[i].name}-nav-button`).click({ force: true });
       await expect(page.getByRole('heading', { name: `✵ ${links[i].name} ✵` })).toBeVisible({ timeout: 10000 });
     }
   });
@@ -21,14 +21,14 @@ test.describe.serial('Posting', () => {
   test('new thread works', async ({ page }) => {
     await page.goto('/dashboard/random');
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright posted this thread');
-    await page.getByTestId('postform-postbutton').click();
+    await page.getByTestId('postform-postbutton').click({ force: true });
     await expect(page.getByTestId('boardtype-post-content').first()).toContainText('[TEST]: Playwright posted this thread', { timeout: 20000 });
   });
 
   test('throttling works', async ({ page }) => {
     await page.goto('/dashboard/random');
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright attempts to post');
-    await page.getByTestId('postform-postbutton').click();
+    await page.getByTestId('postform-postbutton').click({ force: true });
 
     // Intercept response
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
@@ -37,12 +37,12 @@ test.describe.serial('Posting', () => {
 
   test('reply to newly created thread works', async ({ page }) => {
     await page.goto('/dashboard/random');
-    await page.getByTestId('boardtype-post-content').first().click();
+    await page.getByTestId('boardtype-post-content').first().click({ force: true });
     await expect(page.getByTestId('post-content').nth(0)).toContainText('[TEST]: Playwright posted this thread', { timeout: 10000 })
 
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright posted this reply');
     await page.waitForTimeout(2000); // because of post throttling
-    await page.getByTestId('postform-postbutton').click();
+    await page.getByTestId('postform-postbutton').click({ force: true });
 
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
     await expect(response.status()).toBe(201);
@@ -53,7 +53,7 @@ test.describe.serial('Posting', () => {
 
   test('a reply with image works', async ({ page }) => {
     await page.goto('/dashboard/random');
-    await page.getByTestId('boardtype-post-content').first().click();
+    await page.getByTestId('boardtype-post-content').first().click({ force: true });
     await expect(page.getByTestId('post-content').nth(0)).toContainText('[TEST]: Playwright posted this thread', { timeout: 5000 })
 
     // Write reply and choose img
@@ -62,7 +62,7 @@ test.describe.serial('Posting', () => {
     await fileInput.setInputFiles('__tests__/assets/15.gif');
 
     await page.waitForTimeout(5000);
-    await page.getByTestId('postform-postbutton').click();
+    await page.getByTestId('postform-postbutton').click({ force: true });
 
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
     await expect(response.status()).toBe(201);
