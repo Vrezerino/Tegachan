@@ -25,7 +25,7 @@ test.describe.serial('Posting', () => {
 
     // Intercept response
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
-    await expect(response.status()).toBe(429);
+    await expect(response.status()).toBe(201);
 
     await expect(page.getByTestId('boardtype-post-content').first()).toContainText('[TEST]: Playwright posted this thread', { timeout: 20000 });
   });
