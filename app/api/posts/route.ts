@@ -23,7 +23,7 @@ import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
   try {
-    const ip = req.headers.get('x-real-ip');
+    const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
     // Check if ip in banlist
     if (findExactInString(ip, banlist)) {
