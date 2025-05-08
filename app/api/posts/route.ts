@@ -22,17 +22,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
-
-  let u;
-
-  if (PGDB_URL.includes('divine-sun')) {
-    u = 'production PGDB URL';
-  } else if (PGDB_URL.includes('cool-snowflake')) {
-    u = 'development or test PGDB URL';
-  } else {
-    u = `erroneous PGDB URL:', ${PGDB_URL}`;
-  }
-
   try {
     const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
@@ -142,7 +131,8 @@ export const POST = async (req: NextRequest) => {
     // Insert post into db
     const { thread, image_url, created_at, board } = newPost;
     const sql = neon(PGDB_URL);
-    const res = await sql`
+    try {
+      const res = await sql`
       INSERT INTO posts (
         thread,
         name,
@@ -166,25 +156,41 @@ export const POST = async (req: NextRequest) => {
         ${board},
         ${admin}
       )
-      RETURNING post_num`
-      ;
+      RETURNING post_num`;
 
-    const newPostNum = res[0].post_num;
+      const newPostNum = res[0].post_num;
 
-    // Insert replies (if any)
-    if (recipients.length > 0) {
-      for (const parentPostNum of recipients) {
-        await sql`
-          INSERT INTO replies (post_num, parent_post_num)
-          VALUES (${newPostNum}, ${parentPostNum})`
-          ;
+      // Insert replies (if any)
+      if (recipients.length > 0) {
+        for (const parentPostNum of recipients) {
+          try {
+            await sql`
+            INSERT INTO replies (post_num, parent_post_num)
+            VALUES (${newPostNum}, ${parentPostNum})`;
+
+          } catch (e) {
+            if (e instanceof Error) {
+              console.error('SQL insert into replies error:', e.message);
+              console.error('SQL insert into replies stack:', e.stack);
+            } else {
+              console.error('Unknown error during db insert into replies:', e);
+            }
+          }
+        }
+      }
+
+      return NextResponse.json('Created', { status: 201 });
+    } catch (e) {
+      if (e instanceof Error) {
+        console.error('SQL insert error:', e.message);
+        console.error('SQL insert stack:', e.stack);
+      } else {
+        console.error('Unknown error during db insert:', e);
       }
     }
 
-    return NextResponse.json('Created', { status: 201 });
-
   } catch (e) {
-    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message + ` ${u}`);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
