@@ -127,9 +127,9 @@ export const POST = async (req: NextRequest) => {
     // Set post's imageUrl as url of the image we just uploaded to Amazon S3
     newPost.image_url = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
     delete newPost.image;
+    const { thread, image_url, created_at, board } = newPost;
 
     // Insert post into db
-    const { thread, image_url, created_at, board } = newPost;
     const sql = neon(PGDB_URL);
     try {
       const res = await sql`
@@ -170,10 +170,9 @@ export const POST = async (req: NextRequest) => {
 
           } catch (e) {
             if (e instanceof Error) {
-              console.error('SQL insert into replies error:', e.message);
-              console.error('SQL insert into replies stack:', e.stack);
+              throw new Error(`SQL insert into replies error: ${e.message}, stack: ${e.stack}`);
             } else {
-              console.error('Unknown error during db insert into replies:', e);
+              throw new Error(`Unknown error during db insert into replies: ${e}`);
             }
           }
         }
@@ -182,10 +181,9 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json('Created', { status: 201 });
     } catch (e) {
       if (e instanceof Error) {
-        console.error('SQL insert error:', e.message);
-        console.error('SQL insert stack:', e.stack);
+        throw new Error(`SQL insert error: ${e.message}, stack: ${e.stack}`);
       } else {
-        console.error('Unknown error during db insert:', e);
+        throw new Error(`Unknown error during db insert: ${e}`);
       }
     }
 
