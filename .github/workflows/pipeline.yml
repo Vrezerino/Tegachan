@@ -51,6 +51,13 @@ jobs:
       - name: Debug test image presence
         run: ls -l __tests__/assets/
 
+      # Important to do before e2e test
+      - name: Prepare standalone output
+        run: |
+          cd ${{ github.workspace }}
+          cp -r public .next/standalone/
+          cp -r .next/static .next/standalone/.next/
+
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
 
@@ -62,11 +69,9 @@ jobs:
           path: |
             test-results/**/*.zip
 
-      - name: Prepare standalone output
+      - name: Remove Next cache
         run: |
           cd ${{ github.workspace }}
-          cp -r public .next/standalone/
-          cp -r .next/static .next/standalone/.next/
           rm -rf .next/cache
 
       - name: Upload standalone build
