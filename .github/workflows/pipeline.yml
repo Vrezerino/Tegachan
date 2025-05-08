@@ -51,11 +51,6 @@ jobs:
       - name: Debug test image presence
         run: ls -l __tests__/assets/
 
-      - name: Start standalone app
-        run: node .next/standalone/server.js &
-        env:
-          PORT: 3000
-
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
 
