@@ -22,12 +22,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
-  let neonError;
   try {
-    fetch(PGDB_URL)
-      .then(res => console.log('DB fetch response status:', res.status))
-      .catch(e => console.error('Raw fetch to Neon failed:', e));
-
     const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
     // Check if ip in banlist
@@ -135,22 +130,8 @@ export const POST = async (req: NextRequest) => {
     const { thread, image_url, created_at, board } = newPost;
 
     // Insert post into db
-    let sql;
-    try {
-      sql = neon(PGDB_URL);
-    } catch (e) {
-      if (e instanceof Error) {
-        neonError = `Error while initializing Neon SQL client: ${e.message}, stack: ${e.stack}`;
-        console.error(`Error while initializing Neon SQL client: ${e.message}, stack: ${e.stack}`)
-        throw new Error(`Error while initializing Neon SQL client: ${e.message}, stack: ${e.stack}`);
-      }
-      neonError = `Error while initializing Neon SQL client: ${e}`;
-      console.error(`Error while initializing Neon SQL client: ${e}`)
-      throw new Error(`Error while initializing Neon SQL client: ${e}`);
-    }
-
-    try {
-      const res = await sql`
+    const sql = neon(PGDB_URL);
+    const res = await sql`
       INSERT INTO posts (
         thread,
         name,
@@ -176,39 +157,23 @@ export const POST = async (req: NextRequest) => {
       )
       RETURNING post_num`;
 
-      const newPostNum = res[0].post_num;
+    const newPostNum = res[0].post_num;
 
-      // Insert replies (if any)
-      if (recipients.length > 0) {
-        for (const parentPostNum of recipients) {
-          try {
-            await sql`
-            INSERT INTO replies (post_num, parent_post_num)
-            VALUES (${newPostNum}, ${parentPostNum})`;
-
-          } catch (e) {
-            if (e instanceof Error) {
-              neonError = `SQL insert into replies error: ${e.message}, stack: ${e.stack}`;
-            } else {
-              neonError = `Unknown error during db insert into replies: ${e}`;
-            }
-          }
-        }
-      }
-
-      return NextResponse.json('Created', { status: 201 });
-    } catch (e) {
-      if (e instanceof Error) {
-        neonError = `SQL insert error: ${e.message}, stack: ${e.stack}`;
-      } else {
-        neonError = `Unknown error during db insert: ${e}`;
+    // Insert replies if any
+    if (recipients.length > 0) {
+      for (const parentPostNum of recipients) {
+        await sql`
+          INSERT INTO replies (post_num, parent_post_num)
+          VALUES (${newPostNum}, ${parentPostNum})`;
       }
     }
 
+    return NextResponse.json('Created', { status: 201 });
+
   } catch (e) {
-    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) ? `${e.message}: ${neonError}` : `${e}: ${neonError}`);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) ? e.message : e);
     return NextResponse.json(
-      { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
+      { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : e },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
     );
   }
