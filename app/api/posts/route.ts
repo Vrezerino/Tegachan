@@ -22,6 +22,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
+  let sqlError;
   try {
     const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
@@ -170,9 +171,9 @@ export const POST = async (req: NextRequest) => {
 
           } catch (e) {
             if (e instanceof Error) {
-              throw new Error(`SQL insert into replies error: ${e.message}, stack: ${e.stack}`);
+              sqlError = `SQL insert into replies error: ${e.message}, stack: ${e.stack}`;
             } else {
-              throw new Error(`Unknown error during db insert into replies: ${e}`);
+              sqlError = `Unknown error during db insert into replies: ${e}`;
             }
           }
         }
@@ -181,14 +182,14 @@ export const POST = async (req: NextRequest) => {
       return NextResponse.json('Created', { status: 201 });
     } catch (e) {
       if (e instanceof Error) {
-        throw new Error(`SQL insert error: ${e.message}, stack: ${e.stack}`);
+        sqlError = `SQL insert error: ${e.message}, stack: ${e.stack}`;
       } else {
-        throw new Error(`Unknown error during db insert: ${e}`);
+        sqlError = `Unknown error during db insert: ${e}`;
       }
     }
 
   } catch (e) {
-    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message + `: ${sqlError}`);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
