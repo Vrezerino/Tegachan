@@ -22,12 +22,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
+
+  let u;
+
   if (PGDB_URL.includes('divine-sun')) {
-    console.log('production PGDB URL')
+    u = 'production PGDB URL';
   } else if (PGDB_URL.includes('cool-snowflake')) {
-    console.log('development or test PGDB URL')
+    u = 'development or test PGDB URL';
   } else {
-    console.error('erroneous PGDB URL:', PGDB_URL);
+    u = `erroneous PGDB URL:', ${PGDB_URL}`;
   }
 
   try {
@@ -181,7 +184,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json('Created', { status: 201 });
 
   } catch (e) {
-    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message + ` ${u}`);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
