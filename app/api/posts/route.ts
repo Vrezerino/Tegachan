@@ -22,6 +22,14 @@ import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
+  if (PGDB_URL.includes('divine-sun')) {
+    console.log('production PGDB URL')
+  } else if (PGDB_URL.includes('cool-snowflake')) {
+    console.log('development or test PGDB URL')
+  } else {
+    console.error('erroneous PGDB URL:', PGDB_URL);
+  }
+
   try {
     const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
