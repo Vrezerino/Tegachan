@@ -27,6 +27,7 @@ env:
   PROXYLIST: ${{ secrets.PROXYLIST }}
   BWL: ${{ secrets.BWL }}
   CI: true
+  DEBUG: neon:*
 
 jobs:
   test-and-build:

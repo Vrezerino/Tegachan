@@ -24,6 +24,10 @@ import { checkRateLimit } from '@/app/lib/rateLimit';
 export const POST = async (req: NextRequest) => {
   let neonError;
   try {
+    fetch(PGDB_URL)
+      .then(res => console.log('DB fetch response status:', res.status))
+      .catch(e => console.error('Raw fetch to Neon failed:', e));
+
     const ip = req.headers.get('x-real-ip') || '127.0.0.1';
 
     // Check if ip in banlist
@@ -202,7 +206,7 @@ export const POST = async (req: NextRequest) => {
     }
 
   } catch (e) {
-    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) && e.message + `: ${neonError}`);
+    console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) ? `${e.message}: ${neonError}` : `${e}: ${neonError}`);
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
       { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
