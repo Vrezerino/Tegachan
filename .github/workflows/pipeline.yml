@@ -57,6 +57,7 @@ jobs:
           cd ${{ github.workspace }}
           cp -r public .next/standalone/
           cp -r .next/static .next/standalone/.next/
+          cp -r .next/BUILD_ID .next/standalone/
           cp -r .next/BUILD_ID .next/standalone/.next/
 
       - name: Run e2e tests
