@@ -57,6 +57,7 @@ jobs:
           cd ${{ github.workspace }}
           cp -r public .next/standalone/
           cp -r .next/static .next/standalone/.next/
+          cp -r .next/BUILD_ID .next/standalone/.next/
 
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
@@ -115,6 +116,7 @@ jobs:
           ls -al tegachanArtifact/
 
       - name: Deploy to server
+        shell: bash
         run: |
           chmod -R 755 tegachanArtifact/
 
@@ -125,13 +127,13 @@ jobs:
           # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pwd"
 
           echo "Stopping pm2 and clearing target folder..."
+          # Supress pm2 table output upon stopping already running site
           # Tilde might not expand properly, use full path to home
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
-
-          # echo "Ensuring remote directory exists..."
-          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "mkdir -p /tegachan/.next/standalone"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
 
           echo "Copying files..."
+          # shopt modifies glob behavior to include hidden stuff
+          shopt -s dotglob
           scp -r tegachanArtifact/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
           echo "Starting pm2..."
