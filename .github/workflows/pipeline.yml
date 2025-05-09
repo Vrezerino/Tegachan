@@ -100,9 +100,11 @@ jobs:
 
       - name: Set up SSH key
         run: |
+          set -ex
           mkdir -p ~/.ssh
           echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+          echo "AZURE_VM_IP: $AZURE_VM_IP"
           ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
 
       - name: Deploy to server
