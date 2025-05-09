@@ -120,13 +120,13 @@ jobs:
           chmod -R 755 tegachanArtifact/
 
           echo "Stopping pm2 and clearing target folder..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} pm2 stop tegachan && rm  /tegachan/.next/standalone/*
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} pm2 stop tegachan && rm tegachan/.next/standalone/*
 
-          echo "Ensuring remote directory exists..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "mkdir -p /tegachan/.next/standalone"
+          # echo "Ensuring remote directory exists..."
+          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "mkdir -p /tegachan/.next/standalone"
 
           echo "Copying files..."
           scp -r tegachanArtifact/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/tegachan/.next/standalone
 
           echo "Starting pm2..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd /tegachan/.next/standalone && pm2 start server.js --name tegachan"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd tegachan/.next/standalone && pm2 start server.js --name tegachan"
