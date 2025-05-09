@@ -78,7 +78,7 @@ jobs:
       - name: Upload standalone build
         uses: actions/upload-artifact@v4
         with:
-          name: tegachan
+          name: tegachanArtifact
           path: |
             .next/standalone/
 
@@ -96,29 +96,37 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@v4
         with:
-          name: tegachan
-          path: tegachan
+          name: tegachanArtifact
+          path: tegachanArtifact
 
       - name: Set up SSH key
         run: |
           set -ex
           mkdir -p ~/.ssh
+
           echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
+
           echo "AZURE_VM_IP: $AZURE_VM_IP"
           ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
 
       - name: List files in standalone dir
         run: |
           echo "Listing files in standalone dir..."
-          ls -al tegachan/
+          ls -al tegachanArtifact/
 
       - name: Deploy to server
         run: |
-          chmod -R 755 tegachan/
+          chmod -R 755 tegachanArtifact/
+
           echo "Stopping pm2 and clearing target folder..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} pm2 stop tegachan && rm -rf /tegachan/.next/standalone/*
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} pm2 stop tegachan && rm  /tegachan/.next/standalone/*
+
+          echo "Ensuring remote directory exists..."
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "mkdir -p /tegachan/.next/standalone"
+
           echo "Copying files..."
-          scp -r tegachan/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/tegachan/.next/standalone
+          scp -r tegachanArtifact/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/tegachan/.next/standalone
+
           echo "Starting pm2..."
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd /tegachan/.next/standalone && pm2 start server.js --name tegachan"
