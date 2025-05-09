@@ -119,14 +119,14 @@ jobs:
           chmod -R 755 tegachanArtifact/
 
           # Confirm presence of target folder
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
+          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
 
           # Check current working dir
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pwd"
+          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pwd"
 
           echo "Stopping pm2 and clearing target folder..."
           # Tilde might not expand properly, use full path to home
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan && rm /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
 
           # echo "Ensuring remote directory exists..."
           # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "mkdir -p /tegachan/.next/standalone"
