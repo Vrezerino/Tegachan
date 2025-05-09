@@ -107,10 +107,17 @@ jobs:
           echo "AZURE_VM_IP: $AZURE_VM_IP"
           ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
 
+      - name: List files in standalone dir
+        run: |
+          echo "Listing files in standalone dir..."
+          ls -al tegachan/
+
       - name: Deploy to server
         run: |
-          echo "Deploying to VM..."
-          # Stop pm2 and clear target folder before copying files into it
+          chmod -R 755 tegachan/
+          echo "Stopping pm2 and clearing target folder..."
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} pm2 stop tegachan && rm -rf /tegachan/.next/standalone/*
+          echo "Copying files..."
           scp -r tegachan/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/tegachan/.next/standalone
+          echo "Starting pm2..."
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd /tegachan/.next/standalone && pm2 start server.js --name tegachan"
