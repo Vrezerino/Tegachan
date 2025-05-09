@@ -130,7 +130,7 @@ jobs:
           echo "Stopping pm2 and clearing target folder..."
           # Supress pm2 table output upon stopping already running site
           # Tilde might not expand properly, use full path to home
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan > /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
 
           echo "Copying files..."
           # shopt modifies glob behavior to include hidden stuff
