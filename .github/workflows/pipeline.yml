@@ -1,6 +1,9 @@
 name: Build, test, deploy
 
-on: push
+on:
+  push:
+    branches:
+      - main
 
 env:
   AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME}}
@@ -74,18 +77,17 @@ jobs:
           echo "In .next/standalone/.next:"
           ls -la .next/standalone/.next
 
-      #
-      #  - name: Run e2e tests
-      #    run: npx playwright install --with-deps && npx playwright test
-      #
-      #  - name: Upload Playwright traces on e2e failure
-      #    if: failure()
-      #    uses: actions/upload-artifact@v4
-      #    with:
-      #      name: playwright-traces
-      #      path: |
-      #        test-results/**/*.zip
-      #
+      - name: Run e2e tests
+        run: npx playwright install --with-deps && npx playwright test
+
+      - name: Upload Playwright traces on e2e failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: |
+            test-results/**/*.zip
+
       - name: Remove Next cache
         run: |
           cd ${{ github.workspace }}
@@ -132,47 +134,44 @@ jobs:
           echo "Listing files in standalone dir..."
           ls -al tegachanArtifact/
 
-      #- name: Deploy to server
-      #  shell: bash
-      #  run: |
-      #    chmod -R 755 tegachanArtifact/
-      #
-      #    # Confirm presence of target folder
-      #    # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
-      #
-      #    echo "Stopping pm2 and clearing target folder..."
-      #    # Supress pm2 table output upon stopping already running site
-      #    # Tilde might not expand properly, use full path to home
-      #    ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan > /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
-      #
-      #    echo "Copying files..."
-      #    # shopt modifies glob behavior to include hidden stuff
-      #    shopt -s dotglob
-      #    scp -r tegachanArtifact/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
-      #
-      #    echo "Starting pm2..."
-      #    ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
-
-  mark-deployment-success:
-    needs: deploy
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        
-      - name: Mark deployment as successful
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Deploy to server
+        shell: bash
         run: |
-          DEPLOYMENT_ID=$(  {
-            gh api repos/${{ github.repository }}/deployments \
-              --field ref=${{ github.sha }} \
-              --field environment=production \
-              --field auto_merge=false \
-              --field required_contexts[]= \
-              --field description="Deployed via GitHub Actions" \
-              -q '.id'
-          })
+          chmod -R 755 tegachanArtifact/
 
-          gh api repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses \
-          -f state=success
+          # Confirm presence of target folder
+          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
+
+          echo "Stopping pm2 and clearing target folder..."
+          # Supress pm2 table output upon stopping already running site
+          # Tilde might not expand properly, use full path to home
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan > /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
+
+          echo "Copying files..."
+          # shopt modifies glob behavior to include hidden stuff
+          shopt -s dotglob
+          scp -r tegachanArtifact/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
+
+          echo "Starting pm2..."
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
+
+  #mark-deployment-success:
+  #  needs: deploy
+  #  runs-on: ubuntu-latest
+  #  steps:
+  #    - name: Mark deployment as successful
+  #      env:
+  #        GH_TOKEN: ${{ github.token }}
+  #      run: |
+  #        DEPLOYMENT_ID=$(  {
+  #          gh api repos/${{ github.repository }}/deployments \
+  #            --field ref=${{ github.sha }} \
+  #            --field environment=production \
+  #            --field auto_merge=false \
+  #            --field required_contexts[]= \
+  #            --field description="Deployed via GitHub Actions" \
+  #            -q '.id'
+  #        })
+  #
+  #        gh api repos/${{ github.repository }}/deployments/$DEPLOYMENT_ID/statuses \
+  #        -f state=success
