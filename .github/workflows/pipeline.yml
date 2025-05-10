@@ -157,7 +157,6 @@ jobs:
             echo "BANLIST=${{ secrets.BANLIST }}"
             echo "PROXYLIST=${{ secrets.PROXYLIST }}"
             echo "BWL=${{ secrets.BWL }}"
-            echo "CI=true"
           } > deploy_folder/standalone/.env
 
       - name: Set up SSH key
