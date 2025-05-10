@@ -51,7 +51,10 @@ jobs:
       - name: Debug test image presence
         run: ls -l __tests__/assets/
 
-      # Important to do before e2e test
+      # Copy files and folders into right places. Has to be done manually
+      # after build. This is because Vercel thinks surely you're using a
+      # CDN to serve static files if you build in standalone mode, and so
+      # this step isn't baked in the build process
       - name: Prepare standalone output
         run: |
           cd ${{ github.workspace }}
@@ -59,6 +62,12 @@ jobs:
           cp -r .next/static .next/standalone/.next/
           cp -r .next/BUILD_ID .next/standalone/
           cp -r .next/BUILD_ID .next/standalone/.next/
+
+          echo "In .next/standalone/:"
+          ls -la .next/standalone
+
+          echo "In .next/standalone/.next:"
+          ls -la .next/standalone/.next
 
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
@@ -94,6 +103,15 @@ jobs:
         with:
           node-version: "20.x"
 
+      # Install and authenticate with github cli
+      # Creating release in the final step needs authentication
+      - name: Install GitHub CLI
+        run: |
+          curl -s https://cli.github.com/install.sh | bash
+
+      - name: Authenticate with GitHub CLI
+        run: gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+
       - name: Download build
         uses: actions/download-artifact@v4
         with:
@@ -124,9 +142,6 @@ jobs:
           # Confirm presence of target folder
           # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
 
-          # Check current working dir
-          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pwd"
-
           echo "Stopping pm2 and clearing target folder..."
           # Supress pm2 table output upon stopping already running site
           # Tilde might not expand properly, use full path to home
@@ -139,3 +154,11 @@ jobs:
 
           echo "Starting pm2..."
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
+
+      - name: Create GitHub Release
+        if: success()
+        run: |
+          TAG_NAME="v$(date +'%Y%m%d%H%M%S')"
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+          gh release create $TAG_NAME --title "Deployed $TAG_NAME" --notes "Deployment complete"
