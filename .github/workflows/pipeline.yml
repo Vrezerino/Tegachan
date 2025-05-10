@@ -149,6 +149,8 @@ jobs:
       #    ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
 
       - name: Mark deployment as successful
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           DEPLOYMENT_ID=$(gh api repos/${{ github.repository }}/deployments \
           -f ref=${{ github.sha }} \
