@@ -62,7 +62,8 @@ jobs:
       # Copy files and folders into right places. Has to be done manually
       # after build. This is because Vercel thinks surely you're using a
       # CDN to serve static files if you build in standalone mode, and so
-      # this step isn't baked in the build process
+      # this step isn't baked in the build process. Also DON'T copy and
+      # upload .env in artifact zip, generate .env in deploy job instead
       - name: Prepare standalone output
         run: |
           cd ${{ github.workspace }}
@@ -124,8 +125,38 @@ jobs:
           path: deploy_folder
 
       - name: Unzip build
-        # Creates deploy/folder/standalone dir
+        # Notice: this creates deploy_folder/standalone dir,
+        # build contents aren't unzipped directly under deploy_folder
         run: unzip deploy_folder/standalone.zip -d deploy_folder/
+
+      - name: Generate .env
+        run: |
+          {
+            echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME}}"
+            echo "AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }}"
+            echo "AWS_BUCKET_NAME_DEV=${{ secrets.AWS_BUCKET_NAME_DEV }}"
+            echo "AWS_BUCKET_URL_DEV=${{ secrets.AWS_BUCKET_URL_DEV }}"
+            echo "AWS_BUCKET_NAME_TEST=${{ secrets.AWS_BUCKET_NAME_TEST }}"
+            echo "AWS_BUCKET_URL_TEST=${{ secrets.AWS_BUCKET_URL_TEST }}"
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+            echo "AWS_REGION=${{ secrets.AWS_REGION }}"
+          
+            echo "AZURE_USERNAME=${{ secrets.AZURE_USERNAME }}"
+            echo "AZURE_VM_IP=${{ secrets.AZURE_VM_IP }}"
+            echo "AZURE_SSH_PRIVATE_KEY=${{ secrets.AZURE_SSH_PRIVATE_KEY }}"
+          
+            echo "PGDB_URL=${{ secrets.PGDB_URL }}"
+            echo "PGDB_URL_DEV=${{ secrets.PGDB_URL_DEV }}"
+          
+            echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
+            echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
+          
+            echo "BANLIST=${{ secrets.BANLIST }}"
+            echo "PROXYLIST=${{ secrets.PROXYLIST }}"
+            echo "BWL=${{ secrets.BWL }}"
+            echo "CI=true"
+          } > deploy_folder/standalone/.env
 
       - name: Set up SSH key
         run: |
@@ -148,8 +179,7 @@ jobs:
         run: |
           chmod -R 755 deploy_folder/
 
-          # echo "Stopping pm2 and clearing target folder..."
-          # Supress pm2 table output upon stopping already running site
+          echo "Clearing target folder..."
           # Tilde might not expand properly, use full path to home
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
 
@@ -158,7 +188,8 @@ jobs:
           shopt -s dotglob
           scp -r deploy_folder/standalone/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
-          echo "Starting pm2..."
+          echo "Restarting pm2 process..."
+          # "> /dev/null 2>&1" suppresses pm2 process table output, ain't nobody gotta see that shit
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 restart tegachan > /dev/null 2>&1"
 
   #mark-deployment-success:
