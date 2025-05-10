@@ -28,6 +28,10 @@ env:
   BWL: ${{ secrets.BWL }}
   CI: true
 
+permissions:
+  contents: write
+  deployments: write
+
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
