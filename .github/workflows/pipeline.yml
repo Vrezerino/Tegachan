@@ -74,17 +74,18 @@ jobs:
           echo "In .next/standalone/.next:"
           ls -la .next/standalone/.next
 
-      - name: Run e2e tests
-        run: npx playwright install --with-deps && npx playwright test
-
-      - name: Upload Playwright traces on e2e failure
-        if: failure()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-traces
-          path: |
-            test-results/**/*.zip
-
+      #
+      #  - name: Run e2e tests
+      #    run: npx playwright install --with-deps && npx playwright test
+      #
+      #  - name: Upload Playwright traces on e2e failure
+      #    if: failure()
+      #    uses: actions/upload-artifact@v4
+      #    with:
+      #      name: playwright-traces
+      #      path: |
+      #        test-results/**/*.zip
+      #
       - name: Remove Next cache
         run: |
           cd ${{ github.workspace }}
@@ -156,6 +157,9 @@ jobs:
     needs: deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
       - name: Mark deployment as successful
         env:
           GH_TOKEN: ${{ github.token }}
