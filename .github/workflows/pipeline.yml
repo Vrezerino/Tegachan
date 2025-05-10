@@ -124,12 +124,14 @@ jobs:
           name: standalone_build
           path: deploy_folder
 
+      # Notice: this creates deploy_folder/standalone dir,
+      # build contents aren't unzipped directly under deploy_folder
       - name: Unzip build
-        # Notice: this creates deploy_folder/standalone dir,
-        # build contents aren't unzipped directly under deploy_folder
         run: unzip deploy_folder/standalone.zip -d deploy_folder/
 
-      - name: Generate .env
+      - name: Generate .env in production mode
+        env:
+          NODE_ENV: production
         run: |
           {
             echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME}}"
@@ -185,7 +187,7 @@ jobs:
 
           echo "Copying files..."
           # shopt modifies glob behavior to include hidden stuff
-          shopt -s dotglob
+          # shopt -s dotglob
           scp -r deploy_folder/standalone/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
           echo "Restarting pm2 process..."

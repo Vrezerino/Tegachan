@@ -13,6 +13,7 @@ import {
   removeGapsFromString,
   recipientsJSONparser,
   findInStringList,
+  getClientIp,
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
@@ -23,7 +24,7 @@ import { checkRateLimit } from '@/app/lib/rateLimit';
 
 export const POST = async (req: NextRequest) => {
   try {
-    const ip = req.headers.get('x-real-ip') || '127.0.0.1';
+    const ip = getClientIp(req);
 
     // Check if ip in banlist
     if (findExactInString(ip, banlist)) {

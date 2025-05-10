@@ -13,6 +13,7 @@ import {
   GlobeEuropeAfricaIcon,
   ChatBubbleLeftRightIcon
 } from '@heroicons/react/24/outline';
+import { NextRequest } from 'next/server';
 
 // Links to display in the side navigation
 export const links = [
@@ -192,6 +193,20 @@ export const findInStringList = (content: string, ignoreCase: boolean, list?: st
 
   const bannedWords = list.split(/\s+/);
   return bannedWords.some(word => content.includes(word));
+}
+
+/**
+ * Get IP address from client request
+ * @param req NextRequest
+ * @returns string | null
+ */
+export function getClientIp(req: NextRequest): string | null {
+  const forwarded = req.headers.get('x-forwarded-for');
+  return (
+    (forwarded && forwarded.split(',')[0].trim()) ??
+    req.headers.get('x-real-ip') ??
+    null
+  );
 }
 
 // 'other' includes 'development'
