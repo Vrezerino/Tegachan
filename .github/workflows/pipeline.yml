@@ -121,10 +121,11 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: standalone_build
-          path: tegachanArtifact
+          path: deploy_folder
 
       - name: Unzip build
-        run: unzip tegachanArtifact/standalone.zip -d tegachanArtifact/
+        # Creates deploy/folder/standalone dir
+        run: unzip deploy_folder/standalone.zip -d deploy_folder/
 
       - name: Set up SSH key
         run: |
@@ -140,28 +141,25 @@ jobs:
       - name: List files in standalone dir
         run: |
           echo "Listing files in standalone dir..."
-          ls -al tegachanArtifact/
+          ls -al deploy_folder/standalone
 
       - name: Deploy to server
         shell: bash
         run: |
-          chmod -R 755 tegachanArtifact/
+          chmod -R 755 deploy_folder/
 
-          # Confirm presence of target folder
-          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
-
-          echo "Stopping pm2 and clearing target folder..."
+          # echo "Stopping pm2 and clearing target folder..."
           # Supress pm2 table output upon stopping already running site
           # Tilde might not expand properly, use full path to home
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan > /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
 
           echo "Copying files..."
           # shopt modifies glob behavior to include hidden stuff
           shopt -s dotglob
-          scp -r tegachanArtifact/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
+          scp -r deploy_folder/standalone/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
           echo "Starting pm2..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan > /dev/null 2>&1"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 restart tegachan > /dev/null 2>&1"
 
   #mark-deployment-success:
   #  needs: deploy
