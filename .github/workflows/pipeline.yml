@@ -93,12 +93,17 @@ jobs:
           cd ${{ github.workspace }}
           rm -rf .next/cache
 
+      - name: Zip standalone output
+        run: |
+          cd .next
+          zip -r ../standalone.zip standalone
+
       - name: Upload standalone build
         uses: actions/upload-artifact@v4
         with:
-          name: tegachanArtifact
+          name: standalone_build
           path: |
-            .next/standalone/
+            standalone.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -115,8 +120,11 @@ jobs:
       - name: Download build
         uses: actions/download-artifact@v4
         with:
-          name: tegachanArtifact
+          name: standalone_build
           path: tegachanArtifact
+
+      - name: Unzip build
+        run: unzip tegachanArtifact/standalone.zip -d tegachanArtifact/
 
       - name: Set up SSH key
         run: |
@@ -153,7 +161,7 @@ jobs:
           scp -r tegachanArtifact/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
           echo "Starting pm2..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan > /dev/null 2>&1"
 
   #mark-deployment-success:
   #  needs: deploy
