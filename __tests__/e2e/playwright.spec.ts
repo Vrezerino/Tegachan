@@ -19,7 +19,7 @@ test.describe('Navigation', () => {
 
 test.describe.serial('Posting', () => {
   test('new thread works', async ({ page }) => {
-    await page.goto('/dashboard/random');
+    await page.goto('/random');
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright posted this thread');
     await page.getByTestId('postform-postbutton').click({ force: true });
 
@@ -27,11 +27,11 @@ test.describe.serial('Posting', () => {
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
     await expect(response.status()).toBe(201);
 
-    await expect(page.getByTestId('boardtype-post-content').first()).toContainText('[TEST]: Playwright posted this thread', { timeout: 20000 });
+    await expect(page.getByTestId('post-content').first()).toContainText('[TEST]: Playwright posted this thread', { timeout: 20000 });
   });
 
   test('throttling works', async ({ page }) => {
-    await page.goto('/dashboard/random');
+    await page.goto('/random');
     await page.getByTestId('postform-textarea').fill('[TEST]: Playwright attempts to post');
     await page.getByTestId('postform-postbutton').click({ force: true });
 
@@ -40,7 +40,7 @@ test.describe.serial('Posting', () => {
   });
 
   test('reply to newly created thread works', async ({ page }) => {
-    await page.goto('/dashboard/random');
+    await page.goto('/random');
     await page.getByTestId('boardtype-post-content').first().click({ force: true });
     await expect(page.getByTestId('post-content').nth(0)).toContainText('[TEST]: Playwright posted this thread', { timeout: 10000 })
 
@@ -56,7 +56,7 @@ test.describe.serial('Posting', () => {
   });
 
   test('a reply with image works', async ({ page }) => {
-    await page.goto('/dashboard/random');
+    await page.goto('/random');
     await page.getByTestId('boardtype-post-content').first().click({ force: true });
     await expect(page.getByTestId('post-content').nth(0)).toContainText('[TEST]: Playwright posted this thread', { timeout: 5000 })
 

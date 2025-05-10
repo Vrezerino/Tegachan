@@ -61,20 +61,29 @@ const PostFormBig = ({
 
   const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const board = pathname.split('/')[1];
 
-    // Set true so loading anim is rendered
-    // While true, form post button and text area are disabled
+    /**
+     * Set true so loading anim is rendered. While true,
+     * form post button and text area are disabled
+    */
     setLoading(true);
 
     const formData = new FormData(e.currentTarget);
 
-    // Set post content and image from state and don't get them directly from form data
-    // Content will be stripped of multiple linebreaks and spaces
+    /**
+     * Set post content and image from state and don't get them directly
+     * from form data. Content will be stripped of multiple linebreaks and spaces
+    */
     const noGapContent = removeGapsFromString(content);
     formData.set('content', String(noGapContent));
     if (image) formData.set('image', image);
 
-    // If postForm gets existing OP as prop, the new post will be a reply. Otherwise it is itself OP
+
+    /**
+     * If postForm gets existing OP as prop, the new post will be a reply.
+     * Otherwise it is itself OP
+    */
     if (op) {
       formData.set('OP', 'false');
       formData.set('thread', op.post_num.toString());
@@ -82,7 +91,7 @@ const PostFormBig = ({
       formData.set('OP', 'true');
     }
 
-    formData.set('board', pathname.split('/')[2]);
+    formData.set('board', board);
     formData.set('recipients', JSON.stringify(recipients));
 
     const response = await fetch(`/api/posts`, {
@@ -92,14 +101,23 @@ const PostFormBig = ({
 
     response && setLoading(false);
 
+    // Clear state, reset recipient array, clear textarea on successful post
     if (response.status === 201) {
-      // Clear state, reset recipient array, clear textarea on successful post
       setContent('');
       setImage(null);
       op && setRecipients && setRecipients([op.post_num]);
       if (fileRef.current) fileRef.current.value = '';
 
-      router.refresh();
+      /**
+       * Refresh thread if you have op in props i.e. you're not the op,
+       * otherwise redirect to thread num
+      */
+      if (op) {
+        router.refresh();
+      } else {
+        const thread_num = (await response.json()).post_num;
+        router.push(`/${board}/${thread_num}`);
+      }
     } else {
       toast.error((await response.json()).message);
     }

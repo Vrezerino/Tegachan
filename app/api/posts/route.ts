@@ -56,7 +56,7 @@ export const POST = async (req: NextRequest) => {
 
     // Sanitize form data entries
     const sanitizedBoardName = sanitizeString(formData.get('board'));
-    const boardSearchResult = links.find((l) => l.href.split('/')[2] === sanitizedBoardName);
+    const boardSearchResult = links.find((l) => l.href.split('/')[1] === sanitizedBoardName);
     if (!boardSearchResult) throw { message: 'Unknown board', status: 400 };
 
     const rawTitle = formData.get('title');
@@ -169,7 +169,7 @@ export const POST = async (req: NextRequest) => {
       }
     }
 
-    return NextResponse.json('Created', { status: 201 });
+    return NextResponse.json({ message: 'Created', post_num: newPostNum }, { status: 201 });
 
   } catch (e) {
     console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) ? e.message : e);

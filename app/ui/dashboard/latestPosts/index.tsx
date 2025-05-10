@@ -29,7 +29,7 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
                 </div>
                 <div className='flex-1 min-w-0 ms-1'>
                   {/* Link to threadnum#post_num if post is not an OP, otherwise just post_num */}
-                  <Link href={`dashboard/${post?.board}${!post?.is_op ? '/' + post.thread + '#' : '' + '/'}${post?.post_num}`}>
+                  <Link href={`/${post?.board}${!post?.is_op ? '/' + post.thread + '#' : '' + '/'}${post?.post_num}`}>
                     <p className='text-sm font-medium text-gray-900 truncate dark:text-white mt-0'>
                       {post?.title}
                     </p>
@@ -42,7 +42,7 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
                   </Link>
                 </div>
                 <div className='inline-flex items-center text-base font-semibold text-gray-900 dark:text-white'>
-                  <Link href={`dashboard/${post?.board}`}>/{post?.board}</Link>
+                  <Link href={`/${post?.board}`}>/{post?.board}</Link>
                 </div>
               </div>
             </li>

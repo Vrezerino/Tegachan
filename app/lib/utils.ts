@@ -19,72 +19,72 @@ import { NextRequest } from 'next/server';
 export const links = [
   {
     name: 'Index',
-    href: '/dashboard',
+    href: '/',
     icon: HomeIcon
   },
   {
     name: 'Technology',
-    href: '/dashboard/technology',
+    href: '/technology',
     icon: ComputerDesktopIcon,
   },
   {
     name: 'Business',
-    href: '/dashboard/business',
+    href: '/business',
     icon: CurrencyDollarIcon,
   },
   {
     name: 'Music',
-    href: '/dashboard/music',
+    href: '/music',
     icon: MusicalNoteIcon,
   },
   {
     name: 'Art',
-    href: '/dashboard/art',
+    href: '/art',
     icon: PaintBrushIcon,
   },
   {
     name: 'Video Games',
-    href: '/dashboard/videogames',
+    href: '/videogames',
     icon: ComputerDesktopIcon,
   },
   {
     name: 'TV & Film',
-    href: '/dashboard/tv',
+    href: '/tv',
     icon: TvIcon,
   },
   {
     name: 'Automobiles',
-    href: '/dashboard/auto',
+    href: '/auto',
     icon: TruckIcon,
   },
   {
     name: 'Outdoors',
-    href: '/dashboard/outdoors',
+    href: '/outdoors',
     icon: SunIcon,
   },
   {
     name: 'Sports',
-    href: '/dashboard/sports',
+    href: '/sports',
     icon: TrophyIcon,
   },
   {
     name: 'Science & Math',
-    href: '/dashboard/science',
+    href: '/science',
     icon: BeakerIcon,
   },
   {
     name: 'International',
-    href: '/dashboard/international',
+    href: '/international',
     icon: GlobeEuropeAfricaIcon
   },
   {
     name: 'Random',
-    href: '/dashboard/random',
+    href: '/random',
     icon: ChatBubbleLeftRightIcon
   }
 ];
 
-export const MAX_FILE_SIZE = 1000000;
+export const MAX_FILE_SIZE = 2000000;
 export const ACCEPTED_IMAGE_TYPES = [
   'image/gif',
   'image/jpeg',

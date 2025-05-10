@@ -8,7 +8,7 @@ const Intro = () => {
         pages with their own topics. It is adviced that you make yourself familiar with rules and other information before you start posting.
       </p>
       <p className='mt-3 text-sm font-bold text-red-600 text-center'>
-        <Link href={`dashboard/info`}>Rules & Info</Link>
+        <Link href={`/info`}>Rules & Info</Link>
       </p>
     </div>
   );
