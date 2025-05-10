@@ -159,7 +159,8 @@ jobs:
           DEPLOYMENT_ID=$(gh api repos/${{ github.repository }}/deployments \
           -f ref=${{ github.sha }} \
           -f environment=production \
-          -f auto_merge=false \
+          # To send booleans, use -F
+          -F auto_merge=false \
           -f required_contexts[]= \
           -q '.id')
 
