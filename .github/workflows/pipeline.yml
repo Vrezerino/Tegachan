@@ -94,7 +94,6 @@ jobs:
             .next/standalone/
 
   deploy:
-    # skip deploy for debug
     if: false
     runs-on: ubuntu-latest
     needs: test-and-build
@@ -129,26 +128,26 @@ jobs:
           echo "Listing files in standalone dir..."
           ls -al tegachanArtifact/
 
-      - name: Deploy to server
-        shell: bash
-        run: |
-          chmod -R 755 tegachanArtifact/
-
-          # Confirm presence of target folder
-          # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
-
-          echo "Stopping pm2 and clearing target folder..."
-          # Supress pm2 table output upon stopping already running site
-          # Tilde might not expand properly, use full path to home
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan > /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
-
-          echo "Copying files..."
-          # shopt modifies glob behavior to include hidden stuff
-          shopt -s dotglob
-          scp -r tegachanArtifact/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
-
-          echo "Starting pm2..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
+      #- name: Deploy to server
+      #  shell: bash
+      #  run: |
+      #    chmod -R 755 tegachanArtifact/
+#
+      #    # Confirm presence of target folder
+      #    # ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "ls -la ~/tegachan/.next/standalone"
+#
+      #    echo "Stopping pm2 and clearing target folder..."
+      #    # Supress pm2 table output upon stopping already running site
+      #    # Tilde might not expand properly, use full path to home
+      #    ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "pm2 stop tegachan > /dev/null 2>&1 && rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
+#
+      #    echo "Copying files..."
+      #    # shopt modifies glob behavior to include hidden stuff
+      #    shopt -s dotglob
+      #    scp -r tegachanArtifact/* ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
+#
+      #    echo "Starting pm2..."
+      #    ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
 
   create-release:
     runs-on: ubuntu-latest
