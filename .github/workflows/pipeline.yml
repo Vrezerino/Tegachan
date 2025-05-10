@@ -152,6 +152,10 @@ jobs:
       #    echo "Starting pm2..."
       #    ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 start server.js --name tegachan"
 
+  mark-deployment-success:
+    needs: deploy
+    runs-on: ubuntu-latest
+    steps:
       - name: Mark deployment as successful
         env:
           GH_TOKEN: ${{ github.token }}
