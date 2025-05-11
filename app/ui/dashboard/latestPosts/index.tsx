@@ -6,7 +6,7 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
   return (
     <div className='w-full max-w-md p-3 bg-white border border-gray-200 rounded-xs rounded-br-2xl shadow-sm sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
       <div className='flex items-center justify-between mb-4'>
-        <h5 className='my-0 mx-auto text-xl font-bold leading-none text-gray-900 dark:text-white'>Latest Posts</h5>
+        <h5 className='my-0 mx-auto text-xl font-bold leading-none text-gray-900 dark:header-darkmode'>Latest Posts</h5>
       </div>
       <div className='flow-root m-0'>
         <ul role='list' className='divide-y divide-gray-200 dark:divide-gray-700'>

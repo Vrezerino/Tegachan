@@ -69,10 +69,10 @@ describe('Navigation', () => {
     const scienceLink = scienceParagraph?.closest('a');
     expect(scienceLink?.getAttribute('href')).toBe('/science');
 
-    // International
-    const intParagraph = screen.getAllByText('International')[0].closest('p');
-    const intLink = intParagraph?.closest('a');
-    expect(intLink?.getAttribute('href')).toBe('/international');
+    // News
+    const newsParagraph = screen.getAllByText('News')[0].closest('p');
+    const newsLink = newsParagraph?.closest('a');
+    expect(newsLink?.getAttribute('href')).toBe('/news');
 
     // Random
     const randParagraph = screen.getAllByText('Random')[0].closest('p');

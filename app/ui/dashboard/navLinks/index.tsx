@@ -17,6 +17,12 @@ const NavLinks = () => {
     const result = links.find((l) => l.name === board);
     router.push(`${result?.href}`);
   }
+
+  /**
+   * This will retain the correct select option in dropdown list after page
+   * refresh, notice that the initial forward slash is needed
+   */
+  const currentPage = links.find((link) => ('/' + pathname.split('/')[1]) === (link.href));
   return (
     <>
       <NextTopLoader color='white' height={9} />
@@ -45,7 +51,13 @@ const NavLinks = () => {
 
       {/** On mobile devices, a dropdown list is shown instead */}
       <div className='xsm:block hidden'>
-        <select name='boards' id='boards' onChange={onPickBoard} className='text-sm p-0.5 text-slate-900 dark:text-slate-200 dark:bg-neutral-800'>
+        <select
+          name='boards'
+          id='boards'
+          onChange={onPickBoard}
+          value={currentPage ? currentPage.name : 'Index'}
+          className='text-sm p-0.5 text-slate-900 dark:text-slate-200 dark:bg-neutral-800'
+        >
           {links.map((link) => {
             return (
               <option key={link.name} value={link.name}>

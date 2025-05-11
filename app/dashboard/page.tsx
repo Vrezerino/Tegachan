@@ -9,8 +9,15 @@ const Page = async () => {
   return (
     <main>
       <div>
-        <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>
+        {/** Header won't be surrounded by stars in mobile devices i.e. screens narrower than 767 px */}
+        <h1 className='text-3xl font-bold mb-9 dark:header-darkmode text-center xsm:hidden'>
           ✵ Welcome to Tegachan! ✵
+        </h1>
+        <h1 className='text-3xl font-bold dark:header-darkmode text-center xsm:block hidden'>
+          Welcome to Tegachan!
+        </h1>
+        <h1 className='text-6xl font-bold m-4 dark:header-darkmode text-center xsm:block hidden'>
+          ✵
         </h1>
         <Intro />
       </div>

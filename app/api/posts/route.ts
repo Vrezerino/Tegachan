@@ -14,6 +14,7 @@ import {
   recipientsJSONparser,
   findInStringList,
   getClientIp,
+  evaluateName
 } from '@/app/lib/utils';
 
 import s3 from '@/aws.config';
@@ -26,29 +27,20 @@ export const POST = async (req: NextRequest) => {
   try {
     const ip = getClientIp(req);
 
-    // Check if ip in banlist
-    if (findExactInString(ip, banlist)) {
-      throw { message: 'Can not post at this time.', status: 403 };
-    }
-
-    // Check if in proxy list
-    if (findExactInString(ip, proxylist)) {
-      throw { message: 'Posting from proxy not allowed.', status: 403 };
-    }
+    // Check if ip in banlist or proxylist
+    if (findExactInString(ip, banlist)) throw { message: 'Can not post at this time.', status: 403 };
+    if (findExactInString(ip, proxylist)) throw { message: 'Posting from proxy not allowed.', status: 403 };
 
     // Limit rate based on ip
     const { limited, retryAfterSeconds } = await checkRateLimit(ip as string);
-
-    if (limited) {
-      throw { message: `Try again in ${retryAfterSeconds} seconds.`, status: 429 };
-    }
+    if (limited) throw { message: `Try again in ${retryAfterSeconds} seconds.`, status: 429 };
 
     const formData = await req.formData();
     const file = formData.get('image') as File;
 
     if (file?.size > 0) {
       if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) throw { message: 'GIF/JPG/PNG/WEBP/AVIF only.', status: 400 };
-      if (file?.size >= MAX_FILE_SIZE) throw { message: 'Image must be under 1MB in size.', status: 400 };
+      if (file?.size >= MAX_FILE_SIZE) throw { message: `Image must be under ${MAX_FILE_SIZE / 1000000} in size.`, status: 400 };
     }
 
     const content = removeGapsFromString(formData.get('content'));
@@ -72,10 +64,9 @@ export const POST = async (req: NextRequest) => {
     const recipientsRaw: unknown = formData.get('recipients');
     const recipients = recipientsJSONparser(recipientsRaw);
 
+    // Evaluate poster's name and check if they're admin
     const rawName = formData.get('name');
-    let name = rawName ? removeGapsFromString(rawName) : 'Noob';
-    const admin = adminPass && name?.includes(adminPass) ? true : false;
-    if (admin) name = 'Expert';
+    const { name, admin } = evaluateName(rawName, adminPass);
 
     const newPost: NewPostType = {
       content,
@@ -87,7 +78,7 @@ export const POST = async (req: NextRequest) => {
       recipients,
       created_at: new Date(),
       ip: ip || 'none',
-      admin: false // fuck with later
+      admin
     }
 
     if (file?.size > 0) newPost.image = file;

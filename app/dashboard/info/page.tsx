@@ -1,7 +1,9 @@
+import { MAX_FILE_SIZE } from "@/app/lib/utils";
+
 const Page = () => {
   return (
     <div className='mt-0 mb-16 mx-auto w-full max-w-md p-2 bg-white border border-gray-200 rounded-xs rounded-br-2xl shadow-sm sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
-      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mb-6 dark:h1-darkmode'>Rules</h1>
+      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mb-6 dark:header-darkmode'>Rules</h1>
 
       <p className='py-4 text-md font-bold text-red-600'>
         1. Be respectful
@@ -29,7 +31,7 @@ const Page = () => {
         4. Do not post illegal content or links
       </p>
       <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white'>
-        This site uses services from countries in which e.g. child pornography is illegal.
+        This site uses services from countries in which e.g. material of certain types of abuse is illegal.
         If you submit this type of content, your IP address will get forwarded to authorities
         and/or at the very least, you will get banned permanently.
       </p>
@@ -47,7 +49,7 @@ const Page = () => {
         constructive, fun and interesting posts. Site rules and information are subject to change.
       </p>
 
-      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-12 mb-6 dark:h1-darkmode'>Site Information</h1>
+      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-12 mb-6 dark:header-darkmode'>Site Information</h1>
 
       <p className='py-4 text-md font-bold text-gray-900 dark:text-white'>
         How to post
@@ -58,9 +60,7 @@ const Page = () => {
       </p>
       <p className='ml-4 my-4 text-sm font-medium text-gray-900 dark:text-white'>
         There is a 30 second timeout after posting from the same IP, to prevent flooding.
-      </p>
-      <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white'>
-        It is possible to reply to up to five other posters at a time, not counting the thread starter &#40;OP&#41;.
+        Maximum image file size is {MAX_FILE_SIZE / 1000000} MB and supported formats are JPG PNG GIF AVIF WEBP.
       </p>
 
       <p className='py-6 text-md font-bold text-gray-900 dark:text-white'>

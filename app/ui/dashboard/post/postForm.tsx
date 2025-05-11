@@ -46,7 +46,7 @@ const PostFormBig = ({
     }
 
     if (file?.size >= MAX_FILE_SIZE) {
-      toast.error('Image must be under 1MB in size.');
+      toast.error(`Image must be under ${MAX_FILE_SIZE / 1000000} in size.`);
       if (fileRef.current) fileRef.current.value = '';
     }
 

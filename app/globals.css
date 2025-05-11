@@ -32,7 +32,7 @@
   .linkName,
   label,
   h1, h5, .span-h5 {
-    color: #2a3f79;
+    color: #000000;
     text-shadow: 1px 1px 1px #a3c2d1,
       2px 2px 1px #aeeaf5,
       3px 3px 2px #ffca7a
@@ -122,7 +122,7 @@
     3px 3px 2px #441815;
 }
 
-@utility h1-darkmode {
+@utility header-darkmode {
   color: #f8ddd6;
   text-shadow:
     1px 1px 1px #11587c,

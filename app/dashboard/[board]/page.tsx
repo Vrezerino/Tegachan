@@ -22,7 +22,8 @@ const Page = async ({ params }: { params: ParamsType }) => {
 
   return (
     <>
-      <h1 className='text-4xl font-bold mb-9 dark:h1-darkmode text-center'>✵ {result.name} ✵</h1>
+      <h1 className='text-3xl font-bold mb-3 dark:header-darkmode text-center'>✵ {result.name} ✵</h1>
+      <p className='text-xs wrap-anywhere text-center mb-5 font-normal text-neutral-600/60 dark:text-neutral-300/60' data-testid='board-description'>{result.desc}</p>
       <Board posts={data} />
     </>
   );

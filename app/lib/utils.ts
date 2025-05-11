@@ -20,68 +20,81 @@ export const links = [
   {
     name: 'Index',
     href: '/',
-    icon: HomeIcon
-  },
-  {
-    name: 'Technology',
-    href: '/technology',
-    icon: ComputerDesktopIcon,
-  },
-  {
-    name: 'Business',
-    href: '/business',
-    icon: CurrencyDollarIcon,
-  },
-  {
-    name: 'Music',
-    href: '/music',
-    icon: MusicalNoteIcon,
+    icon: HomeIcon,
+    desc: ''
   },
   {
     name: 'Art',
     href: '/art',
     icon: PaintBrushIcon,
-  },
-  {
-    name: 'Video Games',
-    href: '/videogames',
-    icon: ComputerDesktopIcon,
-  },
-  {
-    name: 'TV & Film',
-    href: '/tv',
-    icon: TvIcon,
+    desc: 'Discuss artists, techniques, methods, post your own art'
   },
   {
     name: 'Automobiles',
     href: '/auto',
     icon: TruckIcon,
+    desc: 'Discuss automobiles'
+  },
+  {
+    name: 'Business',
+    href: '/business',
+    icon: CurrencyDollarIcon,
+    desc: 'Discuss business'
+  },
+  {
+    name: 'Music',
+    href: '/music',
+    icon: MusicalNoteIcon,
+    desc: 'Discuss releases, music theory, post your own material'
+  },
+  {
+    name: 'News',
+    href: '/news',
+    icon: GlobeEuropeAfricaIcon,
+    desc: 'Discuss recent events'
   },
   {
     name: 'Outdoors',
     href: '/outdoors',
     icon: SunIcon,
+    desc: 'Discuss outdoors'
   },
   {
-    name: 'Sports',
-    href: '/sports',
-    icon: TrophyIcon,
+    name: 'Random',
+    href: '/random',
+    icon: ChatBubbleLeftRightIcon,
+    desc: 'Anything legal and decent goes'
   },
   {
     name: 'Science & Math',
     href: '/science',
     icon: BeakerIcon,
+    desc: 'Discuss science and math(s)'
   },
   {
-    name: 'International',
-    href: '/international',
-    icon: GlobeEuropeAfricaIcon
+    name: 'Sports',
+    href: '/sports',
+    icon: TrophyIcon,
+    desc: 'Discuss sports'
   },
   {
-    name: 'Random',
-    href: '/random',
-    icon: ChatBubbleLeftRightIcon
-  }
+    name: 'Technology',
+    href: '/technology',
+    icon: ComputerDesktopIcon,
+    desc: 'Discuss technology'
+  },
+  {
+    name: 'TV & Film',
+    href: '/tv',
+    icon: TvIcon,
+    desc: 'Discuss cinema, TV series, production'
+  },
+  {
+    name: 'Video Games',
+    href: '/videogames',
+    icon: ComputerDesktopIcon,
+    desc: 'Discuss games and industry, maybe even share your own game'
+  },
 ];
 
 export const MAX_FILE_SIZE = 2000000;
@@ -98,9 +111,9 @@ export const parseDate = (date: Date): string => {
 };
 
 /**
- * Returns a number between 1 and max
- * @param max
- * @returns
+ * Returns a number between 1 and max.
+ * @param {number} max Maximum integer that can be returned
+ * @returns {number} Number between 1 and max
  */
 export const getRandomInt = (max: number): number => {
   return Math.floor(Math.random() * (max - 1)) + 1;
@@ -112,10 +125,10 @@ export const isErrorWithStatusCodeType = (x: any): x is ErrorWithStatusCode => {
 
 /**
  * Remove consecutive spaces, linebreaks and tabs.
- * @param str any
- * @returns string
+ * @param {unknown} str Object to be processed if string
+ * @returns {string}
  */
-export const removeGapsFromString = (str: any) => {
+export const removeGapsFromString = (str: unknown) => {
   if (typeof str !== 'string') throw { message: 'removeGapsFromString: argument must be a string.', status: 400 };
 
   return str
@@ -126,10 +139,10 @@ export const removeGapsFromString = (str: any) => {
 
 /**
  * Remove consecutive spaces, linebreaks, tabs and special characters.
- * @param str any
- * @returns string
+ * @param {unknown} str Object to be sanitized if string
+ * @returns {string} Sanitized string
  */
-export const sanitizeString = (str: any) => {
+export const sanitizeString = (str: unknown) => {
   if (typeof str !== 'string') throw { message: 'sanitizeString: argument must be a string.', status: 400 };
 
   return removeGapsFromString(str)
@@ -137,9 +150,9 @@ export const sanitizeString = (str: any) => {
 };
 
 /**
- * Attempt to parse and check a post recipients array
- * @param recipientsRaw unknown
- * @returns number[]
+ * Attempt to parse and check a post recipients array.
+ * @param {unknown} recipientsRaw Potential recipients array
+ * @returns {number[]} Processed recipients array
  */
 export const recipientsJSONparser = (recipientsRaw: unknown) => {
   if (typeof recipientsRaw !== 'string') throw { message: `'recipients' must be a string.`, status: 400 };
@@ -178,10 +191,10 @@ export const findExactInString = (searchWord: string | null, target: string | un
 };
 
 /**
- * Returns true if any word from e.g. 'yeet 5e68yu' is found in '5yj5yeetdsk'
- * @param content string
- * @param list string
- * @returns boolean
+ * Returns true if any word from e.g. 'yeet 5e68yu' is found in '5yj5yeetdsk'.
+ * @param {string} content
+ * @param {string} list
+ * @returns {boolean} A word appeared in the list
  */
 export const findInStringList = (content: string, ignoreCase: boolean, list?: string) => {
   if (!list) throw new Error('List not found!');
@@ -196,9 +209,9 @@ export const findInStringList = (content: string, ignoreCase: boolean, list?: st
 }
 
 /**
- * Get IP address from client request
- * @param req NextRequest
- * @returns string | null
+ * Get IP address from client request.
+ * @param {NextRequest} req Web request object
+ * @returns {string | null} ip address
  */
 export function getClientIp(req: NextRequest): string | null {
   const forwarded = req.headers.get('x-forwarded-for');
@@ -207,6 +220,22 @@ export function getClientIp(req: NextRequest): string | null {
     req.headers.get('x-real-ip') ??
     null
   );
+}
+
+/**
+ * Evaluate poster's name and check if they're admin.
+ * Only admins can hold name Expert.
+ * @param {FormDataEntryValue} rawName Name value from form data
+ * @returns {{ name: string, verified: boolean }} Name and whether poster is admin
+ */
+export function evaluateName(rawName?: FormDataEntryValue | null, adminPass?: string) {
+  const name = removeGapsFromString(rawName);
+
+  if (name === adminPass) return { name: 'Expert', admin: true };
+  if (name === 'Expert') return { name: 'Wannabe-Expert', admin: false };
+  if (!name) return { name: 'Noob', admin: false };
+  
+  return { name, admin: false };
 }
 
 // 'other' includes 'development'
