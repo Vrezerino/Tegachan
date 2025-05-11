@@ -156,8 +156,14 @@ const PostContent = ({
           </span>
         )}
 
-        {post.is_op && <><br /><span className='span-h5 wrap-anywhere font-bold dark:header-darkmode'>{post.title}</span></>}
-        <span className='wrap-anywhere font-normal text-gray-700 dark:text-gray-400 mt-1 mb-4 pr-4' data-testid='post-content'>
+        {post.title &&
+          <>
+            <br />
+            <span className='span-h5 wrap-anywhere font-bold dark:header-darkmode'>{post.title}</span>
+            <br />
+          </>
+        }
+        <span className='text-sm font-medium wrap-anywhere text-gray-700 dark:text-gray-400 mt-1 mb-4 pr-4' data-testid='post-content'>
           <br />{renderContentWithLinks(post.content)}
         </span>
       </p>

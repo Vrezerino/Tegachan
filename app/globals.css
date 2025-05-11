@@ -20,6 +20,7 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentcolor);
+    line-height: 1;
   }
 
   body {
@@ -33,15 +34,15 @@
   label,
   h1, h5, .span-h5 {
     color: #000000;
-    text-shadow: 1px 1px 1px #a3c2d1,
-      2px 2px 1px #aeeaf5,
-      3px 3px 2px #ffca7a
+    text-shadow: 1px 1px 1px #b1cbd8,
+      2px 2px 1px #bcecf5,
+      3px 3px 2px #ffd697
   }
 
   .navLinks,
   .sideNav {
     background-image: linear-gradient(to bottom right,
-        rgba(247, 225, 165, 0),
+        rgba(255, 255, 255, 0.45),
         rgb(255, 255, 255),
         rgb(228, 242, 247));
   }
@@ -52,12 +53,12 @@
 
   .posts-container-post {
     width: 160px;
-    height: 246px;
+    height: 206px;
     border-radius: 5px;
     background-image: linear-gradient(to bottom right,
-        rgb(255, 237, 225),
+        rgb(253, 242, 235),
         rgb(255, 255, 255),
-        rgb(228, 242, 247));
+        rgb(233, 245, 250));
   }
 
   .post,
@@ -87,7 +88,7 @@
 
 @utility posts-container-post-darkmode {
   width: 160px;
-  height: 246px;
+  height: 206px;
   border-radius: 5px;
   background-color: #1d1d1d;
   background-image: none;
@@ -186,16 +187,16 @@
 
 .posts-container-text {
   padding: 6px;
-  min-height: 152px;
+  /*min-height: 152px; */
   font-size: small;
 }
 
 .posts-container-post-title {
-  min-height: 55px;
+  min-height: 45px;
   max-width: 140px;
   word-break: keep-all;
   line-height: 1.1em;
-  font-size: 1.8em;
+  font-size: 1.5em;
   margin-bottom: 0.2em;
 }
 

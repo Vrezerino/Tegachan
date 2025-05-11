@@ -36,7 +36,7 @@ const NavLinks = () => {
               href={link.href}
               data-testid={`${link.name}-nav-button`}
               className={clsx(
-                'flex h-[48px] mb-1 grow items-center justify-center gap-2 rounded-xs p-3 border border-orange-200/70 dark:border-orange-200/20 bg-sky-100/40 dark:bg-neutral-800/80 text-sm font-medium hover:bg-blue-200/60 dark:hover:bg-neutral-200/20 md:flex-none md:justify-start md:p-2 md:px-3 dark:navLinks-darkmode',
+                'flex h-[40px] mb-1 grow items-center justify-center gap-2 rounded-xs border-0 border-neutral-200 dark:border-neutral-800 bg-sky-100/40 dark:bg-neutral-800/80 text-sm font-medium hover:bg-blue-200/60 dark:hover:bg-neutral-200/20 md:flex-none md:justify-start md:p-1 dark:navLinks-darkmode',
                 {
                   'bg-blue-200/80': pathname === link.href,
                 },
