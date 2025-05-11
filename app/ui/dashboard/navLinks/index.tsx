@@ -22,7 +22,7 @@ const NavLinks = () => {
    * This will retain the correct select option in dropdown list after page
    * refresh, notice that the initial forward slash is needed
    */
-  const currentPage = links.find((link) => ('/' + pathname.split('/')[1]) === (link.href));
+  const currentPage = links.find((link) => ('/' + pathname?.split('/')[1]) === (link.href));
   return (
     <>
       <NextTopLoader color='white' height={9} />
