@@ -1,12 +1,12 @@
 'use client'
 
-import { PostType } from '@/app/lib/definitions';
+import { CatalogOPType, PostType } from '@/app/lib/definitions';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PostFormBig } from '../post/postForm';
 import { useState } from 'react';
 
-const BoardItem = ({ post }: { post: PostType }) => {
+const BoardItem = ({ post }: { post: CatalogOPType }) => {
   return (
     <Link href={`/${post.board}/${post.post_num}`}>
       <div className='posts-container-post m-1 border-gray-200 shadow-sm dark:border-neutral-800 dark:posts-container-post-darkmode'>
@@ -29,6 +29,7 @@ const BoardItem = ({ post }: { post: PostType }) => {
           <h5 className='posts-container-post-title wrap-anywhere line-clamp-2 dark:posts-container-post-title-darkmode' data-testid='boardtype-post-title'>{post?.title}</h5>
           <p className='wrap-anywhere line-clamp-4 font-normal text-neutral-600 dark:text-neutral-300' data-testid='boardtype-post-content'>{post?.content}</p>
         </div>
+        <p className='text-xs align-text-bottom ml-1.5 font-normal text-neutral-600/60 dark:text-neutral-300/60' data-testid='back-to-board-link'>{post.num_replies} {post.num_replies == 1 ? 'reply' : 'replies'}</p>
       </div>
     </Link>
   );
@@ -49,11 +50,11 @@ const NewThreadForm = () => {
   );
 };
 
-const Board = ({ posts }: { posts: PostType[] }) => {
+const Board = ({ posts }: { posts: CatalogOPType[] }) => {
   return (
     <div>
       <div className='posts-container'>
-        {posts?.map((post: PostType) => (
+        {posts?.map((post: CatalogOPType) => (
           <BoardItem post={post} key={post.post_num} />
         ))}
       </div>

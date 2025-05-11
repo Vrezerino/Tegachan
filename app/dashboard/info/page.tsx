@@ -31,9 +31,9 @@ const Page = () => {
         4. Do not post illegal content or links
       </p>
       <p className='ml-4 text-sm font-medium text-gray-900 dark:text-white'>
-        This site uses services from countries in which e.g. material of certain types of abuse is illegal.
-        If you submit this type of content, your IP address will get forwarded to authorities
-        and/or at the very least, you will get banned permanently.
+        This site uses services from countries in which distribution of material of e.g. certain types of abuse is illegal.
+        If you submit this type of content, your IP address will get forwarded to authorities and/or at the very least,
+        you will get banned permanently.
       </p>
 
       <p className='py-4 text-md font-bold text-red-600'>

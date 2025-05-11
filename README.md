@@ -24,9 +24,9 @@ Posting links for monetary gain through scams, or links that contain malware, is
 
 <h4>4. Do not post illegal content or links</h4>
 
-This site uses services from countries in which distribution of material of e.g. certain types of
-abuse is illegal. If you submit this type of content, your IP address will be forwarded to authorities
-and you will get banned permanently.
+This site uses services from countries in which distribution of material of e.g. certain types of 
+abuse is illegal. If you submit this type of content, your IP address will get forwarded to 
+authorities and/or at the very least, you will get banned permanently.
 
 <h4>5. Do not post extremely graphic images</h4>
 
@@ -41,12 +41,18 @@ constructive, fun and interesting posts. Site rules and information are subject 
 <h4>How to post</h4>
 
 You can submit a new thread on a board (for example on Music) and/or reply to others by clicking
-either the date or the post count number (preceded by “№”) on top of each post. There is a 30
-second timeout after posting from the same IP, to prevent flooding.
+either the date or the post count number (preceded by “№”) on top of each post.
+
+There is a 30 second timeout after posting from the same IP, to prevent flooding. Maximum image
+file size is 2 MB and supported formats are JPG PNG GIF AVIF WEBP.
 
 <h4>How to contact an admin</h4>
 
 As of now you can invoke an administrator simply by stating in a post that you wish to communicate
 with them. You will then get a reply as soon as possible.
+
+<h4>About Tegachan</h4>
+
+Tegachan was launched on 8th April 2024. It was not created using any imageboard templates.
 
 </div>

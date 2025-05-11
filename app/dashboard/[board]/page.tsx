@@ -1,4 +1,4 @@
-import { PostType } from '@/app/lib/definitions';
+import { CatalogOPType, PostType } from '@/app/lib/definitions';
 import { getBumpedPosts } from './data';
 
 import Board from '@/app/ui/dashboard/board';
@@ -18,7 +18,7 @@ const Page = async ({ params }: { params: ParamsType }) => {
   if (!result) notFound();
 
   // Get thread starter posts from given board
-  const data: PostType[] = await getBumpedPosts(sanitizedBoardName);
+  const data: CatalogOPType[] = await getBumpedPosts(sanitizedBoardName);
 
   return (
     <>

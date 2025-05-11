@@ -28,7 +28,11 @@ export type NewPostType = {
 };
 
 // Board catalog OP type
-export interface CatalogOPType extends Omit<PostType, 'is_op'> {
+export interface CatalogOPType extends PostType {
+  latest_reply_created_at: Date;
+  num_replies: number;
+  op_created_at: Date;
+  parent_post_nums: number[];
   repliesCount: number;
 };
 
