@@ -1,11 +1,22 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import localFont from 'next/font/local';
 
 import '@/app/globals.css';
 import NextTopLoader from 'nextjs-toploader';
 import Particles from '@/app/ui/dashboard/particles';
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter'
+});
+
+// Local fonts must be under /app folder, not public
+// Use directly in globals.css, font-family: var(--font-larken);
+const apparel = localFont({
+  src: './lib/fonts/Apparel-Bold.otf',
+  variable: '--font-apparel'
+});
 
 export const metadata: Metadata = {
   title: 'Tegachan',
@@ -19,7 +30,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang='en'>
-      <body className={`${inter.className} dark:body-dark`}>
+      <body className={`${inter.variable} ${apparel.variable} dark:body-dark font-[var(--font-inter)]`}>
         <NextTopLoader color='white' height={9}/>
         <Particles />
         {children}

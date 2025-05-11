@@ -25,8 +25,9 @@
 
   body {
     color: rgb(var(--foreground-rgb));
-    background-image: url('/img/sky1.jpg');
+    background-image: url('/img/s.avif');
     background-size: cover;
+    font-family: var(--font-inter);
   }
 
   .posts-container-post-title,
@@ -83,7 +84,7 @@
 
 /* Custom darkmode selectors */
 @utility body-dark {
-  background-image: url('/img/sky-dark.jpg');
+  background-image: url('/img/s2.avif');
 }
 
 @utility posts-container-post-darkmode {
@@ -100,7 +101,7 @@
 }
 
 @utility posts-container-post-title-darkmode {
-  color: #f8ddd6;
+  color: var(--color-neutral-300);
   text-shadow:
     1px 1px 1px #11587c,
     2px 2px 1px #14515c,
@@ -108,7 +109,7 @@
 }
 
 @utility linkName-darkmode {
-  color: #f8ddd6;
+  color: var(--color-neutral-300);
   text-shadow:
     1px 1px 1px #11587c,
     2px 2px 1px #14515c,
@@ -116,7 +117,7 @@
 }
 
 @utility label-darkmode {
-  color: #f8ddd6;
+  color: var(--color-neutral-300);
   text-shadow:
     1px 1px 1px #11587c,
     2px 2px 1px #14515c,
@@ -124,7 +125,7 @@
 }
 
 @utility header-darkmode {
-  color: #f8ddd6;
+  color: var(--color-neutral-300);
   text-shadow:
     1px 1px 1px #11587c,
     2px 2px 1px #14515c,
@@ -177,6 +178,10 @@
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 11;
   }
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-apparel);
 }
 
 .posts-container {

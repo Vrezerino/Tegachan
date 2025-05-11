@@ -10,13 +10,10 @@ const Page = async () => {
     <main>
       <div>
         {/** Header won't be surrounded by stars in mobile devices i.e. screens narrower than 767 px */}
-        <h1 className='text-3xl font-bold mb-9 dark:header-darkmode text-center xsm:hidden'>
-          ✵ Welcome to Tegachan! ✵
+        <h1 className='text-6xl font-bold dark:header-darkmode text-center'>
+          TEGACHAN
         </h1>
-        <h1 className='text-3xl font-bold dark:header-darkmode text-center xsm:block hidden'>
-          Welcome to Tegachan!
-        </h1>
-        <h1 className='text-6xl font-bold m-4 dark:header-darkmode text-center xsm:block hidden'>
+        <h1 className='text-4xl font-bold m-5 dark:header-darkmode text-center'>
           ✵
         </h1>
         <Intro />
