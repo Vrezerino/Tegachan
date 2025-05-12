@@ -12,7 +12,7 @@ test.describe('Navigation', () => {
 
     for (let i = 1; i < links.length; i++) {
       await page.getByTestId(`${links[i].name}-nav-button`).click({ force: true });
-      await expect(page.getByRole('heading', { name: `✵ ${links[i].name} ✵` })).toBeVisible({ timeout: 10000 });
+      await expect(page.getByRole('heading', { name: `✵ ${links[i].name.toUpperCase()} ✵` })).toBeVisible({ timeout: 10000 });
     }
   });
 });
