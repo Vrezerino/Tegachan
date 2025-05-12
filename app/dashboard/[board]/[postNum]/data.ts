@@ -24,6 +24,8 @@ export const getPost = async (board: string, postNum: string) => {
         p.is_op,
         p.board,
         p.admin,
+        p.country_name,
+        p.country_code,
         NULL::BIGINT AS parent_post_num
       FROM posts p
       WHERE p.board = ${board}
@@ -42,6 +44,8 @@ export const getPost = async (board: string, postNum: string) => {
         child.is_op,
         child.board,
         child.admin,
+        child.country_name,
+        child.country_code,
         r.parent_post_num
       FROM replies r
       INNER JOIN posts child ON child.post_num = r.post_num
@@ -59,6 +63,8 @@ export const getPost = async (board: string, postNum: string) => {
       is_op,
       board,
       admin,
+      country_name,
+      country_code,
     ARRAY_AGG(parent_post_num) FILTER (WHERE parent_post_num IS NOT NULL) AS parent_post_nums
     FROM thread_tree
     GROUP BY
@@ -71,7 +77,9 @@ export const getPost = async (board: string, postNum: string) => {
       created_at,
       is_op,
       board,
-      admin
+      admin,
+      country_name,
+      country_code
     ORDER BY created_at ASC;`
   ;
 

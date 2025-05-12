@@ -35,6 +35,12 @@ export const POST = async (req: NextRequest) => {
     const { limited, retryAfterSeconds } = await checkRateLimit(ip as string);
     if (limited) throw { message: `Try again in ${retryAfterSeconds} seconds.`, status: 429 };
 
+    const geo_res = await fetch(`https://ipapi.co/${ip}/json/`);
+    const geo = await geo_res.json();
+
+    const country_name = geo.country_name || 'Unknown';
+    const country_code = geo.country_code || 'XX';
+
     const formData = await req.formData();
     const file = formData.get('image') as File;
 
@@ -78,7 +84,9 @@ export const POST = async (req: NextRequest) => {
       recipients,
       created_at: new Date(),
       ip: ip || 'none',
-      admin
+      admin,
+      country_name,
+      country_code
     }
 
     if (file?.size > 0) newPost.image = file;
@@ -134,7 +142,9 @@ export const POST = async (req: NextRequest) => {
         ip,
         is_op,
         board,
-        admin
+        admin,
+        country_name,
+        country_code
       ) VALUES (
         ${thread},
         ${name},
@@ -145,7 +155,9 @@ export const POST = async (req: NextRequest) => {
         ${ip},
         ${is_op},
         ${board},
-        ${admin}
+        ${admin},
+        ${country_name},
+        ${country_code}
       )
       RETURNING post_num`;
 

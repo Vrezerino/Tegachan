@@ -135,7 +135,7 @@ export const removeGapsFromString = (str: unknown) => {
     .replace(/ +/g, ' ')
     .replace(/\n\n+/g, "\n\n")
     .replace(/\t+/g, '')
-}
+};
 
 /**
  * Remove consecutive spaces, linebreaks, tabs and special characters.
@@ -179,7 +179,7 @@ export const recipientsJSONparser = (recipientsRaw: unknown) => {
   });
 
   return recipients;
-}
+};
 
 export const toTitleCase = (str: string) => str.toLowerCase().replace(/\b\w/g, s => s.toUpperCase());
 
@@ -206,7 +206,7 @@ export const findInStringList = (content: string, ignoreCase: boolean, list?: st
 
   const bannedWords = list.split(/\s+/);
   return bannedWords.some(word => content.includes(word));
-}
+};
 
 /**
  * Get IP address from client request.
@@ -220,7 +220,7 @@ export function getClientIp(req: NextRequest): string | null {
     req.headers.get('x-real-ip') ??
     null
   );
-}
+};
 
 /**
  * Evaluate poster's name and check if they're admin.
@@ -228,7 +228,7 @@ export function getClientIp(req: NextRequest): string | null {
  * @param {FormDataEntryValue} rawName Name value from form data
  * @returns {{ name: string, verified: boolean }} Name and whether poster is admin
  */
-export function evaluateName(rawName?: FormDataEntryValue | null, adminPass?: string) {
+export const evaluateName = (rawName?: FormDataEntryValue | null, adminPass?: string) => {
   const name = removeGapsFromString(rawName);
 
   if (name === adminPass) return { name: 'Expert', admin: true };
@@ -236,7 +236,20 @@ export function evaluateName(rawName?: FormDataEntryValue | null, adminPass?: st
   if (!name) return { name: 'Noob', admin: false };
   
   return { name, admin: false };
-}
+};
+
+/**
+ * Convert letters in a country code to their Unicode code points
+ * by shifting the letters into Unicode ranges of regional indicator
+ * symbols, which represent flag letters.
+ * @param {string} countryCode ISO 3166-1 alpha-2 country code
+ * @returns Emoji flag corresponding to country code
+ */
+export const getFlagEmoji = (countryCode: string) => {
+  return String.fromCodePoint(
+    ...[...countryCode.toUpperCase()].map(c => 127397 + c.charCodeAt(0))
+  );
+};
 
 // 'other' includes 'development'
 let envType: 'ci' | 'production' | 'other';

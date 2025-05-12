@@ -1,7 +1,7 @@
 'use client'
 
 import { PostType } from '@/app/lib/definitions';
-import { parseDate } from '@/app/lib/utils';
+import { getFlagEmoji, parseDate } from '@/app/lib/utils';
 import { PostFormBig } from './postForm';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -72,8 +72,8 @@ const PostContent = ({
 
   /**
    * If post contains quotes/mentions, render them as links
-   * @param content string
-   * @returns (string | JSX.Element)[]
+   * @param {string} content Post content to process
+   * @returns {(string | JSX.Element)[]} Processed content
    */
   const renderContentWithLinks = (content: string) => {
     const regex = />>(\d{1,10})(\s*)/g;
@@ -143,8 +143,17 @@ const PostContent = ({
       )}
 
       <p className='pl-4 pb-4'>
-        <a onClick={() => addRecipient(post.post_num)} href={`#postForm`} className={`break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-transparent`} data-testid='post-info'>
-          <b>{post.name ?? 'Noob'}</b> {parseDate(post.created_at)} <b>№ <span className='underline hover:cursor-pointer'>{post.post_num}</span></b> {post.admin && <span className='text-red-700 font-bold'>ADMIN</span>}
+        <a
+          onClick={() => addRecipient(post.post_num)}
+          href={`#postForm`}
+          className={`break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-transparent`}
+          data-testid='post-info'
+        >
+          <span data-testid='poster-name'><b>{post.name ?? 'Noob'}</b></span>
+          <span data-testid='poster-flag'> {getFlagEmoji(post.country_code)} </span>
+          <span data-testid='post-created-at'>{parseDate(post.created_at)}</span>
+          <b> № <span className='underline hover:cursor-pointer' data-testid='post_num'>{post.post_num}</span></b>
+          {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin'>ADMIN</span>}
         </a>
 
         {/* Clickable reply post_nums except on OP */}

@@ -11,5 +11,7 @@ export const newPostSchema = Joi.object({
   created_at: Joi.date(),
   recipients: Joi.array(),
   ip: Joi.string(),
-  admin: Joi.boolean()
+  admin: Joi.boolean(),
+  country_name: Joi.string(),
+  country_code: Joi.string().max(2)
 });

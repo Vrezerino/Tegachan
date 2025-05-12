@@ -10,6 +10,8 @@ export interface PostType {
   board: string;
   image_url: string;
   admin: boolean;
+  country_name: string;
+  country_code: string;
 };
 
 export type NewPostType = {
@@ -24,7 +26,9 @@ export type NewPostType = {
   recipients: Array<number> | null;
   image_url?: string
   image?: File
-  admin: boolean
+  admin: boolean;
+  country_name: string;
+  country_code: string;
 };
 
 // Board catalog OP type
