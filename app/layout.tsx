@@ -11,11 +11,11 @@ const inter = Inter({
   variable: '--font-inter'
 });
 
-// Local fonts must be under /app folder, not public
-// Use directly in globals.css, font-family: var(--font-larken);
-const apparel = localFont({
-  src: './lib/fonts/Apparel-Bold.otf',
-  variable: '--font-apparel'
+// Local fonts must be under /app folder, not /public
+// Use directly in globals.css, font-family: var(--font-apparelBoldModified);
+const apparelBoldModified = localFont({
+  src: './lib/fonts/ApparelBoldModified.otf',
+  variable: '--font-apparelBoldModified'
 });
 
 export const metadata: Metadata = {
@@ -30,7 +30,7 @@ const RootLayout = ({
 }>) => {
   return (
     <html lang='en'>
-      <body className={`${inter.variable} ${apparel.variable} dark:body-dark font-[var(--font-inter)]`}>
+      <body className={`${inter.variable} ${apparelBoldModified.variable} dark:body-dark font-[var(--font-inter)]`}>
         <NextTopLoader color='white' height={9}/>
         <Particles />
         {children}

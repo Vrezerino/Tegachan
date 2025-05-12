@@ -9,7 +9,6 @@ const Page = async () => {
   return (
     <main>
       <div>
-        {/** Header won't be surrounded by stars in mobile devices i.e. screens narrower than 767 px */}
         <h1 className='text-6xl font-bold dark:header-darkmode text-center'>
           TEGACHAN
         </h1>
