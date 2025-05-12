@@ -146,14 +146,14 @@ const PostContent = ({
         <a
           onClick={() => addRecipient(post.post_num)}
           href={`#postForm`}
-          className={`break-all mt-3 text-xs text-red-400 dark:text-red-200/30 inline-block bg-transparent`}
+          className={`break-all mt-3 text-xs text-red-400 dark:text-neutral-500 inline-block bg-transparent`}
           data-testid='post-info'
         >
           <span data-testid='poster-name'><b>{post.name ?? 'Noob'}</b></span>
           <span data-testid='poster-flag'> {getFlagEmoji(post.country_code)} </span>
           <span data-testid='post-created-at'>{parseDate(post.created_at)}</span>
           <b> № <span className='underline hover:cursor-pointer' data-testid='post_num'>{post.post_num}</span></b>
-          {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin'>ADMIN</span>}
+          {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin'> ADMIN</span>}
         </a>
 
         {/* Clickable reply post_nums except on OP */}
@@ -172,7 +172,7 @@ const PostContent = ({
             <br />
           </>
         }
-        <span className='text-sm font-medium wrap-anywhere text-gray-700 dark:text-gray-400 mt-1 mb-4 pr-4' data-testid='post-content'>
+        <span className='text-sm font-medium wrap-anywhere text-gray-700 dark:text-gray-300 mt-1 mb-4 pr-4' data-testid='post-content'>
           <br />{renderContentWithLinks(post.content)}
         </span>
       </p>

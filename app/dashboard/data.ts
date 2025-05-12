@@ -17,7 +17,11 @@ export const getLatestPosts = async () => {
         image_url,
         created_at,
         is_op,
-        board
+        board,
+        name,
+        admin,
+        country_name,
+        country_code
       FROM posts
       ORDER BY created_at
       DESC LIMIT 15`

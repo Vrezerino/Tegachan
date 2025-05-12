@@ -61,6 +61,7 @@ const Page = () => {
       <p className='ml-4 my-4 text-sm font-medium text-gray-900 dark:text-white'>
         There is a 30 second timeout after posting from the same IP, to prevent flooding.
         Maximum image file size is {MAX_FILE_SIZE / 1000000} MB and supported formats are JPG PNG GIF AVIF WEBP.
+        All timestamps are Greenwich Mean Time (GMT, UTC+0).
       </p>
 
       <p className='py-6 text-md font-bold text-gray-900 dark:text-white'>

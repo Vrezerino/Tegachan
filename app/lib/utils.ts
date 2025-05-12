@@ -107,7 +107,7 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/avif'];
 
 export const parseDate = (date: Date): string => {
-  return new Date(date).toUTCString();
+  return new Date(date).toUTCString().replace(' GMT', '');
 };
 
 /**
