@@ -10,7 +10,18 @@ beforeAll(async () => {
     for (const post of posts) {
       await sql`
         INSERT INTO posts (
-          thread, title, content, image_url, created_at, ip, is_op, board, admin
+          thread,
+          title,
+          content,
+          image_url,
+          created_at,
+          ip,
+          is_op,
+          board,
+          admin,
+          name,
+          country_name,
+          country_code
         )
         VALUES (
           ${post.thread},
@@ -21,11 +32,16 @@ beforeAll(async () => {
           ${post.ip},
           ${post.is_op},
           ${post.board},
-          ${post.admin}
+          ${post.admin},
+          ${post.name},
+          ${post.country_name},
+          ${post.country_code}
         )
       `;
     }
     console.log('Database initialized!')
+    //const rows = await sql`SELECT * FROM posts ORDER BY created_at DESC`;
+    //console.log(rows);
   } catch (e) {
     console.error(e);
   }

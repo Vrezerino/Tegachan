@@ -5,20 +5,26 @@ export const posts = [
     is_op: true,
     thread: 0,
     board: 'music',
-    created_at: new Date('2024-04-10T15:22:07.101+00:00'),
+    created_at: new Date('2025-05-12T15:22:07.101+00:00'),
     ip: '999.999.999.999',
     image_url: 'https://tegachan-test.s3.eu-north-1.amazonaws.com/img/posts/1307522272776.jpg',
-    admin: true
+    admin: true,
+    name: 'Playwright',
+    country_name: 'Finland',
+    country_code: 'FI'
   },
   {
-    title: 'Test title 2',
+    title: null,
     content: 'Test content 2',
     is_op: true,
     thread: 0,
     board: 'random',
-    created_at: new Date('2024-04-10T15:22:07.101+00:00'),
+    created_at: new Date('2025-05-11T15:20:00.101+00:00'),
     ip: '999.999.999.999',
     image_url: 'https://tegachan-test.s3.eu-north-1.amazonaws.com/img/posts/1387852384601.jpg',
-    admin: false
+    admin: false,
+    name: 'Playwright',
+    country_name: 'Finland',
+    country_code: 'FI'
   }
 ]

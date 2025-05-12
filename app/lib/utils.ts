@@ -247,7 +247,7 @@ export const evaluateName = (rawName?: FormDataEntryValue | null, adminPass?: st
  */
 export const getFlagEmoji = (countryCode: string) => {
   return String.fromCodePoint(
-    ...[...countryCode.toUpperCase()].map(c => 127397 + c.charCodeAt(0))
+    ...[...countryCode?.toUpperCase()].map(c => 127397 + c.charCodeAt(0))
   );
 };
 
