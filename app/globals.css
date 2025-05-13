@@ -92,7 +92,7 @@
 
 /* Custom darkmode selectors */
 @utility body-dark {
-  background-image: url('/img/s2.avif');
+  background-image: url('/img/sky-dark.avif');
 }
 
 @utility posts-container-post-darkmode {
