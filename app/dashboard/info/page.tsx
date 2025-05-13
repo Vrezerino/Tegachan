@@ -3,7 +3,7 @@ import { MAX_FILE_SIZE } from "@/app/lib/utils";
 const Page = () => {
   return (
     <div className='mt-0 mb-16 mx-auto w-full max-w-md p-2 bg-white border border-gray-200 rounded-xs rounded-br-2xl shadow-sm sm:p-3 dark:bg-neutral-900 dark:border-gray-700'>
-      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mb-6 dark:header-darkmode'>Rules</h1>
+      <h3 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mb-6 dark:header-darkmode'>Rules</h3>
 
       <p className='py-4 text-md font-bold text-red-600'>
         1. Be respectful
@@ -49,7 +49,7 @@ const Page = () => {
         constructive, fun and interesting posts. Site rules and information are subject to change.
       </p>
 
-      <h1 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-12 mb-6 dark:header-darkmode'>Site Information</h1>
+      <h3 className='text-center text-xl font-bold leading-none text-gray-900 dark:text-white mt-12 mb-6 dark:header-darkmode'>Site Information</h3>
 
       <p className='py-4 text-md font-bold text-gray-900 dark:text-white'>
         How to post

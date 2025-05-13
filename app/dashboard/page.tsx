@@ -9,10 +9,10 @@ const Page = async () => {
   return (
     <main>
       <div>
-        <h1 className='text-6xl font-bold dark:header-darkmode text-center'>
+        <h1 className='text-6xl text-sky-700 font-bold dark:header-darkmode text-center'>
           TEGACHAN
         </h1>
-        <h1 className='text-4xl font-bold m-5 dark:header-darkmode text-center'>
+        <h1 className='text-4xl text-sky-700 m-5 dark:header-darkmode text-center'>
           ✵
         </h1>
         <Intro />
