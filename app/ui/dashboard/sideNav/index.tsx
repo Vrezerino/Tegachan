@@ -2,6 +2,7 @@
 
 import NavLinks from '@/app/ui/dashboard/navLinks';
 import { useEffect } from 'react';
+import SearchForm from './searchForm';
 
 const SideNav = () => {
   // Toggle darkmode on website
@@ -37,9 +38,13 @@ const SideNav = () => {
   }, [])
 
   return (
-    <div className='sideNav flex h-full flex-col xsm:flex-row px-3 py-4 md:px-2 dark:sideNav-darkmode md:w-44'>
-      <div className='flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2'>
+    <div className='sideNav flex h-full flex-col xsm:flex-row px-3 py-2 md:px-2 dark:sideNav-darkmode md:w-44 justify-between xsm:items-center'>
+      <div className='flex md:grow flex-row md:flex-col space-x-2  md:space-x-0 md:space-y-2'>
         <NavLinks />
+      </div>
+
+      <div>
+        <SearchForm />
       </div>
 
       <label className='flex justify-center xsm:justify-end cursor-pointer md:mt-4 dark:label-darkmode'>

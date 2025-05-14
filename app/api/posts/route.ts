@@ -23,6 +23,8 @@ import { AWS_NAME, AWS_URL, banlist, proxylist, bwl, adminPass } from '../../lib
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
 
+const sql = neon(PGDB_URL);
+
 export const POST = async (req: NextRequest) => {
   try {
     const ip = getClientIp(req);
@@ -130,7 +132,6 @@ export const POST = async (req: NextRequest) => {
     const { thread, image_url, created_at, board } = newPost;
 
     // Insert post into db
-    const sql = neon(PGDB_URL);
     const res = await sql`
       INSERT INTO posts (
         thread,
@@ -173,7 +174,6 @@ export const POST = async (req: NextRequest) => {
     }
 
     return NextResponse.json({ message: 'Created', post_num: newPostNum }, { status: 201 });
-
   } catch (e) {
     console.error('Error on POST:', (e instanceof Error || isErrorWithStatusCodeType(e)) ? e.message : e);
     return NextResponse.json(
