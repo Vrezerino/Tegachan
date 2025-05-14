@@ -106,7 +106,7 @@ export const ACCEPTED_IMAGE_TYPES = [
   'image/webp',
   'image/avif'];
 
-export const parseDate = (date: Date): string => {
+export const parseDate = (date: Date | string): string => {
   return new Date(date).toUTCString().replace(' GMT', '');
 };
 

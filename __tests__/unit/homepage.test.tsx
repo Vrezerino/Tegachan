@@ -10,8 +10,8 @@ describe('Home page', () => {
 
   it('latest posts list exists', async () => {
     render(await Page());
-    expect(screen.getByRole('heading', { level: 5, name: 'Latest Posts' })).toBeDefined();
-  })
+    expect(screen.getByRole('heading', { level: 5, name: 'LATEST POSTS' })).toBeDefined();
+  });
 
   it('latest post list has posts in it', async () => {
     render(await Page());
@@ -23,5 +23,10 @@ describe('Home page', () => {
     expect(screen.getAllByText('Test content 2')[0]).toBeTruthy();
     expect(screen.getAllByText('/random')[0]).toBeTruthy();
     expect(screen.getAllByText('Playwright 🇫🇮 Sun, 11 May 2025 15:20:00')[0]).toBeTruthy();
-  })
+  });
+
+  it('newsfeed exists', async () => {
+    render(await Page());
+    expect(screen.getByRole('heading', { level: 5, name: 'NEWS' })).toBeDefined();
+  });
 });

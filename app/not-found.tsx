@@ -19,12 +19,12 @@ const NotFound = () => {
           className='object-cover rounded-tl-lg' />
       </div>
       <div className='flex flex-col justify-between p-4 leading-normal'>
-        <h1 className='text-3xl font-bold dark:h1-darkmode'>404 - Not Found!</h1>
+        <h3 className='text-3xl font-bold mb-4 dark:header-darkmode'>404 Not Found</h3>
         <p className='mb-3 font-normal text-gray-700 dark:text-gray-400'>The requested resource was not found.</p>
         <Link
           href={'/'}
           className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3'>
-          <h3>Return to Tegachan index</h3>
+          Return to Tegachan index
         </Link>
       </div>
     </div>

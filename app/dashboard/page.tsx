@@ -3,8 +3,16 @@ import { getLatestPosts } from './data';
 import LatestPosts from '@/app/ui/dashboard/latestPosts';
 import Intro from '@/app/ui/dashboard/intro';
 
+import Parser from 'rss-parser';
+import { RSS_FEED_URL } from '../lib/env';
+import NewsFeed from '../ui/dashboard/newsFeed';
+import { NewsItem } from '@/app/lib/definitions';
+
+const parser: Parser<NewsItem> = new Parser<NewsItem>();
+
 const Page = async () => {
   const data: PostType[] = await getLatestPosts();
+  const feed = await parser.parseURL(RSS_FEED_URL);
 
   return (
     <main>
@@ -17,7 +25,10 @@ const Page = async () => {
         </h1>
         <Intro />
       </div>
-      <LatestPosts posts={data} />
+      <div className='flex items-start flex-col md-big:flex-row justify-center max-w-[1480px] mx-auto'>
+        <LatestPosts posts={data} />
+        <NewsFeed items={feed.items} />
+      </div>
     </main>
   );
 };

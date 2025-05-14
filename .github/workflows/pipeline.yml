@@ -29,6 +29,7 @@ env:
   BANLIST: ${{ secrets.BANLIST }}
   PROXYLIST: ${{ secrets.PROXYLIST }}
   BWL: ${{ secrets.BWL }}
+  RSS_FEED_URL: ${{ secrets.RSS_FEED_URL }}
   CI: true
 
 permissions:
@@ -157,6 +158,7 @@ jobs:
             echo "BANLIST=${{ secrets.BANLIST }}"
             echo "PROXYLIST=${{ secrets.PROXYLIST }}"
             echo "BWL=${{ secrets.BWL }}"
+            echo "RSS_FEED_URL=${{ secrets.RSS_FEED_URL }}"
           } > deploy_folder/standalone/.env
 
       - name: Set up SSH key

@@ -44,3 +44,11 @@ export type ErrorWithStatusCode = {
   message: string;
   status: number
 };
+
+export type NewsItem = {
+  title?: string;
+  creator?: string;
+  link?: string;
+  pubDate?: string;
+  contentSnippet?: string;
+};

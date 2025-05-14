@@ -1,4 +1,4 @@
-// Nullcheck environment variables
+// Nullcheck env vars
 if (!process.env.PGDB_URL || !process.env.PGDB_URL_DEV) {
   throw new Error('One or more PostgreSQL Neon DB URL environment variables are missing!');
 };
@@ -11,7 +11,9 @@ if (!process.env.AWS_BUCKET_URL || !process.env.AWS_BUCKET_URL_DEV || !process.e
   throw new Error('One or more Amazon S3 bucket URLs are missing!')
 };
 
-// Assign database and storage variables conditionally
+if (!process.env.RSS_FEED_URL) throw new Error('RSS feed URL is missing!');
+
+// Assign database and storage vars conditionally
 let PGDB_URL: string;
 let AWS_NAME: string;
 let AWS_URL: string;
@@ -42,5 +44,15 @@ const banlist = process.env.BANLIST;
 const proxylist = process.env.PROXYLIST;
 const bwl = process.env.BWL;
 const adminPass = process.env.ADMIN;
+const RSS_FEED_URL = process.env.RSS_FEED_URL;
 
-export { PGDB_URL, AWS_NAME, AWS_URL, banlist, proxylist, bwl, adminPass };
+export {
+  PGDB_URL,
+  AWS_NAME,
+  AWS_URL,
+  banlist,
+  proxylist,
+  bwl,
+  adminPass,
+  RSS_FEED_URL
+};
