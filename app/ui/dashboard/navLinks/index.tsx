@@ -53,6 +53,7 @@ const NavLinks = () => {
       <div className='xsm:block hidden'>
         <select
           name='boards'
+          aria-label='Choose board'
           id='boards'
           onChange={onPickBoard}
           value={currentPage ? currentPage.name : 'Index'}

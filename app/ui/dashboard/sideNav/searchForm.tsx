@@ -43,7 +43,7 @@ const SearchForm = () => {
   }, [query, debouncedQuery]);
 
   return (
-    <div className='md:mt-4 mx-auto text-xs dark:text-neutral-400' data-testid='search-results'>
+    <div className='md:mt-4 mx-auto text-xs text-neutral-900 dark:text-neutral-400' data-testid='search-results'>
       <ul className='space-y-1 md:relative fixed md:w-full w-8/12 md:right-0 right-6 md:mt-0 mt-12'>
         {results.map((post: PostType) => (
           <div data-testid='search-result' key={`${post.post_num}-container`}>
@@ -59,9 +59,9 @@ const SearchForm = () => {
       <div className='text-center md:my-2 mt-8 md:relative absolute' data-testid='search-result-count'>
         {results.length >= 1 && <span><strong>{results.length}</strong> {results.length == 1 ? 'result' : 'results'}</span>}
       </div>
-      <div className='flex flex-row items-center md:max-w-full max-w-[140px]'>
+      <div className='flex flex-row items-center md:max-w-full md:ml-0 ml-[-40px]'>
         <input
-          className='peer block w-[140px] h-3 md:h-5 rounded-md border border-neutral-200/30 bg-neutral-100 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+          className='peer block w-[140px] h-3 md:h-5 rounded-md border border-neutral-200/30 bg-neutral-100 dark:bg-neutral-900 py-2 px-1 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
           type='text'
           placeholder='Search from posts'
           value={query}
@@ -70,7 +70,7 @@ const SearchForm = () => {
         />
         {(query.length >= 3 || results.length >= 3) &&
           <CancelIcon
-            className='text-black dark:text-neutral-200 ml-1 md:relative fixed md:right-0 right-22'
+            className='text-black dark:text-neutral-200 ml-1 md:right-0 right-19'
             alt='Empty searchform'
             fill='currentColor'
             src='/img/misc/cancel.svg'
