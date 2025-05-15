@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { PostType } from '@/app/lib/definitions';
+import { getFlagEmoji, parseDate } from '@/app/lib/utils';
 import CancelIcon from '@/public/img/misc/cancel.svg';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
@@ -32,8 +33,8 @@ const SearchForm = () => {
 
       const res = await fetch(`/api/posts/search?q=${encodeURIComponent(debouncedQuery)}`);
       if (res.ok) {
-        const data = await res.json();
-        setResults(data);
+        const posts = (await res.json() ?? []) as PostType[];
+        setResults(posts);
       } else {
         toast.error('Error fetching results');
       }
@@ -45,11 +46,11 @@ const SearchForm = () => {
   return (
     <div className='md:mt-4 mx-auto text-xs text-neutral-900 dark:text-neutral-400' data-testid='search-results'>
       <ul className='space-y-1 md:relative fixed md:w-full w-8/12 md:right-0 right-6 md:mt-0 mt-12'>
-        {results.map((post: PostType) => (
+        {results?.map((post: PostType) => (
           <div data-testid='search-result' key={`${post.post_num}-container`}>
-            <Link href={`/${post?.board}${!post?.is_op ? '/' + post.thread + '#' : '' + '/'}${post?.post_num}`}>
+            <Link href={`/${post.board}${!post.is_op ? '/' + post.thread + '#' : '' + '/'}${post.post_num}`}>
               <li key={`${post.post_num}-content`} className='border border-neutral-200/50 bg-white dark:bg-neutral-900 p-2 rounded'>
-                <p className='truncate font-bold'>{post.title}</p>
+                <p className='truncate font-bold'>{post.name} {getFlagEmoji(post.country_code)} {parseDate(post.created_at)}</p>
                 <p className='truncate'>{post.content}</p>
               </li>
             </Link>
@@ -57,7 +58,7 @@ const SearchForm = () => {
         ))}
       </ul>
       <div className='text-center md:my-2 mt-8 md:relative absolute' data-testid='search-result-count'>
-        {results.length >= 1 && <span><strong>{results.length}</strong> {results.length == 1 ? 'result' : 'results'}</span>}
+        {results?.length >= 1 && <span><strong>{results?.length}</strong> {results?.length == 1 ? 'result' : 'results'}</span>}
       </div>
       <div className='flex flex-row items-center md:max-w-full md:ml-0 ml-[-40px]'>
         <input
@@ -68,10 +69,10 @@ const SearchForm = () => {
           data-testid='search-field'
           onChange={(e) => setQuery(e.target.value)}
         />
-        {(query.length >= 3 || results.length >= 3) &&
+        {(query?.length >= 3 || results?.length >= 3) &&
           <CancelIcon
             className='text-black dark:text-neutral-200 ml-1 md:right-0 right-19'
-            alt='Empty searchform'
+            alt='Clear the searchform'
             fill='currentColor'
             src='/img/misc/cancel.svg'
             height={21}

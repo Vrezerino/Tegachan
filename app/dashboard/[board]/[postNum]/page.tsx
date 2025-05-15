@@ -10,7 +10,7 @@ const Page = async ({ params }: { params: ParamsType }) => {
   // Asynchronous access of params is now necessary
   const { board, postNum } = await params;
 
-  const data: PostType[] = await getPost(board, postNum.toString());
+  const data = (await getPost(board, postNum.toString()) ?? []) as PostType[];
   if (Object.keys(data).length === 0) notFound();
 
   return (

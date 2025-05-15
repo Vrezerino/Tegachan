@@ -12,7 +12,16 @@ export const GET = async (req: NextRequest) => {
 
   try {
     const res = await sql`
-      SELECT title, name, content, post_num, thread, board, is_op
+      SELECT
+        title,
+        name,
+        content,
+        post_num,
+        created_at,
+        thread,
+        board,
+        is_op,
+        country_code
       FROM posts
       WHERE content ILIKE ${'%' + query + '%'}
         OR name ILIKE ${'%' + query + '%'}

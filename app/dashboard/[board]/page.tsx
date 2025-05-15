@@ -18,13 +18,13 @@ const Page = async ({ params }: { params: ParamsType }) => {
   if (!result) notFound();
 
   // Get thread starter posts from given board
-  const data: CatalogOPType[] = await getBumpedPosts(sanitizedBoardName);
+  const posts = (await getBumpedPosts(sanitizedBoardName) ?? []) as CatalogOPType[];
 
   return (
     <>
       <h1 className='text-3xl text-sky-700 font-bold mb-3 dark:header-darkmode text-center'>✵ {result.name.toUpperCase()} ✵</h1>
       <p className='text-xs wrap-anywhere text-center mb-5 font-normal text-neutral-600/60 dark:text-neutral-300/60' data-testid='board-description'>{result.desc}</p>
-      <Board posts={data} />
+      <Board posts={posts} />
     </>
   );
 };

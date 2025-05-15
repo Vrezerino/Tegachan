@@ -11,8 +11,9 @@ import { NewsItem } from '@/app/lib/definitions';
 const parser: Parser<NewsItem> = new Parser<NewsItem>();
 
 const Page = async () => {
-  const data: PostType[] = await getLatestPosts();
-  const feed = await parser.parseURL(RSS_FEED_URL);
+  const data = (await getLatestPosts() ?? []) as PostType[];
+  const feed = ((await parser.parseURL(RSS_FEED_URL)).items ?? []) as NewsItem[];
+
 
   return (
     <main>
@@ -27,7 +28,7 @@ const Page = async () => {
       </div>
       <div className='flex items-start flex-col md-big:flex-row justify-center max-w-[1480px] mx-auto'>
         <LatestPosts posts={data} />
-        <NewsFeed items={feed.items} />
+        <NewsFeed items={feed} />
       </div>
     </main>
   );
