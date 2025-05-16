@@ -26,7 +26,7 @@ export const GET = async (req: NextRequest) => {
       WHERE content ILIKE ${'%' + query + '%'}
         OR name ILIKE ${'%' + query + '%'}
         OR title ILIKE ${'%' + query + '%'}
-      ORDER BY (created_at) DESC
+      ORDER BY created_at DESC
       LIMIT 20;
     `;
 
