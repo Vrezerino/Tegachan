@@ -150,7 +150,7 @@ const PostContent = ({
           data-testid='post-info'
         >
           <span data-testid='poster-name'><b>{post.name ?? 'Noob'}</b></span>
-          {/**<span data-testid='poster-flag'> {getFlagEmoji(post.country_code)} </span> */}
+          <span data-testid='poster-flag'> {getFlagEmoji(post.country_code)} </span>
           <span data-testid='post-created-at'> {parseDate(post.created_at)}</span>
           <b> № <span className='underline hover:cursor-pointer' data-testid='post_num'>{post.post_num}</span></b>
           {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin'> ADMIN</span>}
