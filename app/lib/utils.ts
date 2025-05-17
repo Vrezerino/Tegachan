@@ -245,7 +245,8 @@ export const evaluateName = (rawName?: FormDataEntryValue | null, adminPass?: st
  * @param {string} countryCode ISO 3166-1 alpha-2 country code
  * @returns Emoji flag corresponding to country code
  */
-export const getFlagEmoji = (countryCode: string) => {
+export const getFlagEmoji = (countryCode?: string) => {
+  if (!countryCode || countryCode.length !== 2) return '';
   return String.fromCodePoint(
     ...[...countryCode?.toUpperCase()].map(c => 127397 + c.charCodeAt(0))
   );

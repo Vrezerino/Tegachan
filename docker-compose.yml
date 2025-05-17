@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:17-alpine
+    container_name: ${CONTAINER_NAME}
+    restart: always
+    environment:
+      POSTGRES_DB: ${PGDB_NAME}
+      POSTGRES_USER: ${PGDB_USER}
+      POSTGRES_PASSWORD: ${PGDB_PASSWORD}
+    ports:
+      - "${PGDB_PORT}:${PGDB_PORT}"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

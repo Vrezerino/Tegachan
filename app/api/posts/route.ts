@@ -1,6 +1,4 @@
-import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '@/app//lib/env';
-
+import { getClient } from '@/app/lib/db';
 import { newPostSchema } from '@/app/lib/newPostSchema';
 import { NewPostType } from '@/app/lib/definitions';
 import {
@@ -22,10 +20,10 @@ import { Upload } from '@aws-sdk/lib-storage';
 import { AWS_NAME, AWS_URL, banlist, proxylist, bwl, adminPass } from '../../lib/env';
 import { NextRequest, NextResponse } from 'next/server';
 import { checkRateLimit } from '@/app/lib/rateLimit';
-
-const sql = neon(PGDB_URL);
+import { QueryResult } from 'pg';
 
 export const POST = async (req: NextRequest) => {
+  const client = await getClient();
   try {
     const ip = getClientIp(req);
 
@@ -132,7 +130,7 @@ export const POST = async (req: NextRequest) => {
     const { thread, image_url, created_at, board } = newPost;
 
     // Insert post into db
-    const res = await sql`
+    const res: QueryResult<{ post_num: number }> = await client.query(`
       INSERT INTO posts (
         thread,
         name,
@@ -147,29 +145,32 @@ export const POST = async (req: NextRequest) => {
         country_name,
         country_code
       ) VALUES (
-        ${thread},
-        ${name},
-        ${title},
-        ${content},
-        ${image_url},
-        ${created_at},
-        ${ip},
-        ${is_op},
-        ${board},
-        ${admin},
-        ${country_name},
-        ${country_code}
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
       )
-      RETURNING post_num`;
+      RETURNING post_num
+    `, [
+      thread,
+      name,
+      title,
+      content,
+      image_url,
+      created_at,
+      ip,
+      is_op,
+      board,
+      admin,
+      country_name,
+      country_code,
+    ]);
 
-    const newPostNum = res[0].post_num;
+    const newPostNum = res.rows[0].post_num;
 
     // Insert replies if any
     if (recipients.length > 0) {
       for (const parentPostNum of recipients) {
-        await sql`
+        await client.query(`
           INSERT INTO replies (post_num, parent_post_num)
-          VALUES (${newPostNum}, ${parentPostNum})`;
+          VALUES (${newPostNum}, ${parentPostNum})`);
       }
     }
 

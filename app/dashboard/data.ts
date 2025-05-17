@@ -1,14 +1,13 @@
-import { neon } from '@neondatabase/serverless';
+import { getClient } from '../lib/db';
 import { NextResponse } from 'next/server';
-import { PGDB_URL } from '@/app/lib/env';
 import { isErrorWithStatusCodeType } from '../lib/utils';
 
 export const getLatestPosts = async () => {
-  const sql = neon(PGDB_URL);
+  const client = await getClient();
 
   // Get fifteen latest posts from all boards
   try {
-    const res = await sql
+    const res = await client.query(
       `SELECT
         post_num,
         thread,
@@ -25,9 +24,9 @@ export const getLatestPosts = async () => {
       FROM posts
       ORDER BY created_at
       DESC LIMIT 15`
-    ;
+    );
 
-    return JSON.parse(JSON.stringify(res));
+    return JSON.parse(JSON.stringify(res.rows));
   } catch (e) {
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },

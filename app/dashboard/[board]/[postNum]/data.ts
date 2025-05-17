@@ -1,17 +1,16 @@
-import { neon } from '@neondatabase/serverless';
+import { getClient } from '@/app/lib/db';
 import { NextResponse } from 'next/server';
-import { PGDB_URL } from '@/app/lib/env';
-import { isErrorWithStatusCodeType } from '../../../lib/utils';
+import { isErrorWithStatusCodeType } from '@/app/lib/utils';
 
 export const getPost = async (board: string, postNum: string) => {
-  const sql = neon(PGDB_URL);
+  const client = await getClient();
 
   try {
     /**
      * Result set will have a post, all of its replies, and an array of post numbers
      * from posts that the post replied to
      */
-    const res = await sql`
+    const res = await client.query(`
     WITH RECURSIVE thread_tree AS (
       SELECT
         p.post_num,
@@ -28,7 +27,7 @@ export const getPost = async (board: string, postNum: string) => {
         p.country_code,
         NULL::BIGINT AS parent_post_num
       FROM posts p
-      WHERE p.board = ${board}
+      WHERE p.board = '${board}'
         AND p.post_num = ${postNum}
 
       UNION ALL
@@ -81,9 +80,9 @@ export const getPost = async (board: string, postNum: string) => {
       country_name,
       country_code
     ORDER BY created_at ASC;`
-  ;
+    );
 
-    return JSON.parse(JSON.stringify(res));
+    return JSON.parse(JSON.stringify(res.rows));
   } catch (e) {
     return NextResponse.json(
       { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
