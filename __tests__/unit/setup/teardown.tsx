@@ -1,15 +1,14 @@
 import { afterAll } from 'vitest';
-import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '@/app/lib/env';
+import { getClient } from '@/app/lib/db';
 
-const sql = neon(PGDB_URL);
+const client = await getClient();
 
 afterAll(async () => {
   await new Promise(res => setTimeout(res, 2000));
   try {
-    await sql`
+    await client.query(`
     DELETE FROM POSTS
-      WHERE ip = '999.999.999.999'`;
+      WHERE ip = '10.0.42.17'`);
     console.log('Database cleared!')
   } catch (e) {
     console.error(e);

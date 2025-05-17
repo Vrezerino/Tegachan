@@ -1,10 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { links } from '@/app/lib/utils';
-
-import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '@/app/lib/env';
-
-const sql = neon(PGDB_URL);
+import { getClient } from '@/app/lib/db';
 
 test.describe('Navigation', () => {
   test('to different boards works', async ({ page }) => {
@@ -81,9 +77,10 @@ test.describe.serial('Posting', () => {
 
   test.afterAll(async () => {
     try {
-      await sql`
+      const client = await getClient();
+      await client.query(`
       DELETE FROM posts
-        WHERE content LIKE '[TEST]: Playwright%'`;
+        WHERE content LIKE '[TEST]: Playwright%'`);
       console.log('Database cleared!')
     } catch (e) {
       console.error(e);

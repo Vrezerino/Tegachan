@@ -1,14 +1,13 @@
 import { beforeAll, beforeEach, vi } from 'vitest';
-import { neon } from '@neondatabase/serverless';
-import { PGDB_URL } from '@/app/lib/env';
+import { getClient } from '@/app/lib/db';
 import { posts } from '@/__tests__/unit/setup/placeholderData';
 
-const sql = neon(PGDB_URL);
+const client = await getClient();
 
 beforeAll(async () => {
   try {
     for (const post of posts) {
-      await sql`
+      await client.query(`
         INSERT INTO posts (
           thread,
           title,
@@ -22,26 +21,28 @@ beforeAll(async () => {
           name,
           country_name,
           country_code
+        ) VALUES (
+          $1, $2, $3, $4, $5, $6, $7,
+          $8, $9, $10, $11, $12
         )
-        VALUES (
-          ${post.thread},
-          ${post.title},
-          ${post.content},
-          ${post.image_url},
-          ${post.created_at},
-          ${post.ip},
-          ${post.is_op},
-          ${post.board},
-          ${post.admin},
-          ${post.name},
-          ${post.country_name},
-          ${post.country_code}
-        )
-      `;
+      `,
+        [
+          post.thread,
+          post.title,
+          post.content,
+          post.image_url,
+          post.created_at,
+          post.ip,
+          post.is_op,
+          post.board,
+          post.admin,
+          post.name,
+          post.country_name,
+          post.country_code
+        ]
+      );
     }
     console.log('Database initialized!')
-    //const rows = await sql`SELECT * FROM posts ORDER BY created_at DESC`;
-    //console.log(rows);
   } catch (e) {
     console.error(e);
   }
