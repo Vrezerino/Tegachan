@@ -195,7 +195,7 @@ jobs:
             echo "POSTGRES_DB=${{ secrets.PGDB_NAME }}"
             echo "POSTGRES_USER=${{ secrets.PGDB_USER }}"
             echo "POSTGRES_PASSWORD=${{ secrets.PGDB_PASSWORD }}"
-            echo "PGDB_PORT"=${{ secrets.PGDB_PORT }}"
+            echo "PGDB_PORT=${{ secrets.PGDB_PORT }}"
 
             echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
             echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
