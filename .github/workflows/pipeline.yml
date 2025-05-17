@@ -203,6 +203,7 @@ jobs:
             echo "BANLIST=${{ secrets.BANLIST }}"
             echo "PROXYLIST=${{ secrets.PROXYLIST }}"
             echo "BWL=${{ secrets.BWL }}"
+            echo "ADMIN=${{ secrets.ADMIN }}"
             echo "RSS_FEED_URL=${{ secrets.RSS_FEED_URL }}"
           } > deploy_folder/standalone/.env
 
@@ -239,7 +240,7 @@ jobs:
 
           echo "Rebuild Docker container if needed..."
           # Only rebuild container if something changed, otherwise just ensures the postgres container is running
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && docker compose up -d --build"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && sudo docker compose up -d --build"
 
           echo "Restarting pm2 process..."
           # "> /dev/null 2>&1" suppresses pm2 process table output, ain't nobody gotta see that shit

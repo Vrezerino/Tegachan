@@ -4,8 +4,8 @@
 Tegachan is an imageboard type discussion forum that's not based on imageboard templates.
 It features dynamic app routing, styles that mostly utilize Tailwind CSS, light and dark mode
 themes, plenty of different discussion boards, anti-flooding, banlists (users and proxies) etc.
-The app runs on Azure virtual machines, image files are uploaded on Amazon S3 cloud object storage,
-and the posts themselves are inserted into a Neon PostgreSQL database.
+The app and PostgreSQL Docker container run on load-balanced Azure virtual machines, and image
+files are uploaded on Amazon S3 cloud object storage.
 
 <h2>Posting Rules On The Website</h2>
 
