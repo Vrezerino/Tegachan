@@ -26,7 +26,7 @@ env:
   POSTGRES_DB: ${{ secrets.PGDB_NAME }}
   POSTGRES_USER: ${{ secrets.PGDB_USER }}
   POSTGRES_PASSWORD: ${{ secrets.PGDB_PASSWORD }}
-  PGDB_PORT: ${{ secrets.PGDB_PORT }}
+  POSTGRES_PORT: ${{ secrets.PGDB_PORT }}
 
   UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
   UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
@@ -44,26 +44,27 @@ permissions:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
-
-    services:
-      # Spin up database for tests
-      postgres:
-        image: ${DOCKER_IMAGE_NAME}
-        env:
-          POSTGRES_DB: ${PGDB_NAME_DEV}
-          POSTGRES_USER: ${PGDB_USER}
-          POSTGRES_PASSWORD: ${PGDB_PASSWORD}
-        ports:
-          - ${PGDB_PORT}:${PGDB_PORT}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Docker Compose
+        run: |
+          echo "POSTGRES_DB=${{ secrets.PGDB_NAME }}" >> .env
+          echo "POSTGRES_USER=${{ secrets.PGDB_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ secrets.PGDB_PASSWORD }}" >> .env
+          echo "POSTGRES_PORT=${{ secrets.PGDB_PORT }}" >> .env
+          echo "DOCKER_IMAGE_NAME=${{ secrets.DOCKER_IMAGE_NAME }}" >> .env
+          echo "CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}" >> .env
+
+          docker-compose up -d --build
+
+      - name: Wait for DB to be ready
+        run: |
+          for i in {1..10}; do
+            docker exec tegachan-db pg_isready -U $POSTGRES_USER && break
+            sleep 2
+          done
 
       - name: Use Node.js
         uses: actions/setup-node@v4

@@ -4,11 +4,12 @@ services:
     container_name: ${CONTAINER_NAME}
     restart: always
     environment:
-      POSTGRES_DB: ${PGDB_NAME}
-      POSTGRES_USER: ${PGDB_USER}
-      POSTGRES_PASSWORD: ${PGDB_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_NAME}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     ports:
-      - "${PGDB_PORT}:${PGDB_PORT}"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
       - pgdata:/var/lib/postgresql/data
 
