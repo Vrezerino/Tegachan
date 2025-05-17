@@ -44,27 +44,43 @@ permissions:
 jobs:
   test-and-build:
     runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          # Container will only see envs defined here, not the top-level envs
+          POSTGRES_USER: ${{ secrets.PGDB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.PGDB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.PGDB_NAME_DEV }}
+        ports:
+          - 5432:5432
+
     steps:
+      - name: Set up SSH key
+        run: |
+          set -ex
+          mkdir -p ~/.ssh
+
+          echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # echo "AZURE_VM_IP: $AZURE_VM_IP"
+          ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
+
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Docker Compose
+      - name: Copy init.sql from VM
         run: |
-          echo "POSTGRES_DB=${{ secrets.PGDB_NAME_DEV }}" >> .env
-          echo "POSTGRES_USER=${{ secrets.PGDB_USER }}" >> .env
-          echo "POSTGRES_PASSWORD=${{ secrets.PGDB_PASSWORD }}" >> .env
-          echo "POSTGRES_PORT=${{ secrets.PGDB_PORT }}" >> .env
-          echo "DOCKER_IMAGE_NAME=${{ secrets.DOCKER_IMAGE_NAME }}" >> .env
-          echo "CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}" >> .env
+          scp ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/home/ultravesaniam/tegachan/init.sql ./init.sql
 
-          docker compose up -d --build
-
-      - name: Wait for DB to be ready
+      - name: Wait for Postgres to be ready
         run: |
-          for i in {1..10}; do
-            docker exec tegachan-db pg_isready -U $POSTGRES_USER && break
-            sleep 2
-          done
+          until pg_isready -h localhost -p 5432 -U postgres; do sleep 2; done
+
+      - name: Run db init script
+        run: |
+          psql "postgres://${{ secrets.PGDB_USER }}:${{ secrets.PGDB_PASSWORD }}@localhost:${{ secrets.PGDB_PORT }}/${{ secrets.PGDB_NAME_DEV }}" -f ./init.sql
 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -213,7 +229,8 @@ jobs:
 
           echo "Clearing target folder..."
           # Tilde might not expand properly, use full path to home
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "rm -rf /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/{*,.*}"
+          # Remove everything else except test db init file and readme
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "sh -c 'cd /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone && find . ! -name \"init.sql\" -a ! -name \"readme.txt\" -mindepth 1 -delete'"
 
           echo "Copying files..."
           # shopt modifies glob behavior to include hidden stuff
