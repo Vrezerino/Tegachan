@@ -239,7 +239,7 @@ jobs:
 
           echo "Rebuild Docker container if needed..."
           # Only rebuild container if something changed, otherwise just ensures the postgres container is running
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && docker-compose up -d --build"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && docker compose up -d --build"
 
           echo "Restarting pm2 process..."
           # "> /dev/null 2>&1" suppresses pm2 process table output, ain't nobody gotta see that shit
