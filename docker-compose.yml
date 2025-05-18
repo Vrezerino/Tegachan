@@ -1,16 +1,7 @@
 services:
-  app:
-    image: ghcr.io/${GHCR_USER}/tegachan-app:latest
-    ports:
-      - "3000:3000"
-    env_file:
-      - .env
-    depends_on:
-      - db
   db:
-    image: ${DOCKER_IMAGE_NAME}
-    container_name: ${CONTAINER_NAME}
-    restart: always
+    image: ${PGDB_IMAGE_NAME}
+    container_name: ${PGDB_CONTAINER_NAME}
     environment:
       POSTGRES_DB: ${POSTGRES_NAME}
       POSTGRES_USER: ${POSTGRES_USER}
@@ -19,7 +10,25 @@ services:
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - tegachan_pgdata
+    networks:
+      - tegachan-network
+
+  app:
+    image: ${APP_IMAGE_NAME}
+    container_name: ${APP_CONTAINER_NAME}
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env
+    networks:
+      - tegachan-network
+    depends_on:
+      - db
 
 volumes:
   pgdata:
+
+networks:
+  tegachan-network:
+    driver: bridge
