@@ -237,7 +237,7 @@ jobs:
       - name: Build app docker image and push to registry
         run: |
           echo "Building Tegachan app image..."
-          echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
           USERNAME_LOWER=$(echo "${{ github.actor }}" | tr '[:upper:]' '[:lower:]')
 
           # Docker image names must be entirely lowercase including github.actor
