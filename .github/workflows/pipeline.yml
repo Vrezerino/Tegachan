@@ -235,9 +235,13 @@ jobs:
         run: |
           echo "Building Tegachan app image..."
           echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          docker build -t tegachan-app:latest deploy_folder/standalone
-          docker tag tegachan-app ghcr.io/${{ github.actor }}/tegachan-app:latest
-          docker push ghcr.io/${{ github.actor }}/tegachan-app:latest
+          USERNAME_LOWER=$(echo "${{ github.actor }}" | tr '[:upper:]' '[:lower:]')
+
+          # Docker image names must be entirely lowercase including github.actor
+          sudo docker build -t tegachan-app:latest deploy_folder/standalone
+          sudo docker tag tegachan-app ghcr.io/$USERNAME_LOWER/tegachan-app:latest
+          sudo docker push ghcr.io/$USERNAME_LOWER/tegachan-app:latest
+          
           # Note that workflow re-runs will always use the privileges of github.actor
 
       - name: Deploy to server
