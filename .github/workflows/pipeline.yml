@@ -298,8 +298,11 @@ jobs:
               exit 1
             fi
 
-            echo "Stop old containers"
+            echo "Remove standalone containers if any"
             docker rm -f tegachan-app || true
+            docker rm -f tegachan-db || true
+
+            echo "Bring down Compose project containers if any"
             docker compose -p tegachan down || true
 
             echo "Switch current symlink to new deployment"
