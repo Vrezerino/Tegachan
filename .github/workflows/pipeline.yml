@@ -220,6 +220,17 @@ jobs:
           echo "Listing files in standalone dir..."
           ls -al deploy_folder/standalone
 
+      - name: Create dockerfile
+        run: |
+          cat <<EOF > deploy_folder/standalone/Dockerfile
+          FROM node:lts-alpine3.20
+          WORKDIR /app
+          COPY . .
+          RUN npm install --omit=dev --legacy-peer-deps
+          EXPOSE 3000
+          CMD ["node", "server.js"]
+          EOF
+
       - name: Build app docker image and push to registry
         run: |
           echo "Building Tegachan app image..."
