@@ -235,7 +235,8 @@ jobs:
           EOF
 
       - name: Set lowercase username
-        # Required in image naming and pushing
+        # Docker image names must be entirely lowercase including github.actor i.e. username
+        # Pushing and pulling to ghcr requires all lowercase names
         run: echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
 
       - name: Build app docker image and push to registry
@@ -243,7 +244,6 @@ jobs:
           echo "Building Tegachan app image..."
           echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $USERNAME_LOWER --password-stdin
 
-          # Docker image names must be entirely lowercase including github.actor
           docker build -t tegachan-app:latest deploy_folder/standalone
           docker tag tegachan-app ghcr.io/$USERNAME_LOWER/tegachan-app:latest
           docker push ghcr.io/$USERNAME_LOWER/tegachan-app:latest
@@ -252,30 +252,39 @@ jobs:
 
       - name: Deploy to server
         shell: bash
+        env:
+          GHCR_USER: ${USERNAME_LOWER}
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
         run: |
           chmod -R 755 deploy_folder/
-          export GHCR_USER=${{ github.actor }} # for docker-compose.yml
 
-          echo "Clearing target folder..."
-          # Tilde might not expand properly, use full path to home
-          # Remove everything else except test db init file and readme
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "sh -c 'cd /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone && find . ! -name \"init.sql\" -a ! -name \"readme.txt\" -mindepth 1 -delete'"
-
-          #echo "Copying env to vm because docker image needs it.."
+          # Copy .env to remote
           scp deploy_folder/standalone/.env ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
-          echo "Ensuring Postgres container is running from docker-compose.yml..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && GHCR_USER=$USERNAME_LOWER docker compose up -d db"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} bash -s <<EOF
+            export GHCR_PAT="$GHCR_PAT"
+            export GHCR_USER="$GHCR_USER"
 
-          echo "Pulling latest Tegachan image from container registry..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker pull ghcr.io/$USERNAME_LOWER/tegachan-app:latest"
+            # Cleanup target folder
+            cd /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone
+            find . ! -name "init.sql" -a ! -name "readme.txt" -mindepth 1 -delete
 
-          echo "Stop and remove existing app container..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker rm -f tegachan-app || true"
+            # Start Postgres container
+            cd ~/tegachan
+            GHCR_USER=$GHCR_USER docker compose up -d db
 
-          echo "Start Tegachan using the pulled image..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker run -d --name tegachan-app -p 3000:3000 --env-file ~/tegachan/.next/standalone/.env ghcr.io/$USERNAME_LOWER/tegachan-app:latest"
+            # Docker login to GHCR
+            echo "$GHCR_PAT" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
 
+            # Pull latest image
+            docker pull ghcr.io/$GHCR_USER/tegachan-app:latest
+
+            # Stop and remove old container
+            docker rm -f tegachan-app || true
+
+            # Run new container
+            docker run -d --name tegachan-app -p 3000:3000 --env-file ~/tegachan/.next/standalone/.env ghcr.io/$GHCR_USER/tegachan-app:latest
+          EOF
   #mark-deployment-success:
   #  needs: deploy
   #  runs-on: ubuntu-latest
