@@ -299,8 +299,7 @@ jobs:
             fi
 
             echo "Remove standalone containers if any"
-            docker rm -f tegachan-app || true
-            docker rm -f tegachan-db || true
+            docker ps -a --format '{{.Names}}' | grep 'tegachan' | xargs -r docker rm -f
 
             echo "Bring down Compose project containers if any"
             docker compose -p tegachan down || true
