@@ -234,11 +234,14 @@ jobs:
           CMD ["node", "server.js"]
           EOF
 
+      - name: Set lowercase username
+        # Required in image naming and pushing
+        run: echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
       - name: Build app docker image and push to registry
         run: |
           echo "Building Tegachan app image..."
-          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-          USERNAME_LOWER=$(echo "${{ github.actor }}" | tr '[:upper:]' '[:lower:]')
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $USERNAME_LOWER --password-stdin
 
           # Docker image names must be entirely lowercase including github.actor
           docker build -t tegachan-app:latest deploy_folder/standalone
@@ -262,16 +265,16 @@ jobs:
           scp deploy_folder/standalone/.env ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
           echo "Ensuring Postgres container is running from docker-compose.yml..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && GHCR_USER=${{ github.actor }} docker compose up -d db"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && GHCR_USER=$USERNAME_LOWER docker compose up -d db"
 
           echo "Pulling latest Tegachan image from container registry..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker pull ghcr.io/${{ github.actor }}/tegachan-app:latest"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker pull ghcr.io/$USERNAME_LOWER/tegachan-app:latest"
 
           echo "Stop and remove existing app container..."
           ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker rm -f tegachan-app || true"
 
           echo "Start Tegachan using the pulled image..."
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker run -d --name tegachan-app -p 3000:3000 --env-file ~/tegachan/.next/standalone/.env ghcr.io/${{ github.actor }}/tegachan-app:latest"
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "docker run -d --name tegachan-app -p 3000:3000 --env-file ~/tegachan/.next/standalone/.env ghcr.io/$USERNAME_LOWER/tegachan-app:latest"
 
   #mark-deployment-success:
   #  needs: deploy
