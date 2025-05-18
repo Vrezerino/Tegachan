@@ -60,28 +60,22 @@ jobs:
         run: |
           set -ex
           mkdir -p ~/.ssh
-
           echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
           # echo "AZURE_VM_IP: $AZURE_VM_IP"
           ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
-
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Copy init.sql from VM
         run: |
           scp ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/home/ultravesaniam/tegachan/init.sql ./init.sql
-
       - name: Wait for Postgres to be ready
         run: |
           until pg_isready -h localhost -p 5432 -U postgres; do sleep 2; done
-
       - name: Run db init script
         run: |
           psql "postgres://${{ secrets.PGDB_USER }}:${{ secrets.PGDB_PASSWORD }}@localhost:${{ secrets.PGDB_PORT }}/${{ secrets.PGDB_NAME_DEV }}" -f ./init.sql
-
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
@@ -96,6 +90,9 @@ jobs:
       - name: Build standalone app
         run: npm run build --if-present
 
+      - name: Debug test image presence
+        run: ls -l __tests__/assets/
+
       # Copy files and folders into right places. Has to be done manually
       # after build. This is because Vercel thinks surely you're using a
       # CDN to serve static files if you build in standalone mode, and so
@@ -108,13 +105,10 @@ jobs:
           cp -r .next/static .next/standalone/.next/
           cp -r .next/BUILD_ID .next/standalone/
           cp -r .next/BUILD_ID .next/standalone/.next/
-
           echo "In .next/standalone/:"
           ls -la .next/standalone
-
           echo "In .next/standalone/.next:"
           ls -la .next/standalone/.next
-
       - name: Run e2e tests
         run: npx playwright install --with-deps && npx playwright test
 
@@ -125,24 +119,20 @@ jobs:
           name: playwright-traces
           path: |
             test-results/**/*.zip
-
       - name: Remove Next cache
         run: |
           cd ${{ github.workspace }}
           rm -rf .next/cache
-
       - name: Zip standalone output
         run: |
           cd .next
           zip -r ../standalone.zip standalone
-
       - name: Upload standalone build
         uses: actions/upload-artifact@v4
         with:
           name: standalone_build
           path: |
             standalone.zip
-
   deploy:
     runs-on: ubuntu-latest
     needs: test-and-build
@@ -180,113 +170,54 @@ jobs:
             echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
             echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
             echo "AWS_REGION=${{ secrets.AWS_REGION }}"
-
             echo "AZURE_USERNAME=${{ secrets.AZURE_USERNAME }}"
             echo "AZURE_VM_IP=${{ secrets.AZURE_VM_IP }}"
             echo "AZURE_SSH_PRIVATE_KEY=${{ secrets.AZURE_SSH_PRIVATE_KEY }}"
-
             echo "PGDB_URL=${{ secrets.PGDB_URL }}"
             echo "PGDB_URL_DEV=${{ secrets.PGDB_URL_DEV }}"
-
             echo "CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}"
             echo "POSTGRES_DB=${{ secrets.PGDB_NAME }}"
             echo "POSTGRES_USER=${{ secrets.PGDB_USER }}"
             echo "POSTGRES_PASSWORD=${{ secrets.PGDB_PASSWORD }}"
             echo "PGDB_PORT=${{ secrets.PGDB_PORT }}"
-
             echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
             echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
-
             echo "BANLIST=${{ secrets.BANLIST }}"
             echo "PROXYLIST=${{ secrets.PROXYLIST }}"
             echo "BWL=${{ secrets.BWL }}"
             echo "ADMIN=${{ secrets.ADMIN }}"
             echo "RSS_FEED_URL=${{ secrets.RSS_FEED_URL }}"
           } > deploy_folder/standalone/.env
-
       - name: Set up SSH key
         run: |
           set -ex
           mkdir -p ~/.ssh
-
           echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-
           # echo "AZURE_VM_IP: $AZURE_VM_IP"
           ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
-
       - name: List files in standalone dir
         run: |
           echo "Listing files in standalone dir..."
           ls -al deploy_folder/standalone
-
-      - name: Add runner to docker group
-        run: sudo usermod -aG docker $USER
-
-      - name: Create dockerfile
-        run: |
-          cat <<EOF > deploy_folder/standalone/Dockerfile
-          FROM node:lts-alpine3.20
-          WORKDIR /app
-          COPY . .
-          RUN npm install --omit=dev --legacy-peer-deps
-          EXPOSE 3000
-          CMD ["node", "server.js"]
-          EOF
-
-      - name: Set lowercase username
-        # Docker image names must be entirely lowercase including github.actor i.e. username
-        # Pushing and pulling to ghcr requires all lowercase names
-        run: echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
-
-      - name: Build app docker image and push to registry
-        run: |
-          echo "Building Tegachan app image..."
-          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $USERNAME_LOWER --password-stdin
-
-          docker build -t tegachan-app:latest deploy_folder/standalone
-          docker tag tegachan-app ghcr.io/$USERNAME_LOWER/tegachan-app:latest
-          docker push ghcr.io/$USERNAME_LOWER/tegachan-app:latest
-
-          # Note that workflow re-runs will always use the privileges of github.actor
-
       - name: Deploy to server
         shell: bash
-        env:
-          GHCR_PAT: ${{ secrets.GHCR_PAT }}
         run: |
-          export GHCR_USER=$USERNAME_LOWER
           chmod -R 755 deploy_folder/
-
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} bash -s <<EOF
-            export GHCR_USER="$GHCR_USER"
-            export GHCR_PAT="$GHCR_PAT"
-
-            echo "Cleanup target folder"
-            cd /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone
-            find . ! -name "init.sql" -a ! -name "readme.txt" -mindepth 1 -delete
-
-            echo "Restoring .env file..."
-            cat > /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone/.env <<EENV
-            $(< deploy_folder/standalone/.env)
-            EENV
-
-            echo "Start Postgres container"
-            cd ~/tegachan
-            GHCR_USER=$GHCR_USER docker compose up -d db
-
-            echo "Docker login to GHCR"
-            echo "$GHCR_PAT" | docker login ghcr.io -u "$GHCR_USER" --password-stdin
-
-            echo "Pulling latest image...""
-            docker pull ghcr.io/$GHCR_USER/tegachan-app:latest
-
-            echo "Stop and remove old container"
-            docker rm -f tegachan-app || true
-
-            echo "Running new container"
-            docker run -d --name tegachan-app -p 3000:3000 --env-file ~/tegachan/.next/standalone/.env ghcr.io/$GHCR_USER/tegachan-app:latest
-          EOF
+          echo "Clearing target folder..."
+          # Tilde might not expand properly, use full path to home
+          # Remove everything else except test db init file and readme
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "sh -c 'cd /home/${{ secrets.AZURE_USERNAME }}/tegachan/.next/standalone && find . ! -name \"init.sql\" -a ! -name \"readme.txt\" -mindepth 1 -delete'"
+          echo "Copying files..."
+          # shopt modifies glob behavior to include hidden stuff
+          # shopt -s dotglob
+          scp -r deploy_folder/standalone/. ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
+          echo "Rebuild Docker container if needed..."
+          # Only rebuild container if something changed, otherwise just ensures the postgres container is running
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan && sudo docker compose up -d --build"
+          echo "Restarting pm2 process..."
+          # "> /dev/null 2>&1" suppresses pm2 process table output, ain't nobody gotta see that shit
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} "cd ~/tegachan/.next/standalone && pm2 restart tegachan > /dev/null 2>&1"
   #mark-deployment-success:
   #  needs: deploy
   #  runs-on: ubuntu-latest
