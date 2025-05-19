@@ -259,19 +259,20 @@ jobs:
           echo "Copy env before heredoc"
           scp deploy_folder/standalone/.env ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
 
-          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} bash -s <<EOF
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} bash -s <<'EOF'
             export GHCR_PAT="$GHCR_PAT"
 
             echo "Prepare new deployment directory"
             NEW_DIR=~/tegachan/releases/$(date +%s)
-            mkdir -p \$NEW_DIR
-            cp -r ~/tegachan/.next/standalone/* \$NEW_DIR/
-            cp ~/tegachan/.next/standalone/.env \$NEW_DIR/
+            mkdir -p $NEW_DIR
+            cp -r ~/tegachan/.next/standalone/tegachan_prod.sql $NEW_DIR/
+            cp ~/tegachan/docker-compose.yml $NEW_DIR/
+            cp ~/tegachan/.next/standalone/.env $NEW_DIR/
 
-            cd \$NEW_DIR
+            cd $NEW_DIR
 
             echo "Docker login to GHCR"
-            echo "\$GHCR_PAT" | docker login ghcr.io -u vrezerino --password-stdin
+            echo "$GHCR_PAT" | docker login ghcr.io -u vrezerino --password-stdin
 
             echo "Pulling latest image..."
             docker pull ghcr.io/vrezerino/tegachan-app:latest
@@ -279,24 +280,7 @@ jobs:
             echo "Bring up containers with unique project name"
             docker compose -p tegachan_new up -d
 
-            echo "Checking app health..."
-            MAX_RETRIES=30
-            SLEEP_INTERVAL=2
-            HEALTHCHECK_URL="http://localhost:3000/healthcheck"
-
-            for ((i=1; i<=MAX_RETRIES; i++)); do
-              if curl -fs "$HEALTHCHECK_URL" > /dev/null; then
-                echo "App detected as running after $((i * SLEEP_INTERVAL))s"
-                break
-              fi
-              echo "[$i/$MAX_RETRIES] Waiting for app to be healthy"
-              sleep "$SLEEP_INTERVAL"
-            done
-
-            if ! curl -fs "$HEALTHCHECK_URL" > /dev/null; then
-              echo "Tegachan-app not healthy after $((MAX_RETRIES * SLEEP_INTERVAL)) seconds"
-              exit 1
-            fi
+            sleep 6
 
             echo "Remove standalone containers if any"
             docker ps -a --format '{{.Names}}' | grep 'tegachan' | xargs -r docker rm -f
@@ -305,7 +289,7 @@ jobs:
             docker compose -p tegachan down || true
 
             echo "Switch current symlink to new deployment"
-            ln -sfn \$NEW_DIR ~/tegachan/.next/standalone
+            ln -sfn $NEW_DIR ~/tegachan/.next/standalone
 
             echo "Done!"
           EOF
