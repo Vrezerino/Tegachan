@@ -302,7 +302,7 @@ jobs:
             docker ps -a --format '{{.Names}}' | grep 'tegachan' | xargs -r docker rm -f
 
             echo "Bring down Compose project containers if any"
-            docker compose -p tegachan down
+            docker compose -p tegachan down || true
 
             echo "Switch current symlink to new deployment"
             ln -sfn \$NEW_DIR ~/tegachan/.next/standalone
