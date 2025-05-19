@@ -35,8 +35,17 @@ export const POST = async (req: NextRequest) => {
     const { limited, retryAfterSeconds } = await checkRateLimit(ip as string);
     if (limited) throw { message: `Try again in ${retryAfterSeconds} seconds.`, status: 429 };
 
-    const geo_res = await fetch(`https://ipapi.co/${ip}/json/`);
+    const geo_res = await fetch(`https://ipapi.co/${ip}/json/`, {
+      headers: {
+        'User-Agent': 'Wget/1.21.1',
+        'Accept': 'application/json',
+        'Accept-Encoding': 'identity',
+        'Connection': 'Keep-Alive',
+      }
+    });
     const geo = await geo_res.json();
+
+    console.log(geo);
 
     const country_name = geo.country_name || 'Unknown';
     const country_code = geo.country_code || 'XX';
