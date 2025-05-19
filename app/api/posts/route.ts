@@ -45,8 +45,6 @@ export const POST = async (req: NextRequest) => {
     });
     const geo = await geo_res.json();
 
-    console.log(geo);
-
     const country_name = geo.country_name || 'Unknown';
     const country_code = geo.country_code || 'XX';
 
