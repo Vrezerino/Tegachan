@@ -265,7 +265,7 @@ jobs:
             echo "Prepare new deployment directory"
             NEW_DIR=~/tegachan/releases/$(date +%s)
             mkdir -p $NEW_DIR
-            cp -r ~/tegachan/.next/standalone/tegachan_prod.sql $NEW_DIR/
+            cp -r ~/tegachan/tegachan_prod.sql $NEW_DIR/
             cp ~/tegachan/docker-compose.yml $NEW_DIR/
             cp ~/tegachan/.next/standalone/.env $NEW_DIR/
 
