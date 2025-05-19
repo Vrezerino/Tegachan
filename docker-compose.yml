@@ -10,7 +10,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     volumes:
-      - tegachan_pgdata
+      - pgdata:/var/lib/postgresql/data
     networks:
       - tegachan-network
 
