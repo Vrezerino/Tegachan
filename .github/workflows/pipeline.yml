@@ -277,16 +277,16 @@ jobs:
             echo "Pulling latest image..."
             docker pull ghcr.io/vrezerino/tegachan-app:latest
 
-            echo "Bring up containers with unique project name"
-            docker compose -p tegachan_new up -d
+            echo "Bring up containers"
+            docker compose -p tegachan up -d
 
             sleep 6
 
-            echo "Remove standalone containers if any"
-            docker ps -a --format '{{.Names}}' | grep 'tegachan' | xargs -r docker rm -f
-
             echo "Switch current symlink to new deployment"
             ln -sfn $NEW_DIR ~/tegachan/.next/standalone
+
+            echo "Prune old volumes"
+            docker system prune -f --volumes
 
             echo "Done!"
           EOF
