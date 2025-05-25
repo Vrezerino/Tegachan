@@ -15,6 +15,7 @@ import {
   evaluateName
 } from '@/app/lib/utils';
 
+import { v4 as uuidv4 } from 'uuid';
 import s3 from '@/aws.config';
 import { Upload } from '@aws-sdk/lib-storage';
 import { AWS_NAME, AWS_URL, banlist, proxylist, bwl, adminPass } from '../../lib/env';
@@ -101,8 +102,8 @@ export const POST = async (req: NextRequest) => {
     const { error } = newPostSchema.validate(newPost);
     if (error) throw { message: error.message, status: 400 };
 
-    // Replace possible spaces in filename with underscores
-    const filename = (file?.size > 0) && `${file.name.replaceAll(' ', '_')}`;
+    // Generate filename
+    const filename = (file?.size > 0) && `${uuidv4()}`;
 
     // If user submitted a file...
     if (file?.size > 0) {
@@ -172,7 +173,7 @@ export const POST = async (req: NextRequest) => {
 
     const newPostNum = res.rows[0].post_num;
 
-    // Insert replies if any
+    // Insert replies if post has replied to others
     if (recipients.length > 0) {
       for (const parentPostNum of recipients) {
         await client.query(`

@@ -154,7 +154,8 @@ const PostFormBig = ({
                 maxLength={1500}
                 placeholder='Max 1500 characters'
                 className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
-                required
+                // Text not required if uploading image, unless you're OP (see below for post button)
+                required={!image}
                 disabled={loading}
                 data-testid='postform-textarea'
               />
@@ -185,6 +186,7 @@ const PostFormBig = ({
             id='postBtn'
             className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3'
             type='submit'
+            // OP post must always have text content; Reply must have either image, text or both
             disabled={(!op && !content) || (op && (!image && content.length == 0)) || content.length >= 1500 || loading}
             data-testid='postform-postbutton'
           >
