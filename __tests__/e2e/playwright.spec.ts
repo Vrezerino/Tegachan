@@ -33,7 +33,7 @@ test.describe.serial('Posting', () => {
     await page.getByTestId('postform-postbutton').click({ force: true });
 
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
-    await expect(response.status()).toBe(429);
+    expect(response.status()).toBe(429);
   });
 
   test('reply to newly created thread works', async ({ page }) => {
@@ -66,7 +66,7 @@ test.describe.serial('Posting', () => {
     await page.getByTestId('postform-postbutton').click({ force: true });
 
     const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
-    await expect(response.status()).toBe(201);
+    expect(response.status()).toBe(201);
 
     const post = page.getByTestId('post-container').nth(2);
     const image = post.getByTestId('post-image');
@@ -74,11 +74,13 @@ test.describe.serial('Posting', () => {
     await expect(image).toBeVisible();
 
     const src = await image.getAttribute('src');
-    if (src === null) throw new Error('src attribute is null');
+    if (!src) throw new Error('src attribute is null');
 
-    const fileNameAndExtension = src.split('.');
-    expect(isUUID(fileNameAndExtension[0])).toBe(true);
-    expect(fileNameAndExtension[1]).toEqual('gif');
+    const filename = new URL(src).pathname.split('/').pop();
+    if (!filename) throw new Error('Filename is null');
+
+    expect(isUUID(filename)).toBe(true);
+    expect(filename.split('.')[1]).toEqual('gif');
   });
 
   test.afterAll(async () => {
