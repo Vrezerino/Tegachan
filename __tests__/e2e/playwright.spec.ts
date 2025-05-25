@@ -72,7 +72,7 @@ test.describe.serial('Posting', () => {
 
     await expect(image).toBeVisible();
     const src = await image.getAttribute('src');
-    await expect(src).toContain('15.gif');
+    await expect(src).toContain('gif');
   });
 
   test.afterAll(async () => {

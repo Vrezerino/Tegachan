@@ -103,7 +103,7 @@ export const POST = async (req: NextRequest) => {
     if (error) throw { message: error.message, status: 400 };
 
     // Generate filename
-    const filename = (file?.size > 0) && `${uuidv4()}`;
+    const filename = (file?.size > 0) && `${uuidv4()}.${file.type.split('/')[1]}`;
 
     // If user submitted a file...
     if (file?.size > 0) {
