@@ -79,7 +79,7 @@ test.describe.serial('Posting', () => {
     const filename = new URL(src).pathname.split('/').pop();
     if (!filename) throw new Error('Filename is null');
 
-    expect(isUUID(filename)).toBe(true);
+    expect(isUUID(filename.split('.')[0])).toBe(true);
     expect(filename.split('.')[1]).toEqual('gif');
   });
 
