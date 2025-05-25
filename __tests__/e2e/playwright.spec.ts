@@ -77,7 +77,7 @@ test.describe.serial('Posting', () => {
     if (src === null) throw new Error('src attribute is null');
 
     const fileNameAndExtension = src.split('.');
-    expect(isUUID(fileNameAndExtension[0])).resolves.toBe(true);
+    expect(isUUID(fileNameAndExtension[0])).toBe(true);
     expect(fileNameAndExtension[1]).toEqual('gif');
   });
 
