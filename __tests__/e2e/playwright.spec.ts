@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { links } from '@/app/lib/utils';
 import { getClient } from '@/app/lib/db';
+import { isUUID } from '@/app/lib/utils';
 
 test.describe('Navigation', () => {
   test('to different boards works', async ({ page }) => {
@@ -71,8 +72,13 @@ test.describe.serial('Posting', () => {
     const image = post.getByTestId('post-image');
 
     await expect(image).toBeVisible();
+
     const src = await image.getAttribute('src');
-    await expect(src).toContain('gif');
+    if (src === null) throw new Error('src attribute is null');
+
+    const fileNameAndExtension = src.split('.');
+    expect(isUUID(fileNameAndExtension[0])).resolves.toBe(true);
+    expect(fileNameAndExtension[1]).toEqual('gif');
   });
 
   test.afterAll(async () => {
