@@ -7,6 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
 import toast from 'react-hot-toast';
+import { renderContentWithLinks } from '@/app/ui/components/utils/renderContentWithLinks';
 
 const Post = ({ posts }: { posts: PostType[] }) => {
   const [recipients, setRecipients] = useState<number[]>([]);
@@ -70,53 +71,6 @@ const PostContent = ({
     }
   }
 
-  /**
-   * If post contains quotes/mentions, render them as links
-   * @param {string} content Post content to process
-   * @returns {(string | JSX.Element)[]} Processed content
-   */
-  const renderContentWithLinks = (content: string) => {
-    const regex = />>(\d{1,10})(\s*)/g;
-    const parts = [];
-    let lastIndex = 0;
-    let match;
-    let brCounter = 0; // necessary for unique elem keys
-
-    while ((match = regex.exec(content)) !== null) {
-      // >>500, 500, space
-      const [fullMatch, postNumber, trailingSpace] = match;
-
-      if (match.index > lastIndex) {
-        const preceding = content.slice(lastIndex, match.index);
-        parts.push(preceding);
-
-        // Insert breaks if preceding text does not end in a newline
-        if (!preceding.endsWith('<br />')) {
-          parts.push(<br key={`br-${postNumber}-${brCounter++}`} />);
-          parts.push(<br key={`br-${postNumber}-${brCounter++}`} />);
-        }
-      }
-
-      parts.push(
-        <a href={`#${postNumber}`} key={`link-${postNumber}-${match.index}`} className="font-bold underline">
-          {`>>${postNumber}`}<br />
-        </a>
-      );
-
-      if (trailingSpace) {
-        parts.push(trailingSpace);
-      }
-
-      lastIndex = regex.lastIndex;
-    }
-
-    if (lastIndex < content.length) {
-      parts.push(content.slice(lastIndex));
-    }
-
-    return parts;
-  };
-
   return (
     <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
       {post.image_url && (
@@ -160,7 +114,7 @@ const PostContent = ({
         {!post.is_op && replies?.length > 0 && (
           <span className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
             &nbsp;{replies.map((r) => (
-              <><a href={`#${r}`} key={`replypost_num-${r}`} className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>&gt;&gt;{r}</a>&nbsp;</>
+              <span key={`replypost-num-span-${r}`}><a href={`#${r}`} key={`replypost-num-link-${r}`} className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>&gt;&gt;{r}</a>&nbsp;</span>
             ))}
           </span>
         )}
