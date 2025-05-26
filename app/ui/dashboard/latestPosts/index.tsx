@@ -1,5 +1,6 @@
 import { PostType } from '@/app/lib/definitions';
 import { getFlagEmoji, parseDate } from '@/app/lib/utils';
+import FormatContent from '@/app/ui/components/utils/formatContent';
 import Image from 'next/image';
 import Link from 'next/link';
 
@@ -36,7 +37,10 @@ const LatestPosts = ({ posts }: { posts: PostType[] }) => {
                       {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin'> ADMIN</span>}
                     </p>
                     <p className='text-sm text-neutral-900 truncate dark:text-white' data-testid='latest-post-post-content'>
-                      {post.content}
+                      <FormatContent
+                        content={post.content}
+                        renderLinks={false}
+                        renderLinebreaks={false} />
                     </p>
                   </Link>
                 </div>

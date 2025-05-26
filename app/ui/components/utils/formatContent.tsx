@@ -21,44 +21,50 @@ const applyWeirdCase = (text: string) => {
  * - '>b>' bolds the text, '>i>' for italic, '>w>' for 'weird' text.
  * - These modifiers can be combined like so: '>b,p,w>'
  * @param {string} content Post content to process
+ * @param {boolean} renderLinks Whether to make post links (not needed
+ * and messy in latest posts view)
+ * @param {boolean} renderLinebreaks Whether to render any linebreaks
+ * (linebreaks are messy in latest posts view)
  * @returns {(string | JSX.Element)[]} Processed content
  */
-export const formatContent = (content: string) => {
+const FormatContent = ({ content, renderLinks, renderLinebreaks }: { content: string, renderLinks: boolean, renderLinebreaks: boolean }) => {
   const lines = content.split('\n');
   const parts: (string | JSX.Element)[] = [];
   const linkRegex = />>(\d{1,10})(\s*)/g;
   let brCounter = 0;
-
+  let linkCounter = 0; // For when same link appears many times in a post
   lines.forEach((line, lineIndex) => {
     let segments: (string | JSX.Element)[] = [];
-    let match;
     let lastIndex = 0;
 
     // Extract post links first
-    while ((match = linkRegex.exec(line)) !== null) {
-      const [fullMatch, postNumber, trailingSpace] = match;
-      if (match.index > lastIndex) {
-        segments.push(line.slice(lastIndex, match.index));
+    if (renderLinks) {
+      let match;
+      while ((match = linkRegex.exec(line)) !== null) {
+        // >>500, 500, space
+        const [fullMatch, postNumber, trailingSpace] = match;
+
+        if (match.index > lastIndex) segments.push(line.slice(lastIndex, match.index));
+
+        segments.push(
+          <a
+            href={`#${postNumber}`}
+            key={`link-${postNumber}-${match.index}-${linkCounter}`}
+            className='font-bold underline'
+          >
+            {`>>${postNumber}`}
+          </a>
+        );
+
+        if (trailingSpace) segments.push(trailingSpace);
+        lastIndex = linkRegex.lastIndex;
+        linkCounter++;
       }
-
-      segments.push(
-        <a
-          href={`#${postNumber}`}
-          key={`link-${postNumber}-${match.index}`}
-          className='font-bold underline'
-        >
-          {`>>${postNumber}`}
-        </a>
-      );
-
-      if (trailingSpace) {
-        segments.push(trailingSpace);
-      }
-
-      lastIndex = linkRegex.lastIndex;
     }
 
-    if (lastIndex < line.length) {
+    if (!renderLinks || lastIndex >= line.length) {
+      segments.push(line.slice(lastIndex));
+    } else if (lastIndex < line.length) {
       segments.push(line.slice(lastIndex));
     }
 
@@ -161,8 +167,11 @@ export const formatContent = (content: string) => {
       return result;
     });
 
-    parts.push(...processed, <br key={`br-${brCounter++}`} />);
+    // Linebreaks visible in normal post view but not in e.g. latest posts view
+    parts.push(...processed, renderLinebreaks ? <br key={`br-${brCounter++}`} /> : ' ');
   });
 
   return parts;
 };
+
+export default FormatContent;
