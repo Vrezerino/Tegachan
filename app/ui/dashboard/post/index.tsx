@@ -7,7 +7,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Dispatch, SetStateAction, useState } from 'react';
 import toast from 'react-hot-toast';
-import { renderContentWithLinks } from '@/app/ui/components/utils/renderContentWithLinks';
+import { formatContent } from '@/app/ui/components/utils/formatContent';
 
 const Post = ({ posts }: { posts: PostType[] }) => {
   const [recipients, setRecipients] = useState<number[]>([]);
@@ -127,7 +127,7 @@ const PostContent = ({
           </>
         }
         <span className='text-sm font-medium wrap-anywhere text-gray-700 dark:text-gray-300 mt-1 mb-4 pr-4' data-testid='post-content'>
-          <br />{renderContentWithLinks(post.content)}
+          <br />{formatContent(post.content)}
         </span>
       </p>
 
