@@ -96,7 +96,7 @@ const PostContent = ({
         </div>
       )}
 
-      <p className='pl-4 pb-4'>
+      <div className='pl-4 pb-4'>
         <a
           onClick={() => addRecipient(post.post_num)}
           href={`#postForm`}
@@ -134,7 +134,7 @@ const PostContent = ({
             renderLinebreaks: true
           })}
         </span>
-      </p>
+      </div>
 
     </div>
   )
