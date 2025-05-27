@@ -96,11 +96,11 @@ const PostContent = ({
         </div>
       )}
 
-      <div className='pl-4 pb-4'>
+      <div className='pl-4 py-[9px]'>
         <a
           onClick={() => addRecipient(post.post_num)}
           href={`#postForm`}
-          className={`break-all mt-3 text-xs text-red-400 dark:text-neutral-500 inline-block bg-transparent`}
+          className={`wrap-anywhere text-xs text-red-400 dark:text-neutral-500 bg-transparent`}
           data-testid='post-info'
         >
           <span data-testid='poster-name'><b>{post.name ?? 'Noob'}</b></span>
