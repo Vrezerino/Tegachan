@@ -140,7 +140,7 @@ test.describe.serial('Posting', () => {
     await page.getByTestId('postform-name').fill('[Playwright]');
     await page.getByTestId('postform-textarea').fill(`
       >implying\n
-      >r>mad implying\n
+      >r>red text\n
       >p>pink text\n
       >b>bold text\n
       >i>italic text\n
@@ -156,11 +156,11 @@ test.describe.serial('Posting', () => {
     expect(response.status()).toBe(201);
 
     // span elements of modified text
-    const greentextSpan = page.locator('span.text-green-600');
-    const redSpan = page.locator('span.text-red-600');
-    const pinkSpan = page.locator('span.text-pink-500');
-    const boldSpan = page.locator('span.font-bold');
-    const italicSpan = page.locator('span.italic');
+    const greentextSpan = page.locator('span.text-green-600', { hasText: '>implying' });
+    const redSpan = page.locator('span.text-red-600', { hasText: 'red text' });
+    const pinkSpan = page.locator('span.text-pink-500', { hasText: 'pink text' });
+    const boldSpan = page.locator('span.font-bold', { hasText: 'bold text' });
+    const italicSpan = page.locator('span.italic', { hasText: 'italic text' });
     const weirdSpan = page.locator('span[style="color: rgb(255, 132, 0);"]', {
       hasText: 'WeIrD OrAnGe tExT'
     });
