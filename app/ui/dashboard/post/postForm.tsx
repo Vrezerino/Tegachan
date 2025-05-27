@@ -137,6 +137,7 @@ const PostFormBig = ({
               placeholder='Title (optional)'
               maxLength={80}
               className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+              data-testid='postform-title'
             />}
 
           <input type='text'
@@ -144,6 +145,7 @@ const PostFormBig = ({
             placeholder='Name (optional)'
             maxLength={30}
             className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+            data-testid='postform-name'
           />
 
           <div className='relative rounded-md'>
@@ -178,6 +180,7 @@ const PostFormBig = ({
                   step='0.01'
                   placeholder='Image (optional)'
                   className='fileInput peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 placeholder:text-neutral-500 dark:fileInput-darkmode'
+                  data-testid='postform-file-button'
                 />
               </div>
             </div>

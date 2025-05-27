@@ -114,6 +114,7 @@ const FormatContent = ({
             <button
               onClick={() => toggleEmbed(videoId)}
               className='text-sm text-gray-500'
+              data-testid='embed-toggle-button'
             >
               {isExpanded ? '[▲]' : '[▼]'}
             </button>
@@ -126,6 +127,7 @@ const FormatContent = ({
                     className='absolute top-0 left-0 w-full h-full'
                     allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture'
                     allowFullScreen
+                    data-testid='video-embed-iframe'
                   />
                 </div>
               </div>
