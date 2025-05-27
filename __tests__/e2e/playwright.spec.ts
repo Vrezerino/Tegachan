@@ -156,12 +156,14 @@ test.describe.serial('Posting', () => {
     expect(response.status()).toBe(201);
 
     // span elements of modified text
-    const greentextSpan = page.locator('text-green-600');
-    const redSpan = page.locator('text-red-600');
-    const pinkSpan = page.locator('text-pink-500');
-    const boldSpan = page.locator('font-bold');
-    const italicSpan = page.locator('italic');
-    const weirdSpan = page.locator('span', { hasText: 'WeIrD' });
+    const greentextSpan = page.locator('span.text-green-600');
+    const redSpan = page.locator('span.text-red-600');
+    const pinkSpan = page.locator('span.text-pink-500');
+    const boldSpan = page.locator('span.font-bold');
+    const italicSpan = page.locator('span.italic');
+    const weirdSpan = page.locator('span[style="color: rgb(255, 132, 0);"]', {
+      hasText: 'WeIrD OrAnGe tExT'
+    });
 
     await expect(greentextSpan).toBeVisible();
     await expect(redSpan).toBeVisible();
