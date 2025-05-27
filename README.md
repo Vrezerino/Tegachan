@@ -24,8 +24,8 @@ Posting links for monetary gain through scams, or links that contain malware, is
 
 <h4>4. Do not post illegal content or links</h4>
 
-This site uses services from countries in which distribution of material of e.g. certain types of 
-abuse is illegal. If you submit this type of content, your IP address will get forwarded to 
+This site uses services from countries in which distribution of material of e.g. certain types of
+abuse is illegal. If you submit this type of content, your IP address will get forwarded to
 authorities and/or at the very least, you will get banned permanently.
 
 <h4>5. Do not post extremely graphic images</h4>
@@ -45,6 +45,9 @@ either the date or the post count number (preceded by “№”) on top of each 
 
 There is a 30 second timeout after posting from the same IP, to prevent flooding. Maximum image
 file size is 2 MB and supported formats are JPG PNG GIF AVIF WEBP.
+
+There are various ways to format post text. See info on the website for details. YouTube URLs can
+be pasted; a URL will have a button next to it that reveals a video embed.
 
 <h4>How to contact an admin</h4>
 

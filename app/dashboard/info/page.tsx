@@ -76,10 +76,14 @@ const Page = () => {
         &#62;w&#62; makes text wEiRd.
       </p>
 
-      <p className='ml-4 mt-4 text-sm font-medium'>
+      <p className='ml-4 my-4 text-sm font-medium'>
         These modifiers can be combined and many can be used within the same line. &#62;bl,b,i&#62;this is blue, bold and italic will look like
         <span className='text-blue-600 font-bold italic'> this is blue, bold and italic</span>. &#62;r,w&#62;abcd&#62;#5CA8BF&#62;efgh will
         look like <span className='text-red-600'>AbCd</span><span className='text-[#5CA8BF]'>efgh</span>.
+      </p>
+
+      <p className='ml-4 mt-4 text-sm font-medium'>
+        YouTube URLs can be pasted in the post content for video embedding. The embed is revealed by a &#91;▼&#93; button next to the URL.
       </p>
 
       <p className='py-6 text-md font-bold'>
