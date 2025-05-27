@@ -257,11 +257,6 @@ export const isUUID = (str: string) => {
     return regex.test(str);
 };
 
-export const isYouTubeVideoLink = (str: string) => {
-  const regex = /^(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)[\w-]{11}(\?[^\s]*)?$/;
-  return regex.test(str);
-};
-
 // 'other' includes 'development'
 let envType: 'ci' | 'production' | 'other';
 

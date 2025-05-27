@@ -15,11 +15,16 @@ const applyWeirdCase = (text: string) => {
 
 /**
  * Formats post content so that:
- * - '>>66' becomes a link to another post
+ * - e.g. '>>66' becomes a link to post 66
+ * - YouTube URLs will have embeds next to them
  * - '>' is a quote with green text
  * - '>r>', '>b>' and e.g. '>#00FF00' color the text differently
  * - '>b>' bolds the text, '>i>' for italic, '>w>' for 'weird' text.
  * - These modifiers can be combined like so: '>b,p,w>'
+ *
+ * There are three loops that run as long as their respective regexes
+ * find matches in the content string. This is possible with the g flag
+ * in the regex. Without it, the loops would stop at the first match
  * @param {string} content Post content to process
  * @param {boolean} renderLinks Whether to make post links (not needed
  * and messy in latest posts view)
@@ -51,8 +56,10 @@ const FormatContent = ({
   const parts: (string | JSX.Element)[] = [];
   const linkRegex = />>(\d{1,10})(\s*)/g;
   const youtubeRegex = /(https?:\/\/)?(www\.)?(youtube\.com\/watch\?v=|youtu\.be\/)([\w-]{11})(\?[^\s]*)?/g;
+  const formatRegex = />((#[0-9a-fA-F]{3,6}|[a-zA-Z]+(?:,[a-zA-Z#0-9]+)*))>/g;
+
   let brCounter = 0;
-  let linkCounter = 0;
+  let postLinkCounter = 0;
 
   lines.forEach((line, lineIndex) => {
     let segments: (string | JSX.Element)[] = [];
@@ -60,6 +67,7 @@ const FormatContent = ({
 
     if (renderLinks) {
       let match;
+      // POST LINKS LOOP
       while ((match = linkRegex.exec(line)) !== null) {
         // >>123, 123, space
         const [fullMatch, postNumber, trailingSpace] = match;
@@ -68,7 +76,7 @@ const FormatContent = ({
         segments.push(
           <a
             href={`#${postNumber}`}
-            key={`link-${postNumber}-${match.index}-${linkCounter}`}
+            key={`link-${postNumber}-${match.index}-${postLinkCounter}`}
             className='font-bold underline'
           >
             {`>>${postNumber}`}
@@ -77,14 +85,22 @@ const FormatContent = ({
 
         if (trailingSpace) segments.push(trailingSpace);
         lastIndex = linkRegex.lastIndex;
-        linkCounter++;
+        postLinkCounter++;
       }
 
-      // YouTube links
       let ytMatch;
+      // YOUTUBE LINKS LOOP
       while ((ytMatch = youtubeRegex.exec(line)) !== null) {
+        /**
+         * Array destructuring to extract from regex match result the
+         * - fullMatch: entire matched string
+         * - group 1 is https:// which is skipped here
+         * - group 2 is undefined if no www in link, skipped
+         * - group 3 is youtu.be/, skipped
+         * - group 4 is 11 digit video id, which videoId gets
+         * - group 5 would return optional query strings like &t=27s
+         */
         const [fullMatch, , , , videoId] = ytMatch;
-        const url = typeof fullMatch === 'string' ? fullMatch.trim() : '';
 
         if (ytMatch.index > lastIndex) {
           segments.push(line.slice(lastIndex, ytMatch.index));
@@ -94,17 +110,10 @@ const FormatContent = ({
 
         segments.push(
           <span key={`yt-${videoId}-${ytMatch.index}`}>
-            <a
-              href={url}
-              target='_blank'
-              rel='noopener noreferrer'
-              className='underline'
-            >
-              {fullMatch}
-            </a>{' '}
+            <span>{fullMatch}</span>{' '}
             <button
               onClick={() => toggleEmbed(videoId)}
-              className='text-sm text-gray-500 ml-1'
+              className='text-sm text-gray-500'
             >
               {isExpanded ? '[▲]' : '[▼]'}
             </button>
@@ -135,9 +144,6 @@ const FormatContent = ({
 
     if (segments.length === 0) segments.push(line);
 
-    // Format tag parsing
-    const formatRegex = />((#[0-9a-fA-F]{3,6}|[a-zA-Z]+(?:,[a-zA-Z#0-9]+)*))>/g;
-
     const processed = segments.flatMap((segment, segIndex) => {
       if (typeof segment !== 'string') return [segment];
 
@@ -145,7 +151,9 @@ const FormatContent = ({
       let last = 0;
       let m;
 
+      // TEXT FORMATTING LOOP
       while ((m = formatRegex.exec(segment)) !== null) {
+        // Extract e.g. >r,b> as fullMatch and r,b as tagGroup
         const [fullMatch, tagGroup] = m;
         const startIdx = m.index;
 
