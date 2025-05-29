@@ -1,19 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { links } from '@/app/lib/utils';
-import { getClient } from '@/app/lib/db';
 import { isUUID } from '@/app/lib/utils';
-
-test.describe('Navigation', () => {
-  // Traverse through an array of links included in the side navigation
-  test('to different boards works', async ({ page }) => {
-    await page.goto('/');
-
-    for (let i = 1; i < links.length; i++) {
-      await page.getByTestId(`${links[i].name}-nav-button`).click({ force: true });
-      await expect(page.getByRole('heading', { name: `✵ ${links[i].name.toUpperCase()} ✵` })).toBeVisible({ timeout: 10000 });
-    }
-  });
-});
 
 test.describe.serial('Posting', () => {
   test('new thread works', async ({ page }) => {
@@ -171,17 +157,31 @@ test.describe.serial('Posting', () => {
     await expect(boldSpan).toBeVisible();
     await expect(italicSpan).toBeVisible();
     await expect(weirdSpan).toBeVisible();
+
   });
 
-  test.afterAll(async () => {
-    try {
-      const client = await getClient();
-      await client.query(`
-      DELETE FROM posts
-        WHERE name = '[Playwright]'`);
-      console.log('Database cleared!')
-    } catch (e) {
-      console.error(e);
-    }
+  test('post_num is incremented correctly', async ({ page }) => {
+    // Open the last created thread and post in it
+    await page.goto('/random');
+    await page.getByTestId('boardtype-post-content').first().click({ force: true });
+    await expect(page.getByTestId('post-content').nth(0)).toContainText(
+      '>implying\nred text\npink text\nbold text\nitalic text\nWeIrD OrAnGe tExT', {
+      timeout: 10000
+    });
+
+    await page.getByTestId('postform-name').fill('[Playwright]');
+    await page.getByTestId('postform-textarea').fill(`my post_num should be one greater than op's`);
+
+    // Wait for post throttle window to close and post thread
+    await page.waitForTimeout(5000);
+    await page.getByTestId('postform-postbutton').click({ force: true });
+
+    // Intercept and check HTTP response
+    const response = await page.waitForResponse(resp => resp.url().includes('/api/posts'));
+    expect(response.status()).toBe(201);
+
+    const opsPostNum = parseInt(await page.getByTestId('post_num').first().textContent() ?? '');
+    const replyPostNum = parseInt(await page.getByTestId('post_num').nth(1).textContent() ?? '');
+    expect(replyPostNum).toBe(opsPostNum + 1);
   });
 });

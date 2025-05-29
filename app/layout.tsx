@@ -29,7 +29,7 @@ const RootLayout = ({
   children: React.ReactNode;
 }>) => {
   return (
-    <html lang='en'>
+    <html id='top' lang='en'>
       <body className={`${inter.variable} ${apparelBoldModified.variable} dark:body-dark font-[var(--font-inter)]`}>
         <NextTopLoader color='white' height={9}/>
         <Particles />

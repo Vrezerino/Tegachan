@@ -1,6 +1,6 @@
 // Nullcheck env vars
 if (!process.env.PGDB_URL || !process.env.PGDB_URL_DEV) {
-  throw new Error('One or more PostgreSQL Neon DB URL environment variables are missing!');
+  throw new Error('One or more PostgreSQL DB URL environment variables are missing!');
 };
 
 if (!process.env.AWS_BUCKET_NAME || !process.env.AWS_BUCKET_NAME_DEV || !process.env.AWS_BUCKET_NAME_TEST) {
@@ -45,6 +45,7 @@ const proxylist = process.env.PROXYLIST;
 const bwl = process.env.BWL;
 const adminPass = process.env.ADMIN;
 const RSS_FEED_URL = process.env.RSS_FEED_URL;
+//const WSPORT = process.env.WSPORT;
 
 export {
   PGDB_URL,
@@ -54,5 +55,6 @@ export {
   proxylist,
   bwl,
   adminPass,
-  RSS_FEED_URL
+  RSS_FEED_URL,
+  //WSPORT
 };
