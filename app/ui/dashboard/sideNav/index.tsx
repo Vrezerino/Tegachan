@@ -38,7 +38,7 @@ const SideNav = () => {
   }, [])
 
   return (
-    <div className='sideNav flex h-full flex-col xsm:flex-row px-3 py-2 md:px-2 dark:sideNav-darkmode md:w-44 justify-between xsm:items-center'>
+    <div className='sideNav flex md:h-full flex-col xsm:flex-row px-3 py-2 md:px-2 dark:sideNav-darkmode md:w-44 justify-between xsm:items-center xsm:w-full xsm:fixed xsm:bg-neutral-50/100 xsm:dark:bg-neutral-900'>
       <div className='flex md:grow flex-row md:flex-col space-x-2  md:space-x-0 md:space-y-2'>
         <NavLinks />
       </div>
