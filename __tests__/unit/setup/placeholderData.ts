@@ -11,7 +11,8 @@ export const posts = [
     admin: true,
     name: 'Playwright',
     country_name: 'Finland',
-    country_code: 'FI'
+    country_code: 'FI',
+    image_size_bytes: 25964
   },
   {
     title: null,
@@ -25,6 +26,7 @@ export const posts = [
     admin: false,
     name: 'Playwright',
     country_name: 'Finland',
-    country_code: 'FI'
+    country_code: 'FI',
+    image_size_bytes:64925
   }
 ]

@@ -4,7 +4,7 @@ import LatestPosts from '@/app/ui/dashboard/latestPosts';
 import Intro from '@/app/ui/dashboard/intro';
 
 import Parser from 'rss-parser';
-import { RSS_FEED_URL } from '../lib/env';
+import { RSS_FEED_URL } from '@/app/lib/env';
 import NewsFeed from '@/app/ui/dashboard/newsFeed';
 import { NewsItem } from '@/app/lib/definitions';
 import Statistics from '@/app/ui/dashboard/statistics';

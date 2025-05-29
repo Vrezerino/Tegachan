@@ -1,4 +1,4 @@
-import { MAX_FILE_SIZE } from "@/app/lib/utils";
+import { MAX_FILE_SIZE } from '@/app/lib/utils';
 
 const Page = () => {
   return (

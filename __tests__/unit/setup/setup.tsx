@@ -20,7 +20,8 @@ beforeAll(async () => {
           admin,
           name,
           country_name,
-          country_code
+          country_code,
+          image_size_bytes
         ) VALUES (
           $1, $2, $3, $4, $5, $6, $7,
           $8, $9, $10, $11, $12
@@ -38,7 +39,8 @@ beforeAll(async () => {
           post.admin,
           post.name,
           post.country_name,
-          post.country_code
+          post.country_code,
+          post.image_size_bytes
         ]
       );
     }
