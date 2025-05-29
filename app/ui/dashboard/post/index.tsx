@@ -30,6 +30,10 @@ const Post = ({ posts }: { posts: PostType[] }) => {
           replies={replies} />)
       })}
 
+      <a href='#top'>
+        <p className='text-xs wrap-anywhere text-center mt-8 font-normal text-neutral-600/60 dark:text-neutral-300/60' data-testid='back-to-board-link'>↑ Back to top</p>
+      </a>
+
       {/* Reply form */}
       <PostFormBig
         recipients={recipients}
