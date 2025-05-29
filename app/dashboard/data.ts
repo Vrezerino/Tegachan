@@ -34,3 +34,24 @@ export const getLatestPosts = async () => {
     );
   }
 };
+
+export const getStatistics = async () => {
+  const client = await getClient();
+
+  try {
+    const postCount = await client.query(`SELECT COUNT (post_num) FROM posts`);
+    const activeContentSize = await client.query(`SELECT SUM(image_size_bytes) / (1024 * 1024) AS total_content_mb FROM posts;`);
+    const uniqueIps = await client.query(`SELECT COUNT (DISTINCT ip) FROM posts;`)
+
+    return JSON.parse(JSON.stringify({
+      postCount: postCount.rows[0].count,
+      activeContentSize: activeContentSize.rows[0].total_content_mb,
+      uniqueIps: uniqueIps.rows[0].count
+    }));
+  } catch (e) {
+    return NextResponse.json(
+      { message: e instanceof Error || isErrorWithStatusCodeType(e) ? e.message : 'Error!' },
+      { status: isErrorWithStatusCodeType(e) ? e.status : 500 }
+    );
+  }
+};

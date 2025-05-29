@@ -17,5 +17,6 @@ export const newPostSchema = Joi.object({
   ip: Joi.string().required(),
   admin: Joi.boolean().required(),
   country_name: Joi.string().required(),
-  country_code: Joi.string().max(2).required()
+  country_code: Joi.string().max(2).required(),
+  image_size_bytes: Joi.number().optional()
 });

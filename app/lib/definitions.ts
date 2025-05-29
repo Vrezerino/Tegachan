@@ -29,6 +29,7 @@ export type NewPostType = {
   admin: boolean;
   country_name: string;
   country_code: string;
+  image_size_bytes?: number;
 };
 
 // Board catalog OP type
@@ -51,4 +52,10 @@ export type NewsItem = {
   link?: string;
   pubDate?: string;
   contentSnippet?: string;
+};
+
+export type StatisticsType = {
+  postCount: number;
+  activeContentSize: number;
+  uniqueIps: number;
 };

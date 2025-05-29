@@ -94,10 +94,13 @@ export const POST = async (req: NextRequest) => {
       ip: ip || 'none',
       admin,
       country_name,
-      country_code
+      country_code,
     }
 
-    if (file?.size > 0) newPost.image = file;
+    if (file?.size > 0) {
+      newPost.image = file;
+      newPost.image_size_bytes = file.size;
+    }
 
     const { error } = newPostSchema.validate(newPost);
     if (error) throw { message: error.message, status: 400 };
@@ -135,7 +138,7 @@ export const POST = async (req: NextRequest) => {
     // Set post's imageUrl as url of the image we just uploaded to Amazon S3
     newPost.image_url = file?.size > 0 ? `${AWS_URL}/img/posts/${filename}` : '';
     delete newPost.image;
-    const { thread, image_url, created_at, board } = newPost;
+    const { thread, image_url, created_at, board, image_size_bytes } = newPost;
 
     // Insert post into db
     const res: QueryResult<{ post_num: number }> = await client.query(`
@@ -151,9 +154,10 @@ export const POST = async (req: NextRequest) => {
         board,
         admin,
         country_name,
-        country_code
+        country_code,
+        image_size_bytes
       ) VALUES (
-        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13
       )
       RETURNING post_num
     `, [
@@ -169,6 +173,7 @@ export const POST = async (req: NextRequest) => {
       admin,
       country_name,
       country_code,
+      image_size_bytes
     ]);
 
     const newPostNum = res.rows[0].post_num;
