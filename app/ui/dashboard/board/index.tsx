@@ -1,9 +1,9 @@
 'use client'
 
-import { CatalogOPType, PostType } from '@/app/lib/definitions';
+import { CatalogOPType } from '@/app/lib/definitions';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PostFormBig } from '../post/PostForm';
+import { PostFormBig } from '@/app/ui/dashboard/post/PostForm';
 import { useState } from 'react';
 
 const BoardItem = ({ post }: { post: CatalogOPType }) => {

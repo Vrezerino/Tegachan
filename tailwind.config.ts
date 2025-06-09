@@ -19,7 +19,16 @@ const config: Config = {
         'xsm': { 'max': '767px' },
         // Specifically for index page
         'md-big': { 'min': '1780px' }
-      }
+      },
+      keyframes: {
+        marquee: {
+          from: { transform: 'translateX(100%)' },
+          to: { transform: 'translateX(-200%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee linear infinite',
+      },
     },
   },
   plugins: [],

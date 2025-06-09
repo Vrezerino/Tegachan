@@ -2,10 +2,9 @@
 
 import { PostType } from '@/app/lib/definitions';
 import { getFlagEmoji, parseDate } from '@/app/lib/utils';
-import { PostFormBig } from './PostForm';
+import { PostFormBig } from '@/app/ui/dashboard/post/PostForm';
 import Image from 'next/image';
-import Link from 'next/link';
-import { Dispatch, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import FormatContent from '@/app/ui/components/utils/formatContent';
 
