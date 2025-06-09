@@ -7,6 +7,7 @@ import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import FormatContent from '@/app/ui/components/utils/formatContent';
+import Link from 'next/link';
 
 const Post = ({ posts }: { posts: PostType[] }) => {
   const [recipients, setRecipients] = useState<number[]>([]);
@@ -68,6 +69,7 @@ const PostContent = ({
 
   // Opened image's width capped at 800px because of post container width
   // Container height can stretch more
+  /**
   useEffect(() => {
     const img = imgRef.current;
     if (img && img.naturalWidth && img.naturalHeight) {
@@ -95,6 +97,7 @@ const PostContent = ({
       }
     }
   }, [post.image_url])
+  */
 
   // Called when you click on a post's post_number in order to reply to it.
   const addRecipient = (replyNum: number) => {
@@ -109,11 +112,34 @@ const PostContent = ({
   }
 
   return (
+    /**
+     * <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
+     */
     <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
       {post.image_url && (
-        <div key={`imgContainer-${post.post_num}`} className={`relative float-left mr-4 ${opened ? `max-w-[800px] h-[${dimensions?.heightOpened}]` : `w-[110px] h-[${dimensions?.heightThumbnail }]`}`}>
-
-          <Image
+        /**
+         * <div key={`imgContainer-${post.post_num}`} className={`relative float-left mr-4 ${opened ? `max-w-[800px] h-[${dimensions?.heightOpened}]` : `w-[110px] h-[110px]`}`}>
+        */
+        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 max-w-[100px]'>
+          <Link key={post.post_num} href={post.image_url} target='_blank'>
+            <Image
+              src={post.image_url}
+              key={`image-${post.post_num}`}
+              alt={`Post num ${post.post_num}'s image`}
+              // className will determine final size so these are practically compression levels, higher is better
+              width={110}
+              height={110}
+              style={{
+                objectFit: 'cover',
+                objectPosition: 'left top'
+              }}
+              placeholder='blur'
+              blurDataURL='/img/misc/blurred.jpg'
+              className='object-cover rounded-tl-sm max-h-[300px] w-[100px]'
+              unoptimized={post.image_url.includes('.gif')}
+              data-testid='post-image' />
+          </Link>
+          {/**<Image
             src={post.image_url}
             key={`image-${post.post_num}`}
             alt={`Post num ${post.post_num}'s image`}
@@ -132,21 +158,12 @@ const PostContent = ({
               rounded-tl-sm
               ${opened ? `max-w-[800px]` : 'w-[100px] max-h-[300px]'}
             `}
-            */
             unoptimized
             data-testid='post-image'
             onClick={() => setOpened(prev => !prev)}
             ref={imgRef}
-          /**
-          onLoad={(e) => {
-            const img = e.target as HTMLImageElement
-            setOriginalDimensions({
-              width: img.naturalWidth,
-              height: img.naturalHeight
-            })
-          }}
-          */
-          />
+
+          />*/}
 
         </div>
       )}
