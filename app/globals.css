@@ -174,22 +174,6 @@
   color: #f8ddd6;
 }
 
-@utility updateMarquee {
-  animation: marquee 55s linear infinite;
-  display: block;
-  min-width: 100%;
-  text-wrap: nowrap;
-  white-space: nowrap;
-}
-
-@utility updateMarqueeSm {
-  animation: marquee 25s linear infinite;
-  display: block;
-  min-width: 100%;
-  text-wrap: nowrap;
-  white-space: nowrap;
-}
-
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
