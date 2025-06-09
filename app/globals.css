@@ -188,6 +188,16 @@
   }
 }
 
+@keyframes marquee {
+  from {
+    transform: translateX(100%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}
+
 h1,
 h2,
 h3,
@@ -224,6 +234,12 @@ h5 {
 
 option {
   border-radius: 10px;
+}
+
+.updateMarquee {
+  animation: marquee 55s linear infinite;
+  display: block;
+  min-width: 100%;
 }
 
 @keyframes loadingAnimWave {

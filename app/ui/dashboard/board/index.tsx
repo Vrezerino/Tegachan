@@ -3,7 +3,7 @@
 import { CatalogOPType, PostType } from '@/app/lib/definitions';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PostFormBig } from '../post/postForm';
+import { PostFormBig } from '../post/PostForm';
 import { useState } from 'react';
 
 const BoardItem = ({ post }: { post: CatalogOPType }) => {

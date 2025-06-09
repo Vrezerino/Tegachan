@@ -54,7 +54,7 @@ export const POST = async (req: NextRequest) => {
 
     if (file?.size > 0) {
       if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) throw { message: 'GIF/JPG/PNG/WEBP/AVIF only.', status: 400 };
-      if (file?.size >= MAX_FILE_SIZE) throw { message: `Image must be under ${MAX_FILE_SIZE / 1000000} in size.`, status: 400 };
+      if (file?.size >= MAX_FILE_SIZE) throw { message: `Image must be under ${MAX_FILE_SIZE / 1000000} MB in size.`, status: 400 };
     }
 
     const content = removeGapsFromString(formData.get('content'));

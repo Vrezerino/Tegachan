@@ -25,7 +25,7 @@ const middleware = async (req: NextRequest) => {
         }
 
         if (file && file.size >= MAX_FILE_SIZE) {
-          throw { message: `Image must be under ${MAX_FILE_SIZE / 1000000} in size.`, status: 400 };
+          throw { message: `Image must be under ${MAX_FILE_SIZE / 1000000} MB in size.`, status: 400 };
         }
       }
 

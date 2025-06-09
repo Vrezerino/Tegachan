@@ -187,7 +187,6 @@ jobs:
             echo "PGDB_URL=${{ secrets.PGDB_URL }}"
             echo "PGDB_URL_DEV=${{ secrets.PGDB_URL_DEV }}"
 
-            echo "CONTAINER_NAME=${{ secrets.CONTAINER_NAME }}"
             echo "POSTGRES_DB=${{ secrets.PGDB_NAME }}"
             echo "POSTGRES_USER=${{ secrets.PGDB_USER }}"
             echo "POSTGRES_PASSWORD=${{ secrets.PGDB_PASSWORD }}"
@@ -195,6 +194,9 @@ jobs:
 
             echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
             echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
+
+            echo "APP_CONTAINER_NAME=${{ secrets.APP_CONTAINER_NAME }}"
+            echo "PGDB_CONTAINER_NAME=${{ secrets.PGDB_CONTAINER_NAME }}"
 
             echo "BANLIST=${{ secrets.BANLIST }}"
             echo "PROXYLIST=${{ secrets.PROXYLIST }}"

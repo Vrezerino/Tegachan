@@ -2,10 +2,10 @@
 
 import { PostType } from '@/app/lib/definitions';
 import { getFlagEmoji, parseDate } from '@/app/lib/utils';
-import { PostFormBig } from './postForm';
+import { PostFormBig } from './PostForm';
 import Image from 'next/image';
 import Link from 'next/link';
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, MouseEventHandler, SetStateAction, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import FormatContent from '@/app/ui/components/utils/formatContent';
 
@@ -63,6 +63,40 @@ const PostContent = ({
   setContent
 }: PostContentProps
 ) => {
+  const [opened, setOpened] = useState<boolean>(false);
+  const [dimensions, setDimensions] = useState<{ widthOpened: number; heightOpened: number; widthThumbnail: number, heightThumbnail: number } | null>(null)
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Opened image's width capped at 800px because of post container width
+  // Container height can stretch more
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img && img.naturalWidth && img.naturalHeight) {
+
+      setDimensions({
+        widthOpened: 1,
+        heightOpened: 1,
+        widthThumbnail: img.naturalWidth > 110 ? (img.naturalWidth / img.naturalHeight) * 110 : img.naturalWidth,
+        heightThumbnail: 110
+      });
+
+      if (img.naturalWidth > 800) {
+        const height = (img.naturalHeight / img.naturalWidth) * 800;
+        setDimensions(prev => prev && {
+          ...prev,
+          widthOpened: 800,
+          heightOpened: Math.round(height)
+        });
+      } else {
+        setDimensions(prev => prev && {
+          ...prev,
+          widthOpened: img.naturalWidth,
+          heightOpened: img.naturalHeight
+        });
+      }
+    }
+  }, [post.image_url])
+
   // Called when you click on a post's post_number in order to reply to it.
   const addRecipient = (replyNum: number) => {
     if (recipients.length <= 5) {
@@ -78,25 +112,43 @@ const PostContent = ({
   return (
     <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
       {post.image_url && (
-        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 max-w-[100px]'>
-          <Link key={post.post_num} href={post.image_url} target='_blank'>
-            <Image
-              src={post.image_url}
-              key={`image-${post.post_num}`}
-              alt={`Post num ${post.post_num}'s image`}
-              // className will determine final size so these are practically compression levels, higher is better
-              width={110}
-              height={110}
-              style={{
-                objectFit: 'cover',
-                objectPosition: 'left top'
-              }}
-              placeholder='blur'
-              blurDataURL='/img/misc/blurred.jpg'
-              className='object-cover rounded-tl-sm max-h-[300px] w-[100px]'
-              unoptimized={post.image_url.includes('.gif')}
-              data-testid='post-image' />
-          </Link>
+        <div key={`imgContainer-${post.post_num}`} className={`relative float-left mr-4 ${opened ? `max-w-[800px] h-[${dimensions?.heightOpened}]` : `w-[110px] h-[${dimensions?.heightThumbnail }]`}`}>
+
+          <Image
+            src={post.image_url}
+            key={`image-${post.post_num}`}
+            alt={`Post num ${post.post_num}'s image`}
+            width={opened ? dimensions?.widthOpened ?? 800 : dimensions?.widthThumbnail ?? 0}
+            height={opened ? dimensions?.heightOpened ?? 800 : 110}
+            style={{
+              //objectFit: 'scale-down',
+              objectPosition: 'left top',
+              cursor: 'pointer'
+            }}
+            placeholder='blur'
+            blurDataURL='/img/misc/blurred.jpg'
+            /**
+            className={`
+              object-cover
+              rounded-tl-sm
+              ${opened ? `max-w-[800px]` : 'w-[100px] max-h-[300px]'}
+            `}
+            */
+            unoptimized
+            data-testid='post-image'
+            onClick={() => setOpened(prev => !prev)}
+            ref={imgRef}
+          /**
+          onLoad={(e) => {
+            const img = e.target as HTMLImageElement
+            setOriginalDimensions({
+              width: img.naturalWidth,
+              height: img.naturalHeight
+            })
+          }}
+          */
+          />
+
         </div>
       )}
 
