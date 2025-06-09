@@ -1,5 +1,6 @@
 const nextConfig = {
   webpack(config) {
+    config.resolve.alias['@'] = path.resolve(__dirname, 'app');
     config.module.rules.push({
       test: /\.svg$/,
       issuer: /\.[jt]sx?$/,
