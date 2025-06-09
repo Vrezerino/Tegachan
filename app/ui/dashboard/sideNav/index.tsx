@@ -4,7 +4,6 @@ import NavLinks from '@/app/ui/dashboard/navLinks';
 import { useEffect } from 'react';
 import SearchForm from './SearchForm';
 
-
 const SideNav = () => {
   // Toggle darkmode on website
   const toggleTheme = (e: React.ChangeEvent<HTMLInputElement>) => {

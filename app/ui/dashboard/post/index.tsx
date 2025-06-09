@@ -2,7 +2,7 @@
 
 import { PostType } from '@/app/lib/definitions';
 import { getFlagEmoji, parseDate } from '@/app/lib/utils';
-import PostForm from '@/app/ui/dashboard/post/PostForm';
+import PostForm from './PostForm';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
