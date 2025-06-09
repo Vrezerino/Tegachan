@@ -2,7 +2,7 @@
 
 import NavLinks from '@/app/ui/dashboard/navLinks';
 import { useEffect } from 'react';
-import SearchForm from './searchForm';
+import SearchForm from './SearchForm';
 
 
 const SideNav = () => {
