@@ -1,0 +1,294 @@
+name: Build, test, deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME}}
+  AWS_BUCKET_URL: ${{ secrets.AWS_BUCKET_URL }}
+  AWS_BUCKET_NAME_DEV: ${{ secrets.AWS_BUCKET_NAME_DEV }}
+  AWS_BUCKET_URL_DEV: ${{ secrets.AWS_BUCKET_URL_DEV }}
+  AWS_BUCKET_NAME_TEST: ${{ secrets.AWS_BUCKET_NAME_TEST }}
+  AWS_BUCKET_URL_TEST: ${{ secrets.AWS_BUCKET_URL_TEST }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: ${{ secrets.AWS_REGION }}
+
+  AZURE_USERNAME: ${{ secrets.AZURE_USERNAME }}
+  AZURE_VM_IP: ${{ secrets.AZURE_VM_IP }}
+  AZURE_SSH_PRIVATE_KEY: ${{ secrets.AZURE_SSH_PRIVATE_KEY }}
+
+  PGDB_URL: ${{ secrets.PGDB_URL }}
+  PGDB_URL_DEV: ${{ secrets.PGDB_URL_DEV }}
+
+  POSTGRES_DB: ${{ secrets.PGDB_NAME }}
+  POSTGRES_USER: ${{ secrets.PGDB_USER }}
+  POSTGRES_PASSWORD: ${{ secrets.PGDB_PASSWORD }}
+  POSTGRES_PORT: ${{ secrets.PGDB_PORT }}
+
+  UPSTASH_REDIS_REST_URL: ${{ secrets.UPSTASH_REDIS_REST_URL }}
+  UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN }}
+
+  BANLIST: ${{ secrets.BANLIST }}
+  PROXYLIST: ${{ secrets.PROXYLIST }}
+  BWL: ${{ secrets.BWL }}
+  RSS_FEED_URL: ${{ secrets.RSS_FEED_URL }}
+  CI: true
+
+permissions:
+  contents: write
+  deployments: write
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:17-alpine
+        env:
+          # Container will only see envs defined here, not the top-level envs
+          POSTGRES_USER: ${{ secrets.PGDB_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.PGDB_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.PGDB_NAME_DEV }}
+        ports:
+          - 5432:5432
+
+    steps:
+      - name: Set up SSH key
+        run: |
+          set -ex
+          mkdir -p ~/.ssh
+
+          echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # echo "AZURE_VM_IP: $AZURE_VM_IP"
+          ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Copy init.sql from VM
+        run: |
+          scp ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:/home/ultravesaniam/tegachan/init.sql ./init.sql
+
+      - name: Wait for Postgres to be ready
+        run: |
+          until pg_isready -h localhost -p 5432 -U postgres; do sleep 2; done
+
+      - name: Run db init script
+        run: |
+          psql "postgres://${{ secrets.PGDB_USER }}:${{ secrets.PGDB_PASSWORD }}@localhost:${{ secrets.PGDB_PORT }}/${{ secrets.PGDB_NAME_DEV }}" -f ./init.sql
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Run unit tests
+        run: npx vitest run
+
+      - name: Build standalone app
+        run: npm run build --if-present
+
+      # Copy files and folders into right places. Has to be done manually
+      # after build. This is because Vercel thinks surely you're using a
+      # CDN to serve static files if you build in standalone mode, and so
+      # this step isn't baked in the build process. Also DON'T copy and
+      # upload .env in artifact zip, generate .env in deploy job instead
+      - name: Prepare standalone output
+        run: |
+          cd ${{ github.workspace }}
+          cp -r public .next/standalone/
+          cp -r .next/static .next/standalone/.next/
+          cp -r .next/BUILD_ID .next/standalone/
+          cp -r .next/BUILD_ID .next/standalone/.next/
+
+          echo "In .next/standalone/:"
+          ls -la .next/standalone
+
+          echo "In .next/standalone/.next:"
+          ls -la .next/standalone/.next
+
+      - name: Run e2e tests
+        run: npx playwright install --with-deps && npx playwright test
+
+      - name: Upload Playwright traces on e2e failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-traces
+          path: |
+            test-results/**/*.zip
+
+      - name: Remove Next cache
+        run: |
+          cd ${{ github.workspace }}
+          rm -rf .next/cache
+
+      - name: Zip standalone output
+        run: |
+          cd .next
+          zip -r ../standalone.zip standalone
+
+      - name: Upload standalone build
+        uses: actions/upload-artifact@v4
+        with:
+          name: standalone_build
+          path: |
+            standalone.zip
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: test-and-build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20.x"
+
+      - name: Download build
+        uses: actions/download-artifact@v4
+        with:
+          name: standalone_build
+          path: deploy_folder
+
+      # Notice: this creates deploy_folder/standalone dir,
+      # build contents aren't unzipped directly under deploy_folder
+      - name: Unzip build
+        run: unzip deploy_folder/standalone.zip -d deploy_folder/
+
+      - name: Generate .env in production mode
+        env:
+          NODE_ENV: production
+        run: |
+          {
+            echo "AWS_BUCKET_NAME=${{ secrets.AWS_BUCKET_NAME}}"
+            echo "AWS_BUCKET_URL=${{ secrets.AWS_BUCKET_URL }}"
+            echo "AWS_BUCKET_NAME_DEV=${{ secrets.AWS_BUCKET_NAME_DEV }}"
+            echo "AWS_BUCKET_URL_DEV=${{ secrets.AWS_BUCKET_URL_DEV }}"
+            echo "AWS_BUCKET_NAME_TEST=${{ secrets.AWS_BUCKET_NAME_TEST }}"
+            echo "AWS_BUCKET_URL_TEST=${{ secrets.AWS_BUCKET_URL_TEST }}"
+            echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
+            echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
+            echo "AWS_REGION=${{ secrets.AWS_REGION }}"
+
+            echo "AZURE_USERNAME=${{ secrets.AZURE_USERNAME }}"
+            echo "AZURE_VM_IP=${{ secrets.AZURE_VM_IP }}"
+
+            echo "PGDB_URL=${{ secrets.PGDB_URL }}"
+            echo "PGDB_URL_DEV=${{ secrets.PGDB_URL_DEV }}"
+
+            echo "POSTGRES_DB=${{ secrets.PGDB_NAME }}"
+            echo "POSTGRES_USER=${{ secrets.PGDB_USER }}"
+            echo "POSTGRES_PASSWORD=${{ secrets.PGDB_PASSWORD }}"
+            echo "PGDB_PORT=${{ secrets.PGDB_PORT }}"
+
+            echo "UPSTASH_REDIS_REST_URL=${{ secrets.UPSTASH_REDIS_REST_URL }}"
+            echo "UPSTASH_REDIS_REST_TOKEN=${{ secrets.UPSTASH_REDIS_REST_TOKEN }}"
+
+            echo "APP_CONTAINER_NAME=${{ secrets.APP_CONTAINER_NAME }}"
+            echo "PGDB_CONTAINER_NAME=${{ secrets.PGDB_CONTAINER_NAME }}"
+
+            echo "BANLIST=${{ secrets.BANLIST }}"
+            echo "PROXYLIST=${{ secrets.PROXYLIST }}"
+            echo "BWL=${{ secrets.BWL }}"
+            echo "ADMIN=${{ secrets.ADMIN }}"
+            echo "RSS_FEED_URL=${{ secrets.RSS_FEED_URL }}"
+          } > deploy_folder/standalone/.env
+
+      - name: Set up SSH key
+        run: |
+          set -ex
+          mkdir -p ~/.ssh
+
+          echo "$AZURE_SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          # echo "AZURE_VM_IP: $AZURE_VM_IP"
+          ssh-keyscan -H $AZURE_VM_IP >> ~/.ssh/known_hosts
+
+      - name: List files in standalone dir
+        run: |
+          echo "Listing files in standalone dir..."
+          ls -al deploy_folder/standalone
+
+      - name: Add runner to docker group
+        run: sudo usermod -aG docker $USER
+
+      - name: Create dockerfile
+        run: |
+          cat << 'EOF' > deploy_folder/standalone/Dockerfile
+          FROM node:lts-alpine3.20
+          WORKDIR /app
+          COPY . .
+          RUN npm install --omit=dev --legacy-peer-deps
+          EXPOSE 3000
+          CMD ["node", "server.js"]
+          EOF
+
+      - name: Set lowercase username
+        # Docker image names must be entirely lowercase including github.actor i.e. username
+        # Pushing and pulling to ghcr requires all lowercase names
+        run: echo "USERNAME_LOWER=$(echo '${{ github.actor }}' | tr '[:upper:]' '[:lower:]')" >> $GITHUB_ENV
+
+      - name: Build app docker image and push to registry
+        run: |
+          echo "Building Tegachan app image..."
+          echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u $USERNAME_LOWER --password-stdin
+
+          docker build -t tegachan-app:latest deploy_folder/standalone
+          docker tag tegachan-app ghcr.io/$USERNAME_LOWER/tegachan-app:latest
+          docker push ghcr.io/$USERNAME_LOWER/tegachan-app:latest
+
+          # Note that workflow re-runs will always use the privileges of github.actor
+
+      - name: Deploy to server
+        shell: bash
+        env:
+          GHCR_PAT: ${{ secrets.GHCR_PAT }}
+        run: |
+          chmod -R 755 deploy_folder/
+
+          echo "Copy env before heredoc"
+          scp deploy_folder/standalone/.env ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }}:~/tegachan/.next/standalone
+
+          ssh ${{ secrets.AZURE_USERNAME }}@${{ secrets.AZURE_VM_IP }} bash -s <<'EOF'
+            export GHCR_PAT="$GHCR_PAT"
+
+            echo "Prepare new deployment directory"
+            NEW_DIR=~/tegachan/releases/$(date +%s)
+            mkdir -p $NEW_DIR
+            cp -r ~/tegachan/tegachan_prod.sql $NEW_DIR/
+            cp ~/tegachan/docker-compose.yml $NEW_DIR/
+            cp ~/tegachan/.next/standalone/.env $NEW_DIR/
+
+            cd $NEW_DIR
+
+            echo "Docker login to GHCR"
+            echo "$GHCR_PAT" | docker login ghcr.io -u vrezerino --password-stdin
+
+            echo "Pulling latest image..."
+            docker pull ghcr.io/vrezerino/tegachan-app:latest
+
+            echo "Bring up containers"
+            docker compose -p tegachan up -d
+
+            sleep 6
+
+            echo "Switch current symlink to new deployment"
+            ln -sfn $NEW_DIR ~/tegachan/.next/standalone
+
+            echo "Prune old volumes"
+            docker system prune -f --volumes
+
+            echo "Done!"
+          EOF
