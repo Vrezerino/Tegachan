@@ -24,7 +24,7 @@ interface PostFormProps {
   setContent: Dispatch<SetStateAction<string>>;
 }
 
-const PostFormBig = ({
+const PostForm = ({
   op,
   recipients,
   setRecipients,
@@ -210,4 +210,4 @@ const PostFormSmall = ({ replyTo }: { replyTo: PostType }) => {
 };
 */
 
-export { PostFormBig, /* PostFormSmall */ };
+export default PostForm;

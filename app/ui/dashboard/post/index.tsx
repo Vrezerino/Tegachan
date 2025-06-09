@@ -2,7 +2,7 @@
 
 import { PostType } from '@/app/lib/definitions';
 import { getFlagEmoji, parseDate } from '@/app/lib/utils';
-import { PostFormBig } from '@/app/ui/dashboard/post/PostForm';
+import PostForm from '@/app/ui/dashboard/post/PostForm';
 import Image from 'next/image';
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -34,7 +34,7 @@ const Post = ({ posts }: { posts: PostType[] }) => {
       </a>
 
       {/* Reply form */}
-      <PostFormBig
+      <PostForm
         recipients={recipients}
         setRecipients={setRecipients}
         op={posts[0]}
