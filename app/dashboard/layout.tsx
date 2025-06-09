@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       <div className='w-full flex-none md:w-64'>
         <SideNav />
       </div>
-      <div className='grow md:overflow-y-auto p-3 xsm:pt-11'>{children}</div>
+      <div className='grow md:overflow-y-auto p-3 xsm:pt-13'>{children}</div>
       <Toaster position='top-center' />
     </div>
   );
