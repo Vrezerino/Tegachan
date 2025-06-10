@@ -30,7 +30,7 @@ const Page = async () => {
         <Updates />
         <Statistics statistics={statistics} />
       </div>
-      <div className='flex items-start flex-col md-big:flex-row justify-center max-w-[1480px] mx-auto'>
+      <div className='flex items-start flex-col md-big:flex-row justify-center max-w-[1430px] mx-auto'>
         <LatestPosts posts={posts} />
         <NewsFeed items={feed} />
       </div>

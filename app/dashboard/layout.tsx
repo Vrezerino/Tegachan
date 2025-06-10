@@ -5,7 +5,7 @@ import SideNav from '@/app/ui/dashboard/sideNav';
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <div className='flex h-screen flex-col md:flex-row md:overflow-hidden'>
-      <div className='w-full flex-none md:w-64'>
+      <div className='w-full flex-none md:w-44'>
         <SideNav />
       </div>
       <div className='grow md:overflow-y-auto p-3 xsm:pt-13'>{children}</div>
