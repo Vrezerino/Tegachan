@@ -19,21 +19,26 @@ const Page = async () => {
 
   return (
     <main>
-      <div>
-        <h1 className='text-6xl text-sky-700 font-bold dark:header-darkmode text-center'>
+      <header>
+        <h1 className='bronzeShadow text-6xl text-sky-700 font-bold dark:header-darkmode text-center'>
           TEGACHAN
         </h1>
-        <h1 className='text-4xl text-sky-700 m-5 dark:header-darkmode text-center'>
-          ✵
-        </h1>
+      </header>
+      <p
+        className='bronzeShadow text-4xl text-sky-700 m-5 dark:header-darkmode text-center'
+        aria-label='star symbol'
+      >
+        ✵
+      </p>
+      <aside>
         <Intro />
         <Updates />
         <Statistics statistics={statistics} />
-      </div>
-      <div className='flex items-start flex-col md-big:flex-row justify-center max-w-[1430px] mx-auto'>
+      </aside>
+      <section className='flex items-start flex-col md-big:flex-row justify-center max-w-[1430px] mx-auto'>
         <LatestPosts posts={posts} />
         <NewsFeed items={feed} />
-      </div>
+      </section>
     </main>
   );
 };

@@ -38,20 +38,22 @@ const SideNav = () => {
   }, [])
 
   return (
-    <div className='sideNav flex md:h-full flex-col xsm:flex-row px-3 py-2 md:px-2 dark:sideNav-darkmode md:w-44 justify-between xsm:items-center xsm:w-full xsm:fixed xsm:bg-neutral-50/100 xsm:dark:bg-neutral-900'>
+    <aside className='sideNav flex md:h-full flex-col xsm:flex-row px-3 py-2 md:px-2 dark:sideNav-darkmode md:w-44 justify-between xsm:items-center xsm:w-full xsm:fixed xsm:bg-neutral-50/100 xsm:dark:bg-neutral-900'>
       <div className='flex md:grow flex-row md:flex-col space-x-2  md:space-x-0 md:space-y-2'>
         <NavLinks />
       </div>
 
-      <div>
+      <section aria-label='search posts by text content'>
         <SearchForm />
-      </div>
+      </section>
 
-      <label className='flex justify-center xsm:justify-end cursor-pointer md:mt-4 dark:label-darkmode'>
-        <input id='toggle' type='checkbox' value='' className='sr-only peer' onChange={toggleTheme} />
-        <div className="relative w-11 h-6 bg-neutral-200 peer-focus:outline-hidden rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-neutral-300/40"></div>
-      </label>
-    </div>
+      <section aria-label='theme toggle'>
+        <label className='flex justify-center xsm:justify-end cursor-pointer md:mt-4 dark:label-darkmode'>
+          <input id='toggle' type='checkbox' value='' className='sr-only peer' onChange={toggleTheme} />
+          <div className="relative w-11 h-6 bg-neutral-200 peer-focus:outline-hidden rounded-full peer dark:bg-neutral-700 peer-checked:after:translate-x-full peer-checked:rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-neutral-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-neutral-600 peer-checked:bg-neutral-300/40"></div>
+        </label>
+      </section>
+    </aside>
   );
 };
 

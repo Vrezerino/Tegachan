@@ -33,6 +33,7 @@
   .posts-container-post-title,
   .linkName,
   label,
+  h2,
   h3,
   h5,
   .span-h5 {
@@ -42,10 +43,10 @@
       3px 2px 2px #ffd697
   }
 
-  h1 {
+  .bronzeShadow {
     text-shadow:
-      1px 1px 2px #c95c14,
-      2px 2px 2px #ffe48d
+    1px 1px 2px #c95c14,
+    2px 2px 2px #ffe48d
   }
 
   .navLinks,

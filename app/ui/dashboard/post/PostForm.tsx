@@ -125,48 +125,61 @@ const PostForm = ({
   return (
     <>
       <form onSubmit={onSubmit} id='postForm' className={`postForm bg-sky-200/30 mt-10 p-3 border border-neutral-200 rounded-xs shadow-sm w-full md:max-w-xl dark:border-neutral-800 dark:postForm-darkmode dark:bg-neutral-900`}>
-        <div>
-          {/* Text content */}
-          <label htmlFor='postlabel' className='mb-2 block text-sm font-medium dark:label-darkmode'>
-            {op ? 'Reply' : 'Post new thread'}
-          </label>
+        {/* Text content */}
+        <label htmlFor='postlabel' className='mb-2 block text-sm font-medium dark:label-darkmode'>
+          {op ? 'Reply' : 'Post new thread'}
+        </label>
 
+        <fieldset>
+          <legend className='sr-only'>Post title and optional poster name</legend>
           {!op &&
-            <input type='text'
-              name='title'
-              placeholder='Title (optional)'
-              maxLength={80}
-              className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
-              data-testid='postform-title'
-            />}
+            <>
+              <label htmlFor='title' className='sr-only'>Post title</label>
+              <input type='text'
+                id='title'
+                name='title'
+                placeholder='Title (optional)'
+                maxLength={80}
+                className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
 
+                data-testid='postform-title'
+              />
+            </>}
+
+          <label htmlFor='name' className='sr-only'>Optional poster name</label>
           <input type='text'
+            id='name'
             name='name'
             placeholder='Name (optional)'
             maxLength={30}
             className='peer block mb-1 w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
             data-testid='postform-name'
           />
+        </fieldset>
 
+        <fieldset>
+          <legend className='sr-only'>Post main text content</legend>
+          <label htmlFor='content' className='sr-only'>Post main text content</label>
           <div className='relative rounded-md'>
-            <div className='relative'>
-              <textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                maxLength={1500}
-                placeholder='Max 1500 characters'
-                className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
-                // Text not required if uploading image, unless you're OP (see below for post button)
-                required={!image}
-                disabled={loading}
-                data-testid='postform-textarea'
-              />
-              {loading && <PostingAnim />}
-            </div>
-
+            <textarea
+              id='content'
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              maxLength={1500}
+              placeholder='Max 1500 characters'
+              className='h-32 peer block w-full rounded-md border border-neutral-200/30 bg-neutral-200 dark:bg-neutral-900 p-2 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+              // Text not required if uploading image, unless you're OP (see below for post button)
+              required={!image}
+              disabled={loading}
+              data-testid='postform-textarea'
+            />
+            {loading && <PostingAnim />}
           </div>
+        </fieldset>
 
-          {/* Image */}
+        {/* Image */}
+        <fieldset>
+          <legend className='sr-only'>Optional image file upload</legend>
           <div className='mb-4'>
             <label htmlFor='image' className='mt-2 mb-2 block text-sm font-medium dark:label-darkmode'>
               Image (optional)
@@ -174,6 +187,7 @@ const PostForm = ({
             <div className='relative rounded-md'>
               <div className='relative'>
                 <input
+                  id='image'
                   ref={fileRef}
                   onChange={(e) => e.target.files && setImageFile(e.target.files[0])}
                   type='file'
@@ -185,6 +199,10 @@ const PostForm = ({
               </div>
             </div>
           </div>
+        </fieldset>
+
+        <section>
+          <label htmlFor='postBtn' className='sr-only'>Post submission button</label>
           <button
             id='postBtn'
             className='rounded-md p-3 border border-orange-200/70 dark:border-neutral-500/70 bg-sky-100/40 dark:bg-neutral-700 text-sm font-medium dark:text-neutral-300 hover:bg-blue-200/60 md:flex-none md:justify-start md:p-2 md:px-3'
@@ -195,7 +213,7 @@ const PostForm = ({
           >
             Post
           </button>
-        </div>
+        </section>
       </form>
     </>
   );

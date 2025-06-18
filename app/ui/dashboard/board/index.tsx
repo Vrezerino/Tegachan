@@ -53,18 +53,19 @@ const NewThreadForm = () => {
   );
 };
 
-const Board = ({ posts }: { posts: CatalogOPType[] }) => {
+const Board = ({ posts, boardName }: { posts: CatalogOPType[], boardName: string }) => {
   return (
-    <div>
-      <div className='posts-container'>
+    <>
+      <section className='posts-container' aria-labelledby='all-threads'>
+        <h2 id='all-threads' className='sr-only'>All threads on {boardName}</h2>
         {posts?.map((post: CatalogOPType) => (
           <BoardItem post={post} key={post.post_num} />
         ))}
-      </div>
-      <div>
+      </section>
+      <section>
         <NewThreadForm />
-      </div>
-    </div>
+      </section>
+    </>
   );
 };
 

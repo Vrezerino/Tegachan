@@ -14,12 +14,12 @@ const Page = async ({ params }: { params: ParamsType }) => {
   if (Object.keys(data).length === 0) notFound();
 
   return (
-    <>
+    <main>
       <Post posts={data} />
       <Link href={`/${board}`}>
         <p className='text-xs wrap-anywhere text-center mb-5 font-normal text-neutral-600/60 dark:text-neutral-300/60' data-testid='back-to-board-link'>⇽ Back to {'/' + board}</p>
       </Link>
-    </>
+    </main>
   );
 };
 

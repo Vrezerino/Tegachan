@@ -13,7 +13,7 @@ const Post = ({ posts }: { posts: PostType[] }) => {
   const [recipients, setRecipients] = useState<number[]>([]);
   const [content, setContent] = useState<string>('');
   return (
-    <>
+    <section aria-label='discussion thread'>
       {/* Thread starter (OP) and possible replies */}
       {posts.map((post) => {
         // Each post will have a replies number array (and already has an array of replied-to posts)
@@ -41,7 +41,7 @@ const Post = ({ posts }: { posts: PostType[] }) => {
         op={posts[0]}
         content={content}
         setContent={setContent} />
-    </>
+    </section>
   );
 };
 
@@ -115,12 +115,18 @@ const PostContent = ({
     /**
      * <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
      */
-    <div key={`post-${post.post_num}`} id={post.post_num?.toString()} data-testid='post-container' className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}>
+    <article
+      key={`post-${post.post_num}`}
+      id={post.post_num?.toString()}
+      className={`table clear-both post mb-1 dark:post-darkmode ${post.admin ? 'bg-orange-700/30' : 'bg-white'} border border-neutral-200 rounded-xs shadow-sm sm:flex-row md:max-w-[800px] w-full dark:border-neutral-800 ${post.admin ? 'dark:bg-orange-950' : 'dark:bg-neutral-900'}`}
+      aria-label={`post number ${post.post_num} posted by ${post.name}`}
+      data-testid='post-container'
+    >
       {post.image_url && (
         /**
          * <div key={`imgContainer-${post.post_num}`} className={`relative float-left mr-4 ${opened ? `max-w-[800px] h-[${dimensions?.heightOpened}]` : `w-[110px] h-[110px]`}`}>
         */
-        <div key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 max-w-[100px]'>
+        <figure key={`imgContainer-${post.post_num}`} className='relative float-left mr-4 max-w-[100px]'>
           <Link key={post.post_num} href={post.image_url} target='_blank'>
             <Image
               src={post.image_url}
@@ -137,7 +143,10 @@ const PostContent = ({
               blurDataURL='/img/misc/blurred.jpg'
               className='object-cover rounded-tl-sm max-h-[300px] w-[100px]'
               unoptimized={post.image_url.includes('.gif')}
-              data-testid='post-image' />
+              aria-label='post image'
+              data-testid='post-image'
+            />
+            <figcaption className='sr-only'>Image submitted with post {post.post_num}</figcaption>
           </Link>
           {/**<Image
             src={post.image_url}
@@ -165,7 +174,7 @@ const PostContent = ({
 
           />*/}
 
-        </div>
+        </figure>
       )}
 
       <div className='pl-4 py-[9px]'>
@@ -175,18 +184,28 @@ const PostContent = ({
           className={`wrap-anywhere text-xs text-red-400 dark:text-neutral-500 bg-transparent`}
           data-testid='post-info'
         >
-          <span data-testid='poster-name'><b>{post.name ?? 'Noob'}</b></span>
-          <span data-testid='poster-flag'> {getFlagEmoji(post.country_code)} </span>
-          <span data-testid='post-created-at'> {parseDate(post.created_at)}</span>
-          <b> № <span className='underline hover:cursor-pointer' data-testid='post_num'>{post.post_num}</span></b>
-          {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin'> ADMIN</span>}
+          <header>
+            <span data-testid='poster-name' aria-label='poster name'><b>{post.name ?? 'Noob'}</b></span>
+            <span data-testid='poster-flag' aria-label='poster country flag'> {getFlagEmoji(post.country_code)} </span>
+            <time dateTime={parseDate(post.created_at)} data-testid='post-created-at' aria-label='post date'> {parseDate(post.created_at)}</time>
+            <b> № <span className='underline hover:cursor-pointer' data-testid='post_num' aria-label='post number'>{post.post_num}</span></b>
+            {post.admin && <span className='text-red-700 font-bold' data-testid='poster-is-admin' aria-label='is post admin'> ADMIN</span>}
+          </header>
         </a>
 
         {/* Clickable reply post_nums except on OP */}
         {!post.is_op && replies?.length > 0 && (
-          <span className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`}>
+          <span className={`${!post.image_url && 'ml-4'} break-words dark:bg-transparent`} data-testid='reply-numbers' aria-label='post numbers of replies'>
             &nbsp;{replies.map((r) => (
-              <span key={`replypost-num-span-${r}`}><a href={`#${r}`} key={`replypost-num-link-${r}`} className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>&gt;&gt;{r}</a>&nbsp;</span>
+              <span key={`replypost-num-span-${r}`}>
+                <a
+                  href={`#${r}`}
+                  key={`replypost-num-link-${r}`}
+                  className='font-normal text-xs text-gray-700/70 dark:text-gray-400/70 underline'>
+                  &gt;&gt;{r}
+                </a>
+                &nbsp;
+              </span>
             ))}
           </span>
         )}
@@ -194,21 +213,29 @@ const PostContent = ({
         {post.title &&
           <>
             <br />
-            <span className='span-h5 wrap-anywhere font-bold dark:header-darkmode'>{post.title}</span>
-            <br />
+            <span
+              className='span-h5 wrap-anywhere font-bold dark:header-darkmode'
+              aria-label='post title'
+              data-testid='post-title'
+            >
+              {post.title}
+            </span>
           </>
         }
-        <span className='text-sm font-medium wrap-anywhere text-gray-700 dark:text-gray-300 mt-1 mb-4 pr-4' data-testid='post-content'>
+        <div
+          className='text-sm font-medium wrap-anywhere text-gray-700 dark:text-gray-300 mb-1 pr-4'
+          aria-label='post main text content'
+          data-testid='post-content'>
           <br />
           {FormatContent({
             content: post.content,
             renderLinks: true,
             renderLinebreaks: true
           })}
-        </span>
+        </div>
       </div>
 
-    </div>
+    </article>
   )
 }
 

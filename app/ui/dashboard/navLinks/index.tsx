@@ -27,7 +27,7 @@ const NavLinks = () => {
     <>
       <NextTopLoader color='white' height={9} />
       {/** Vertical button list is shown on larger-than-mobile devices (>767 px) */}
-      <div className='xsm:hidden'>
+      <nav className='xsm:hidden'>
         {links.map((link) => {
           const LinkIcon = link.icon;
           return (
@@ -47,10 +47,10 @@ const NavLinks = () => {
             </Link>
           );
         })}
-      </div>
+      </nav>
 
       {/** On mobile devices, a dropdown list is shown instead */}
-      <div className='xsm:block hidden'>
+      <nav className='xsm:block hidden'>
         <select
           name='boards'
           aria-label='Choose board'
@@ -67,7 +67,7 @@ const NavLinks = () => {
             );
           })}
         </select>
-      </div>
+      </nav>
     </>
   );
 };
