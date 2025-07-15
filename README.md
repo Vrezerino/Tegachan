@@ -1,6 +1,8 @@
 <div align="center">
 <h1>✵ Tegachan ✵</h1>
 
+[![Tegachan usage](https://raw.githubusercontent.com/Vrezerino/Tegachan/refs/heads/master/public/usage.mp4)
+
 Tegachan is an imageboard type discussion forum that's not based on imageboard templates.
 It features dynamic app routing, styles that mostly utilize Tailwind CSS, light and dark mode
 themes, plenty of different discussion boards, anti-flooding, banlists (users and proxies) etc.
@@ -56,6 +58,6 @@ with them. You will then get a reply as soon as possible.
 
 <h4>About Tegachan</h4>
 
-Tegachan was launched on 8th April 2024. It was not created using any imageboard templates.
+Tegachan was launched on 8th April 2024 and closed on 14th Jul 2025 (VM costs).
 
 </div>
