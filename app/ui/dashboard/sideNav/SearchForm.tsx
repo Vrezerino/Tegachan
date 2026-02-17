@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { PostType } from '@/app/lib/definitions';
 import { getFlagEmoji, parseDate } from '@/app/lib/utils';
-import CancelIcon from '@/public/img/misc/cancel.svg';
+import Image from 'next/image';
 import Link from 'next/link';
 import toast from 'react-hot-toast';
 
@@ -76,7 +76,7 @@ const SearchForm = () => {
         {results?.length >= 1 && <span><strong>{results?.length}</strong> {results?.length == 1 ? 'result' : 'results'}</span>}
       </div>
 
-      <div className='flex flex-row items-center md:max-w-full md:ml-0 ml-[-40px]'>
+      <div className='flex flex-row items-center md:max-w-full md:ml-0 -ml-10'>
         <form
           role='search'
           className='flex items-center'
@@ -85,7 +85,7 @@ const SearchForm = () => {
           <label htmlFor='post-search' className='sr-only'>Search posts</label>
           <input
             id='post-search'
-            className='peer block w-[140px] h-3 md:h-5 rounded-md border border-neutral-200/30 bg-neutral-100 dark:bg-neutral-900 py-2 px-1 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
+            className='peer block w-35 h-3 md:h-5 rounded-md border border-neutral-200/30 bg-neutral-100 dark:bg-neutral-900 py-2 px-1 text-sm outline-1 text-neutral-900 dark:text-neutral-300'
             type='text'
             placeholder='Search from posts'
             value={query}
@@ -96,17 +96,16 @@ const SearchForm = () => {
           {(query?.length >= 3 || results?.length >= 3) &&
             <button
               type='button'
-              className='w-[21px] h-[21px]'
+              className='w-5.25 h-5.25'
               onClick={() => setQuery('')}
               aria-label='clear the search'
             >
-              <CancelIcon
-                className='text-black dark:text-neutral-200 ml-1 md:right-0 right-19'
-                alt='Clear the searchform'
-                fill='currentColor'
+              <Image
+                className='ml-1'
                 src='/img/misc/cancel.svg'
-                height={17}
+                alt='Clear the searchform'
                 width={17}
+                height={17}
               />
             </button>
           }
