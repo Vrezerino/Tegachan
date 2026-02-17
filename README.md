@@ -1,7 +1,11 @@
 <div align="center">
 <h1>✵ Tegachan ✵</h1>
 
-![Tegachan usage gif](https://github.com/Vrezerino/Tegachan/blob/master/public/usage2.gif?raw=true)
+
+
+https://github.com/user-attachments/assets/da1afe52-5724-4f3e-b2ac-0a6b1cb2e4e0
+
+
 
 Tegachan is an imageboard type discussion forum that's not based on imageboard templates.
 It features dynamic app routing, styles that mostly utilize Tailwind CSS, light and dark mode
